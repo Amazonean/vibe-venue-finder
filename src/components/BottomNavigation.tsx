@@ -26,30 +26,28 @@ const BottomNavigation = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
-      <div className="flex justify-around items-center px-4 py-2">
+    <div className="fixed bottom-0 left-0 right-0 z-50">
+      <div className="flex gap-2 border-t border-border bg-sidebar px-4 pb-3 pt-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
           
           return (
-            <Button
+            <button
               key={item.path}
-              variant="ghost"
-              size="sm"
               onClick={() => navigate(item.path)}
-              className={`flex flex-col items-center gap-1 h-auto py-2 px-3 ${
-                isActive 
-                  ? 'text-primary' 
-                  : 'text-muted-foreground hover:text-foreground'
+              className={`just flex flex-1 flex-col items-center justify-end gap-1 rounded-full ${
+                isActive ? 'text-white' : 'text-muted-foreground'
               }`}
             >
-              <Icon className="h-5 w-5" />
-              <span className="text-xs font-medium">{item.label}</span>
-            </Button>
+              <div className="flex h-8 items-center justify-center">
+                <Icon className="h-6 w-6" />
+              </div>
+            </button>
           );
         })}
       </div>
+      <div className="h-5 bg-sidebar"></div>
     </div>
   );
 };
