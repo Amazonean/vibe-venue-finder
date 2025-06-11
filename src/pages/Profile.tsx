@@ -251,15 +251,6 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-border">
-              <Button 
-                variant="destructive" 
-                onClick={handleSignOut}
-                className="w-full"
-              >
-                Sign Out
-              </Button>
-            </div>
           </CardContent>
         </Card>
       </div>

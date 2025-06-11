@@ -116,11 +116,8 @@ const Venues = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="bg-background">
-        <div className="px-4 py-4">
-          <VenuesHeader 
-            locationEnabled={locationEnabled}
-            onRequestLocation={requestLocation}
-          />
+        <div className="max-w-md mx-auto px-4 py-4">
+          <VenuesHeader />
 
           <VenuesSearchBar 
             searchQuery={searchQuery}
@@ -145,7 +142,7 @@ const Venues = () => {
         </div>
       </div>
 
-      <div className="px-4">
+      <div className="max-w-md mx-auto px-4">
         <VenuesList
           venues={filteredVenues}
           locationEnabled={locationEnabled}

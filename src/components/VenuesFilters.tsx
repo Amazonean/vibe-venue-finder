@@ -26,7 +26,7 @@ const VenuesFilters: React.FC<VenuesFiltersProps> = ({
       <Button
         variant="outline"
         onClick={onToggleFilters}
-        className="flex items-center gap-2 mb-4 bg-muted border-none text-white"
+        className="flex items-center gap-2 mb-4 bg-muted border-none text-foreground"
         size="sm"
       >
         <Filter className="h-4 w-4" />

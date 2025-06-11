@@ -53,7 +53,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, showDistance }) => {
       <div className="flex flex-[2_2_0px] flex-col gap-4">
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between">
-            <p className="text-white text-base font-bold leading-tight">{venue.name}</p>
+            <p className="text-foreground text-base font-bold leading-tight">{venue.name}</p>
             {showDistance && (
               <Badge variant="secondary" className="bg-accent/20 text-accent-foreground text-xs">
                 {venue.distance}km
@@ -94,7 +94,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, showDistance }) => {
         
         <Button
           size="sm"
-          className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-4 bg-accent text-white text-sm font-medium leading-normal w-fit"
+          className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-4 bg-accent text-accent-foreground text-sm font-medium leading-normal w-fit"
         >
           <span className="truncate">Vote on Vibe</span>
         </Button>

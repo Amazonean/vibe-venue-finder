@@ -10,7 +10,7 @@ const PopularCategories: React.FC = () => {
           key={category}
           className="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-muted pl-4 pr-4"
         >
-          <p className="text-white text-sm font-medium leading-normal">{category}</p>
+          <p className="text-foreground text-sm font-medium leading-normal">{category}</p>
         </div>
       ))}
     </div>

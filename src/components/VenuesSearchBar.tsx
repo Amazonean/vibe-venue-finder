@@ -19,7 +19,7 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
             placeholder="Search for venues"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border-none bg-muted focus:border-none h-full placeholder:text-muted-foreground px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
+            className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-foreground focus:outline-0 focus:ring-0 border-none bg-muted focus:border-none h-full placeholder:text-muted-foreground px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
           />
         </div>
       </label>
