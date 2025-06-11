@@ -1,23 +1,29 @@
 import React from 'react';
-import { Moon, User } from 'lucide-react';
+import { Moon, Sun, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface VenuesHeaderProps {}
 
 const VenuesHeader: React.FC<VenuesHeaderProps> = () => {
   const { theme, setTheme } = useTheme();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleSignOut = async () => {
-    await signOut();
-    toast({
-      title: "Signed out",
-      description: "You have been successfully signed out."
-    });
+  const handleAuthAction = async () => {
+    if (user) {
+      await signOut();
+      toast({
+        title: "Signed out",
+        description: "You have been successfully signed out."
+      });
+    } else {
+      navigate('/auth');
+    }
   };
 
   const toggleTheme = () => {
@@ -36,15 +42,16 @@ const VenuesHeader: React.FC<VenuesHeaderProps> = () => {
           size="sm"
           className="flex items-center gap-2 text-foreground p-0"
         >
-          <Moon className="h-6 w-6" />
+          {theme === 'dark' ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
         </Button>
         <Button 
-          onClick={handleSignOut}
+          onClick={handleAuthAction}
           variant="ghost" 
           size="sm"
-          className="flex items-center gap-2 text-foreground p-0"
+          className="flex items-center gap-2 text-foreground"
         >
-          <User className="h-6 w-6" />
+          <User className="h-4 w-4" />
+          <span className="text-sm">{user ? 'Sign Out' : 'Sign In'}</span>
         </Button>
       </div>
     </div>

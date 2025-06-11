@@ -37,7 +37,7 @@ const BottomNavigation = () => {
               key={item.path}
               onClick={() => navigate(item.path)}
               className={`just flex flex-1 flex-col items-center justify-end gap-1 rounded-full ${
-                isActive ? 'text-primary' : 'text-muted-foreground'
+                isActive ? 'text-primary border border-border bg-muted/20' : 'text-muted-foreground'
               }`}
             >
               <div className="flex h-8 items-center justify-center">
