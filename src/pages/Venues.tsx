@@ -60,24 +60,42 @@ const Venues = () => {
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
   const [maxDistance, setMaxDistance] = useState(5);
+  const [distanceUnit, setDistanceUnit] = useState<'km' | 'miles'>('km');
+  const [selectedVenueTypes, setSelectedVenueTypes] = useState<string[]>([]);
+  const [selectedVibes, setSelectedVibes] = useState<string[]>([]);
   const [filteredVenues, setFilteredVenues] = useState(mockVenues);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Filter venues based on search query and distance
+    // Filter venues based on search query, distance, venue type, and vibe
     let filtered = mockVenues.filter(venue => 
       venue.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       venue.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
       venue.musicType.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    // Apply distance filter if location is enabled
     if (locationEnabled) {
       filtered = filtered.filter(venue => venue.distance <= maxDistance);
     }
 
+    // Apply venue type filter
+    if (selectedVenueTypes.length > 0) {
+      filtered = filtered.filter(venue => 
+        selectedVenueTypes.includes(venue.musicType)
+      );
+    }
+
+    // Apply vibe filter
+    if (selectedVibes.length > 0) {
+      filtered = filtered.filter(venue => 
+        selectedVibes.includes(venue.vibeLevel)
+      );
+    }
+
     setFilteredVenues(filtered);
-  }, [searchQuery, maxDistance, locationEnabled]);
+  }, [searchQuery, maxDistance, locationEnabled, selectedVenueTypes, selectedVibes]);
 
   const handleLocationPermission = (granted: boolean, location?: {lat: number, lng: number}) => {
     setLocationEnabled(granted);
@@ -113,6 +131,13 @@ const Venues = () => {
     }
   };
 
+  const handleClearFilters = () => {
+    setSelectedVenueTypes([]);
+    setSelectedVibes([]);
+    setMaxDistance(5);
+    setDistanceUnit('km');
+  };
+
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="bg-background">
@@ -129,9 +154,16 @@ const Venues = () => {
           <VenuesFilters
             locationEnabled={locationEnabled}
             maxDistance={maxDistance}
+            distanceUnit={distanceUnit}
+            selectedVenueTypes={selectedVenueTypes}
+            selectedVibes={selectedVibes}
             isFiltersOpen={isFiltersOpen}
             onToggleFilters={() => setIsFiltersOpen(!isFiltersOpen)}
             onDistanceChange={setMaxDistance}
+            onDistanceUnitChange={setDistanceUnit}
+            onVenueTypesChange={setSelectedVenueTypes}
+            onVibesChange={setSelectedVibes}
+            onClearFilters={handleClearFilters}
           />
 
           <VenuesLocationStatus
