@@ -3,9 +3,11 @@
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Music, Users } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen bg-background">
@@ -19,13 +21,25 @@ const Index = () => {
             Discover the perfect venues around you. Check real-time vibes, connect with the scene, 
             and find where the energy matches your mood.
           </p>
-          <Button 
-            onClick={() => navigate('/venues')}
-            size="lg" 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg"
-          >
-            Explore Venues
-          </Button>
+          <div className="flex gap-4 justify-center">
+            <Button 
+              onClick={() => navigate(user ? '/venues' : '/auth')}
+              size="lg" 
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg"
+            >
+              {user ? 'Explore Venues' : 'Get Started'}
+            </Button>
+            {!user && (
+              <Button 
+                onClick={() => navigate('/auth')}
+                variant="outline"
+                size="lg" 
+                className="px-8 py-3 text-lg"
+              >
+                Sign In
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Features */}
