@@ -1,8 +1,9 @@
 import React from 'react';
-import { MapPin, Music, Users, Clock } from 'lucide-react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { MapPin, Music, Users } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+
 interface Venue {
   id: number;
   name: string;
@@ -15,10 +16,12 @@ interface Venue {
   lastUpdated: string;
   description: string;
 }
+
 interface VenueCardProps {
   venue: Venue;
   showDistance: boolean;
 }
+
 const getVibeColor = (vibe: string) => {
   switch (vibe) {
     case 'chill':
@@ -31,6 +34,7 @@ const getVibeColor = (vibe: string) => {
       return 'bg-muted text-muted-foreground border border-border';
   }
 };
+
 const getVibeEmoji = (vibe: string) => {
   switch (vibe) {
     case 'chill':
@@ -43,79 +47,72 @@ const getVibeEmoji = (vibe: string) => {
       return '😐';
   }
 };
+
 const VenueCard: React.FC<VenueCardProps> = ({
   venue,
   showDistance
 }) => {
-  return <Card className="bg-muted border-none p-4">
-      <div className="flex gap-4">
+  return (
+    <Card className="bg-muted border-none p-4">
+      <div className="flex gap-4 items-start">
         {/* Image Section */}
-        <div className="w-20 h-20 bg-center bg-cover bg-no-repeat flex-shrink-0 rounded-md" style={{
-        backgroundImage: `url("https://images.unsplash.com/photo-1566737236500-c8ac43014a8e?w=200&h=200&fit=crop")`
-      }} />
+        <div 
+          className="w-20 h-20 bg-center bg-cover bg-no-repeat flex-shrink-0 rounded-md" 
+          style={{
+            backgroundImage: `url("https://images.unsplash.com/photo-1566737236500-c8ac43014a8e?w=200&h=200&fit=crop")`
+          }} 
+        />
         
         {/* Content Section */}
-        <div className="flex-1 min-w-0">
-          <CardHeader className="p-0 pb-3">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex-1 min-w-0">
-                <h3 className="text-foreground text-sm font-bold leading-tight truncate">
-                  {venue.name}
-                </h3>
-                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                  <MapPin className="h-3 w-3 flex-shrink-0" />
-                  <span className="truncate">{venue.address}</span>
-                </div>
+        <div className="flex-1 flex flex-col justify-between min-h-[80px]">
+          {/* Header Section */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-foreground text-sm font-bold leading-tight truncate mb-1">
+                {venue.name}
+              </h3>
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <MapPin className="h-3 w-3 flex-shrink-0" />
+                <span className="truncate">{venue.address}</span>
               </div>
-              {showDistance && <Badge variant="secondary" className="text-xs flex-shrink-0 bg-background border-border">
-                  {venue.distance}km
-                </Badge>}
             </div>
-          </CardHeader>
+            {showDistance && (
+              <Badge variant="secondary" className="text-xs flex-shrink-0 bg-background border-border">
+                {venue.distance}km
+              </Badge>
+            )}
+          </div>
           
-          <CardContent className="p-0 space-y-3">
-            {/* Description */}
-            <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
-              {venue.description}
-            </p>
-            
-            {/* Badges Row */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge className={`${getVibeColor(venue.vibeLevel)} text-xs font-medium`}>
-                {getVibeEmoji(venue.vibeLevel)} {venue.vibeLevel}
-              </Badge>
-              <Badge variant="outline" className="text-xs border-border bg-background/50">
-                {venue.venueType}
-              </Badge>
-            </div>
-            
-            {/* Bottom Info Row */}
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1">
-                  <Music className="h-3 w-3" />
-                  <span>{venue.musicType}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  <span>{venue.voteCount}</span>
-                </div>
+          {/* Middle Section - Badges */}
+          <div className="flex items-center gap-2 my-2">
+            <Badge className={`${getVibeColor(venue.vibeLevel)} text-xs font-medium`}>
+              {getVibeEmoji(venue.vibeLevel)} {venue.vibeLevel}
+            </Badge>
+            <Badge variant="outline" className="text-xs border-border bg-background/50">
+              {venue.venueType}
+            </Badge>
+          </div>
+          
+          {/* Bottom Section - Info and Vote */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Music className="h-3 w-3" />
+                <span>{venue.musicType}</span>
               </div>
               <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                <span>{venue.lastUpdated}</span>
+                <Users className="h-3 w-3" />
+                <span>{venue.voteCount}</span>
               </div>
             </div>
-
-            {/* Vote Button */}
-            <div className="pt-1">
-              <Button size="sm" className="h-7 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
-                Vote
-              </Button>
-            </div>
-          </CardContent>
+            <Button size="sm" className="h-6 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
+              Vote
+            </Button>
+          </div>
         </div>
       </div>
-    </Card>;
+    </Card>
+  );
 };
+
 export default VenueCard;
