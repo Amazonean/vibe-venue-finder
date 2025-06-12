@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import VenueCard from '@/components/VenueCard';
+import LocationPermission from '@/components/LocationPermission';
 
 const mockFavoriteVenues = [
   {
@@ -29,17 +30,37 @@ const mockFavoriteVenues = [
 ];
 
 const Favorites = () => {
-  const [favoriteVenues, setFavoriteVenues] = useState(mockFavoriteVenues);
+  const [favoriteVenues, setFavoriteVenues] = useState(() => {
+    // Load favorites from localStorage, fallback to mock data if none exist
+    const saved = localStorage.getItem('favoriteVenues');
+    return saved ? JSON.parse(saved) : mockFavoriteVenues;
+  });
   const [locationEnabled, setLocationEnabled] = useState(false);
 
   useEffect(() => {
-    // Check if geolocation is available and was previously granted
+    // Save favorites to localStorage whenever favoriteVenues changes
+    localStorage.setItem('favoriteVenues', JSON.stringify(favoriteVenues));
+  }, [favoriteVenues]);
+
+  useEffect(() => {
+    // Check if geolocation is available and get current permission status
     if ("geolocation" in navigator) {
-      navigator.permissions?.query({ name: 'geolocation' }).then((permission) => {
-        setLocationEnabled(permission.state === 'granted');
-      });
+      // Try to get current position to check if permission is granted
+      navigator.geolocation.getCurrentPosition(
+        () => {
+          setLocationEnabled(true);
+        },
+        () => {
+          setLocationEnabled(false);
+        },
+        { timeout: 1000 }
+      );
     }
   }, []);
+
+  const handleLocationPermission = (granted: boolean) => {
+    setLocationEnabled(granted);
+  };
 
   const handleFavoriteChange = (venueId: number, isFavorited: boolean) => {
     if (!isFavorited) {
@@ -54,6 +75,10 @@ const Favorites = () => {
         <h1 className="text-foreground text-[22px] font-bold leading-tight tracking-[-0.015em] pb-6">
           Your Favorites
         </h1>
+        
+        {!locationEnabled && favoriteVenues.length > 0 && (
+          <LocationPermission onPermissionChange={handleLocationPermission} />
+        )}
         
         <div className="space-y-4">
           {favoriteVenues.map(venue => (
