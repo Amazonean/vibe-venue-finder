@@ -33,7 +33,7 @@ const VenuesHeader: React.FC<VenuesHeaderProps> = () => {
   return (
     <div className="flex items-center justify-between pb-2">
       <h2 className="text-foreground text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">
-        Nightlife
+        TurntUp
       </h2>
       <div className="flex items-center gap-2">
         <Button 
