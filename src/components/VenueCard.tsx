@@ -66,7 +66,10 @@ const VenueCard: React.FC<VenueCardProps> = ({
   const { toast } = useToast();
 
   const handleVibeVote = async (vibe: 'turnt' | 'decent' | 'chill') => {
+    console.log('Vote button clicked for vibe:', vibe, 'venue:', venue.name);
+    
     if (!user) {
+      console.log('User not authenticated');
       toast({
         title: "Authentication required",
         description: "Please sign in to vote on venue vibes",
@@ -75,11 +78,15 @@ const VenueCard: React.FC<VenueCardProps> = ({
       return;
     }
 
+    console.log('User authenticated:', user.id);
+
     try {
       // For mock venues (with number IDs), we'll use a placeholder UUID
       // In a real app, you'd need to map these or use real venue IDs
       const venueId = typeof venue.id === 'string' ? venue.id : '00000000-0000-0000-0000-000000000001';
+      console.log('Using venue ID:', venueId);
       
+      console.log('Attempting to insert vote...');
       const { error } = await supabase
         .from('votes')
         .insert({
@@ -87,6 +94,8 @@ const VenueCard: React.FC<VenueCardProps> = ({
           venue_id: venueId,
           vibe: vibe
         });
+
+      console.log('Insert result - error:', error);
 
       if (error) {
         if (error.message.includes('Users can only vote once per venue every 2 hours')) {
@@ -96,9 +105,11 @@ const VenueCard: React.FC<VenueCardProps> = ({
             variant: "destructive"
           });
         } else {
+          console.error('Vote error:', error);
           throw error;
         }
       } else {
+        console.log('Vote successful!');
         toast({
           title: "Vote submitted!",
           description: `Thanks for voting ${vibe} for ${venue.name}`,
