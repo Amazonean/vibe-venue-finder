@@ -47,22 +47,22 @@ const VenueCard: React.FC<VenueCardProps> = ({
   venue,
   showDistance
 }) => {
-  return <Card className="overflow-hidden bg-muted border-none">
-      <div className="flex mx-0">
+  return <Card className="bg-muted border-none p-4">
+      <div className="flex gap-4">
         {/* Image Section */}
-        <div className="w-24 h-24 bg-center bg-cover bg-no-repeat flex-shrink-0" style={{
+        <div className="w-20 h-20 bg-center bg-cover bg-no-repeat flex-shrink-0 rounded-md" style={{
         backgroundImage: `url("https://images.unsplash.com/photo-1566737236500-c8ac43014a8e?w=200&h=200&fit=crop")`
       }} />
         
         {/* Content Section */}
-        <div className="flex-1 p-3 py-[21px] px-0 rounded-none mx-0">
-          <CardHeader className="p-0 pb-2">
-            <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <CardHeader className="p-0 pb-3">
+            <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <h3 className="text-foreground text-sm font-bold leading-tight truncate">
                   {venue.name}
                 </h3>
-                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
                   <MapPin className="h-3 w-3 flex-shrink-0" />
                   <span className="truncate">{venue.address}</span>
                 </div>
@@ -73,7 +73,7 @@ const VenueCard: React.FC<VenueCardProps> = ({
             </div>
           </CardHeader>
           
-          <CardContent className="p-0 space-y-2 mx-0">
+          <CardContent className="p-0 space-y-3">
             {/* Description */}
             <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
               {venue.description}
