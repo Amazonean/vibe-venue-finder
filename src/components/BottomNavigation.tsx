@@ -14,14 +14,14 @@ const BottomNavigation = () => {
       path: '/',
     },
     {
-      icon: MapPin,
-      label: 'Venues',
-      path: '/venues',
-    },
-    {
       icon: Map,
       label: 'Map',
       path: '/map',
+    },
+    {
+      icon: MapPin,
+      label: 'Venues',
+      path: '/venues',
     },
     {
       icon: Heart,

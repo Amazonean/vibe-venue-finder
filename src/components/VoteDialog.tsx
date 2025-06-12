@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Camera } from 'lucide-react';
 
 interface VoteDialogProps {
   venueName: string;
@@ -15,8 +16,20 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
   onOpenChange,
   onVibeVote
 }) => {
+  const [showThankYou, setShowThankYou] = useState(false);
+
+  const handleVibeVote = (vibe: 'turnt' | 'decent' | 'chill') => {
+    onVibeVote(vibe);
+    setShowThankYou(true);
+  };
+
+  const handleClose = () => {
+    setShowThankYou(false);
+    onOpenChange(false);
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogTrigger asChild>
         <Button size="sm" className="h-6 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
           Vote
@@ -24,31 +37,61 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Vote for the vibe at {venueName}</DialogTitle>
+          <DialogTitle>
+            {showThankYou ? 'Thanks for voting!' : `Vote for the vibe at ${venueName}`}
+          </DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col gap-3 py-4">
-          <Button
-            onClick={() => onVibeVote('turnt')}
-            className="w-full justify-start gap-3 h-12 bg-primary/20 text-primary border border-primary/30 hover:bg-primary hover:text-primary-foreground"
-            variant="outline"
-          >
-            🔥 Turnt
-          </Button>
-          <Button
-            onClick={() => onVibeVote('decent')}
-            className="w-full justify-start gap-3 h-12 bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80"
-            variant="outline"
-          >
-            🙂 Decent
-          </Button>
-          <Button
-            onClick={() => onVibeVote('chill')}
-            className="w-full justify-start gap-3 h-12 bg-accent/20 text-accent-foreground border border-accent/30 hover:bg-accent hover:text-accent-foreground"
-            variant="outline"
-          >
-            😌 Chill
-          </Button>
-        </div>
+        
+        {!showThankYou ? (
+          <div className="flex flex-col gap-3 py-4">
+            <Button
+              onClick={() => handleVibeVote('turnt')}
+              className="w-full justify-start gap-3 h-12 bg-primary/20 text-primary border border-primary/30 hover:bg-primary hover:text-primary-foreground"
+              variant="outline"
+            >
+              🔥 Turnt
+            </Button>
+            <Button
+              onClick={() => handleVibeVote('decent')}
+              className="w-full justify-start gap-3 h-12 bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80"
+              variant="outline"
+            >
+              🙂 Decent
+            </Button>
+            <Button
+              onClick={() => handleVibeVote('chill')}
+              className="w-full justify-start gap-3 h-12 bg-accent/20 text-accent-foreground border border-accent/30 hover:bg-accent hover:text-accent-foreground"
+              variant="outline"
+            >
+              😌 Chill
+            </Button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4 py-4 text-center">
+            <p className="text-muted-foreground">
+              Your vote helps others find the perfect vibe! Would you like to take a selfie to share on social media?
+            </p>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => {
+                  // Open camera functionality would go here
+                  handleClose();
+                }}
+                className="flex-1 gap-2"
+              >
+                <Camera className="h-4 w-4" />
+                Take Selfie
+              </Button>
+              <Button
+                onClick={handleClose}
+                variant="outline"
+                className="flex-1"
+              >
+                Maybe Later
+              </Button>
+            </div>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
