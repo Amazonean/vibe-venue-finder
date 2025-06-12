@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Camera } from 'lucide-react';
+import SelfieCamera from '@/components/SelfieCamera';
 
 interface VoteDialogProps {
   venueName: string;
@@ -17,16 +18,25 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
   onVibeVote
 }) => {
   const [showThankYou, setShowThankYou] = useState(false);
+  const [selectedVibe, setSelectedVibe] = useState<'turnt' | 'decent' | 'chill' | null>(null);
+  const [showSelfieCamera, setShowSelfieCamera] = useState(false);
 
   const handleVibeVote = (vibe: 'turnt' | 'decent' | 'chill') => {
     console.log('VoteDialog: handleVibeVote called with vibe:', vibe);
+    setSelectedVibe(vibe);
     onVibeVote(vibe);
     setShowThankYou(true);
   };
 
   const handleClose = () => {
     setShowThankYou(false);
+    setSelectedVibe(null);
+    setShowSelfieCamera(false);
     onOpenChange(false);
+  };
+
+  const handleTakeSelfie = () => {
+    setShowSelfieCamera(true);
   };
 
   return (
@@ -74,10 +84,7 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
             </p>
             <div className="flex gap-3">
               <Button
-                onClick={() => {
-                  // Open camera functionality would go here
-                  handleClose();
-                }}
+                onClick={handleTakeSelfie}
                 className="flex-1 gap-2"
               >
                 <Camera className="h-4 w-4" />
@@ -94,6 +101,16 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
           </div>
         )}
       </DialogContent>
+      
+      {/* Selfie Camera Component */}
+      {selectedVibe && (
+        <SelfieCamera
+          isOpen={showSelfieCamera}
+          onClose={() => setShowSelfieCamera(false)}
+          venueName={venueName}
+          selectedVibe={selectedVibe}
+        />
+      )}
     </Dialog>
   );
 };
