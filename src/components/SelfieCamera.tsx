@@ -21,6 +21,7 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
@@ -35,14 +36,15 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
       console.log('Starting camera...');
       setCameraError(null);
       
+      // Stop any existing stream first
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
+      
       // Check if getUserMedia is supported
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error('Camera API not supported in this browser');
-      }
-      
-      // Stop any existing stream first
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
       }
       
       const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -55,6 +57,7 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
       });
       
       console.log('Camera stream obtained:', mediaStream);
+      streamRef.current = mediaStream;
       setStream(mediaStream);
       
       if (videoRef.current) {
@@ -76,14 +79,15 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
         variant: "destructive"
       });
     }
-  }, [toast, stream]);
+  }, [toast]);
 
   const stopCamera = useCallback(() => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
       setStream(null);
     }
-  }, [stream]);
+  }, []);
 
   const startCountdown = () => {
     setShowPosePrompt(true);
@@ -116,21 +120,35 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
   };
 
   useEffect(() => {
-    if (isOpen && !capturedImage) {
+    if (isOpen && !capturedImage && !streamRef.current) {
       // Add a small delay to ensure DOM is ready
       const timer = setTimeout(() => {
         startCamera();
       }, 100);
       return () => clearTimeout(timer);
     }
+  }, [isOpen, capturedImage]);
+
+  // Cleanup effect when component unmounts or closes
+  useEffect(() => {
+    if (!isOpen && streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+      setStream(null);
+      // Re-enable body scrolling
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
     
     return () => {
-      stopCamera();
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
       // Re-enable body scrolling when component unmounts
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
     };
-  }, [isOpen, capturedImage, startCamera, stopCamera]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
