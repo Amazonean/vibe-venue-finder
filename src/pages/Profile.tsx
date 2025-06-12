@@ -237,35 +237,34 @@ const Profile = () => {
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         <Card>
           <CardHeader className="text-center pb-4">
-            <div className="relative inline-block">
-              <Avatar className="w-24 h-24 mx-auto mb-4">
+            <div className="relative inline-block mx-auto mb-4">
+              <Avatar className="w-24 h-24">
                 <AvatarImage src={profile.avatar_url || undefined} />
                 <AvatarFallback className="text-lg font-semibold">
                   {getInitials(profile.full_name)}
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute bottom-3 right-0">
-                <input
-                  type="file"
-                  id="avatar-upload"
-                  accept="image/*"
-                  onChange={handleAvatarUpload}
-                  className="hidden"
-                />
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="rounded-full w-8 h-8 p-0"
-                  onClick={() => document.getElementById('avatar-upload')?.click()}
-                  disabled={uploading}
-                >
+              
+              {/* Upload button overlay */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-200 cursor-pointer"
+                   onClick={() => document.getElementById('avatar-upload')?.click()}>
+                <div className="bg-primary/90 rounded-full p-2">
                   {uploading ? (
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    <Camera className="h-4 w-4" />
+                    <Camera className="h-5 w-5 text-white" />
                   )}
-                </Button>
+                </div>
               </div>
+              
+              <input
+                type="file"
+                id="avatar-upload"
+                accept="image/*"
+                onChange={handleAvatarUpload}
+                className="hidden"
+                disabled={uploading}
+              />
             </div>
             
             {!isEditing ? (
