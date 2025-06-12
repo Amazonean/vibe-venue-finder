@@ -12,9 +12,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-6">
         {/* Large Logo */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-6">
           <img 
             src="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png" 
             alt="TurntUp Logo" 
