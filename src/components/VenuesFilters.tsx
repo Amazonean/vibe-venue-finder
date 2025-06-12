@@ -76,7 +76,7 @@ const VenuesFilters: React.FC<VenuesFiltersProps> = ({
               enabled={locationEnabled}
             />
             
-            {locationEnabled && <Separator className="bg-border" />}
+            <Separator className="bg-border" />
             
             <VenueTypeFilter
               selectedTypes={selectedVenueTypes}

@@ -17,8 +17,6 @@ const ProximityFilter: React.FC<ProximityFilterProps> = ({
   onUnitChange,
   enabled
 }) => {
-  if (!enabled) return null;
-
   const maxValue = unit === 'km' ? 50 : 30;
   const convertedDistance = unit === 'miles' ? Math.round(maxDistance * 0.621371) : maxDistance;
 
@@ -27,6 +25,19 @@ const ProximityFilter: React.FC<ProximityFilterProps> = ({
     const kmDistance = unit === 'miles' ? Math.round(distance / 0.621371) : distance;
     onDistanceChange(kmDistance);
   };
+
+  if (!enabled) {
+    return (
+      <div>
+        <h4 className="text-sm font-medium text-foreground mb-3">Distance</h4>
+        <div className="text-center py-4">
+          <p className="text-sm text-muted-foreground">
+            Enable location to filter by distance
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

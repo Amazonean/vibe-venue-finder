@@ -9,6 +9,7 @@ interface Venue {
   vibeLevel: 'chill' | 'decent' | 'turnt';
   distance: number;
   musicType: string;
+  venueType: string;
   voteCount: number;
   lastUpdated: string;
   description: string;

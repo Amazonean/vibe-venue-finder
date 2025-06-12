@@ -8,14 +8,13 @@ interface VenueTypeFilterProps {
 
 const venueTypes = [
   'All Types',
-  'Electronic',
-  'Jazz', 
-  'Pop/Hip-Hop',
-  'Live Acoustic',
-  'Rock',
-  'R&B',
-  'Latin',
-  'Country'
+  'Clubs',
+  'Bars', 
+  'Restaurants',
+  'Live Music',
+  'Lounges',
+  'Rooftops',
+  'Dance Halls'
 ];
 
 const VenueTypeFilter: React.FC<VenueTypeFilterProps> = ({ selectedTypes, onTypeChange }) => {
