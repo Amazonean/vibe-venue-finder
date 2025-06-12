@@ -50,7 +50,7 @@ const getVibeEmoji = (vibe: string) => {
 
 const VenueCard: React.FC<VenueCardProps> = ({ venue, showDistance }) => {
   return (
-    <Card className="overflow-hidden bg-card border-border">
+    <Card className="overflow-hidden bg-muted border-none">
       <div className="flex">
         {/* Image Section */}
         <div 
@@ -74,7 +74,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, showDistance }) => {
                 </div>
               </div>
               {showDistance && (
-                <Badge variant="secondary" className="text-xs flex-shrink-0">
+                <Badge variant="secondary" className="text-xs flex-shrink-0 bg-background border-border">
                   {venue.distance}km
                 </Badge>
               )}
@@ -92,7 +92,7 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, showDistance }) => {
               <Badge className={`${getVibeColor(venue.vibeLevel)} text-xs font-medium`}>
                 {getVibeEmoji(venue.vibeLevel)} {venue.vibeLevel}
               </Badge>
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-xs border-border bg-background/50">
                 {venue.venueType}
               </Badge>
             </div>
@@ -113,6 +113,16 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, showDistance }) => {
                 <Clock className="h-3 w-3" />
                 <span>{venue.lastUpdated}</span>
               </div>
+            </div>
+
+            {/* Vote Button */}
+            <div className="pt-1">
+              <Button 
+                size="sm" 
+                className="h-7 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                Vote
+              </Button>
             </div>
           </CardContent>
         </div>
