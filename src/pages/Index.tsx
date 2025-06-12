@@ -16,7 +16,7 @@ const Index = () => {
         {/* Large Logo */}
         <div className="text-center mb-3">
           <img 
-            src="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png" 
+            src="/lovable-uploads/aeb22338-3739-4a42-b534-1c81ec69ff48.png" 
             alt="TurntUp Logo" 
             className="h-60 w-auto mx-auto sm:h-72 md:h-96"
           />
