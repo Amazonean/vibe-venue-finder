@@ -10,7 +10,7 @@ const Index = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-2">
         {/* Large Logo */}
@@ -53,7 +53,7 @@ const Index = () => {
 
         {/* Features */}
         <div className="grid md:grid-cols-3 gap-8 mt-10">
-          <div className="text-center p-6">
+          <div className="text-center p-6 bg-card/70 backdrop-blur-sm rounded-lg">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <MapPin className="h-8 w-8 text-primary" />
             </div>
@@ -63,7 +63,7 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="text-center p-6">
+          <div className="text-center p-6 bg-card/70 backdrop-blur-sm rounded-lg">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <Music className="h-8 w-8 text-primary" />
             </div>
@@ -73,7 +73,7 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="text-center p-6">
+          <div className="text-center p-6 bg-card/70 backdrop-blur-sm rounded-lg">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <Users className="h-8 w-8 text-primary" />
             </div>

@@ -37,7 +37,7 @@ const BottomNavigation = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
-      <div className="flex gap-2 border-t border-border bg-sidebar px-4 pb-3 pt-2">
+      <div className="flex gap-2 border-t border-border bg-sidebar/80 backdrop-blur-sm px-4 pb-3 pt-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
@@ -57,7 +57,7 @@ const BottomNavigation = () => {
           );
         })}
       </div>
-      <div className="h-5 bg-sidebar"></div>
+      <div className="h-5 bg-sidebar/80"></div>
     </div>
   );
 };
