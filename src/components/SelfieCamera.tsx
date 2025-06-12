@@ -28,22 +28,25 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
 
   const vibeConfig = {
     turnt: {
-      filter: 'hue-rotate(330deg) saturate(1.5) brightness(1.1)',
-      badge: '🔥 Turnt',
-      prompt: 'Hit your best \'Turnt\' pose! 🎉',
-      hashtags: ['#TurntAt' + venueName.replace(/\s+/g, ''), '#VibeCheck', '#TurntUp', '#PartyMode']
+      filter: 'sepia(0.3) saturate(1.8) hue-rotate(350deg) brightness(1.1)',
+      overlayColor: 'rgba(255, 59, 31, 0.25)',
+      badge: 'Turnt',
+      prompt: 'Get Turnt! 🎉',
+      hashtags: ['#TurntUpAt' + venueName.replace(/\s+/g, ''), '#VibeCheck', '#TurntUp', '#PartyMode']
     },
     decent: {
-      filter: 'sepia(0.3) saturate(1.2) brightness(1.05) contrast(1.1)',
-      badge: '🙂 Decent',
-      prompt: 'Looking good! Strike a decent pose 📸',
-      hashtags: ['#DecentNight', '#VibeCheck', '#GoodTimes', '#' + venueName.replace(/\s+/g, '')]
+      filter: 'sepia(0.4) saturate(1.3) hue-rotate(280deg) brightness(1.05)',
+      overlayColor: 'rgba(180, 122, 255, 0.25)',
+      badge: 'Decent',
+      prompt: 'Keep it Decent 😎',
+      hashtags: ['#DecentNight', '#VibeCheck', '#GoodTimes', '#TurntUpAt' + venueName.replace(/\s+/g, '')]
     },
     chill: {
-      filter: 'hue-rotate(180deg) saturate(0.8) brightness(0.9) contrast(1.1)',
-      badge: '😌 Chill',
-      prompt: 'Chill mode: activated 😌',
-      hashtags: ['#ChillVibes', '#Relaxed', '#VibeCheck', '#' + venueName.replace(/\s+/g, '')]
+      filter: 'sepia(0.2) saturate(1.1) hue-rotate(180deg) brightness(0.95)',
+      overlayColor: 'rgba(75, 213, 255, 0.25)',
+      badge: 'Chill',
+      prompt: 'Just Chill 😌',
+      hashtags: ['#ChillScene', '#VibeCheck', '#ChillVibes', '#TurntUpAt' + venueName.replace(/\s+/g, '')]
     }
   };
 
@@ -98,7 +101,7 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
     }, 1000);
   };
 
-  const capturePhoto = () => {
+  const capturePhoto = async () => {
     if (!videoRef.current || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
@@ -120,8 +123,8 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
     // Reset filter for overlays
     ctx.filter = 'none';
 
-    // Draw overlays
-    drawOverlays(ctx, canvas.width, canvas.height);
+    // Draw overlays (await for logo loading)
+    await drawOverlays(ctx, canvas.width, canvas.height);
 
     // Convert to image
     const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
@@ -129,48 +132,124 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
     stopCamera();
   };
 
-  const drawOverlays = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
-    // Venue name at top
-    ctx.fillStyle = 'white';
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 4;
-    ctx.font = `bold ${Math.floor(width * 0.06)}px Arial`;
-    ctx.textAlign = 'center';
+  const drawOverlays = async (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    // Add color overlay filter
+    ctx.fillStyle = vibeConfig[selectedVibe].overlayColor;
+    ctx.fillRect(0, 0, width, height);
+
+    // Venue name background
     const venueY = height * 0.1;
+    const venueBackgroundHeight = height * 0.08;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.roundRect(width * 0.1, venueY - venueBackgroundHeight/2, width * 0.8, venueBackgroundHeight, 15);
+    ctx.fill();
+
+    // Venue name text with purple glow effect
+    ctx.fillStyle = '#C26AF5';
+    ctx.strokeStyle = 'rgba(194, 106, 245, 0.5)';
+    ctx.lineWidth = 8;
+    ctx.font = `bold ${Math.floor(width * 0.06)}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    
+    // Create glow effect
+    ctx.shadowColor = 'rgba(194, 106, 245, 0.8)';
+    ctx.shadowBlur = 20;
     ctx.strokeText(venueName, width / 2, venueY);
     ctx.fillText(venueName, width / 2, venueY);
+    ctx.shadowBlur = 0;
 
     // Vibe badge in bottom-left
     const badgeText = vibeConfig[selectedVibe].badge;
     const badgeX = width * 0.05;
-    const badgeY = height * 0.9;
-    const badgeWidth = width * 0.25;
-    const badgeHeight = height * 0.06;
+    const badgeY = height * 0.85;
+    const badgeWidth = width * 0.3;
+    const badgeHeight = height * 0.08;
 
-    // Badge background
+    // Badge colors matching live view
     const badgeColors = {
-      turnt: '#ff4444',
-      decent: '#ffa500',
-      chill: '#4488ff'
+      turnt: '#FF3B1F',
+      decent: '#B47AFF',
+      chill: '#4BD5FF'
     };
+
+    // Badge background with rounded corners and shadow
     ctx.fillStyle = badgeColors[selectedVibe];
-    ctx.fillRect(badgeX, badgeY - badgeHeight, badgeWidth, badgeHeight);
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+    ctx.shadowBlur = 15;
+    ctx.shadowOffsetX = 4;
+    ctx.shadowOffsetY = 4;
+    ctx.roundRect(badgeX, badgeY - badgeHeight, badgeWidth, badgeHeight, badgeHeight / 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+
+    // Badge glow effect
+    ctx.shadowColor = badgeColors[selectedVibe];
+    ctx.shadowBlur = 15;
+    ctx.roundRect(badgeX, badgeY - badgeHeight, badgeWidth, badgeHeight, badgeHeight / 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
 
     // Badge text
     ctx.fillStyle = 'white';
-    ctx.font = `bold ${Math.floor(width * 0.04)}px Arial`;
+    ctx.font = `bold ${Math.floor(width * 0.045)}px Arial, sans-serif`;
     ctx.textAlign = 'center';
     ctx.fillText(badgeText, badgeX + badgeWidth / 2, badgeY - badgeHeight / 2 + height * 0.015);
 
-    // App logo placeholder in bottom-right
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    const logoSize = width * 0.12;
-    ctx.fillRect(width - logoSize - width * 0.05, height - logoSize - height * 0.05, logoSize, logoSize);
-    
-    ctx.fillStyle = 'white';
-    ctx.font = `bold ${Math.floor(logoSize * 0.3)}px Arial`;
-    ctx.textAlign = 'center';
-    ctx.fillText('VIBE', width - logoSize / 2 - width * 0.05, height - logoSize / 2 - height * 0.05 + logoSize * 0.1);
+    // TurntUp logo in bottom-right
+    try {
+      const logoImg = new Image();
+      logoImg.crossOrigin = 'anonymous';
+      
+      return new Promise<void>((resolve) => {
+        logoImg.onload = () => {
+          const logoSize = width * 0.15;
+          const logoX = width - logoSize - width * 0.05;
+          const logoY = height - logoSize - height * 0.05;
+          
+          // Add drop shadow for logo
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+          ctx.shadowBlur = 10;
+          ctx.shadowOffsetX = 2;
+          ctx.shadowOffsetY = 2;
+          
+          ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize * (logoImg.height / logoImg.width));
+          
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+          
+          resolve();
+        };
+        
+        logoImg.onerror = () => {
+          // Fallback to text if image fails to load
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+          const logoSize = width * 0.12;
+          ctx.fillRect(width - logoSize - width * 0.05, height - logoSize - height * 0.05, logoSize, logoSize);
+          
+          ctx.fillStyle = 'white';
+          ctx.font = `bold ${Math.floor(logoSize * 0.3)}px Arial`;
+          ctx.textAlign = 'center';
+          ctx.fillText('TURNT', width - logoSize / 2 - width * 0.05, height - logoSize / 2 - height * 0.05 + logoSize * 0.1);
+          
+          resolve();
+        };
+        
+        logoImg.src = '/lovable-uploads/4798e35a-824c-4ddc-9916-74b59aac299d.png';
+      });
+    } catch (error) {
+      // Fallback to text
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      const logoSize = width * 0.12;
+      ctx.fillRect(width - logoSize - width * 0.05, height - logoSize - height * 0.05, logoSize, logoSize);
+      
+      ctx.fillStyle = 'white';
+      ctx.font = `bold ${Math.floor(logoSize * 0.3)}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.fillText('TURNT', width - logoSize / 2 - width * 0.05, height - logoSize / 2 - height * 0.05 + logoSize * 0.1);
+    }
   };
 
   const saveToDevice = () => {
@@ -334,31 +413,56 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
                 style={{ filter: vibeConfig[selectedVibe].filter }}
               />
               
+              {/* Color overlay filter */}
+              <div 
+                className="absolute inset-0 pointer-events-none"
+                style={{ backgroundColor: vibeConfig[selectedVibe].overlayColor }}
+              />
+              
               {/* Overlays */}
               <div className="absolute inset-0 pointer-events-none">
                 {/* Venue name */}
                 <div className="absolute top-8 left-0 right-0 text-center">
-                  <h1 className="text-white text-2xl font-bold drop-shadow-lg">
-                    {venueName}
-                  </h1>
+                  <div className="bg-black/40 mx-4 rounded-lg py-2">
+                    <h1 
+                      className="text-3xl font-bold drop-shadow-lg"
+                      style={{ 
+                        color: '#C26AF5',
+                        textShadow: '0 0 10px rgba(194, 106, 245, 0.5), 0 2px 4px rgba(0, 0, 0, 0.8)'
+                      }}
+                    >
+                      {venueName}
+                    </h1>
+                  </div>
                 </div>
 
                 {/* Vibe badge */}
-                <div className="absolute bottom-8 left-6">
-                  <div className={`px-4 py-2 rounded-full font-bold text-white ${
-                    selectedVibe === 'turnt' ? 'bg-red-500' :
-                    selectedVibe === 'decent' ? 'bg-orange-500' :
-                    'bg-blue-500'
-                  }`}>
+                <div className="absolute bottom-20 left-6">
+                  <div 
+                    className="px-6 py-3 rounded-full font-bold text-white text-lg transform shadow-lg"
+                    style={{
+                      backgroundColor: selectedVibe === 'turnt' ? '#FF3B1F' :
+                                     selectedVibe === 'decent' ? '#B47AFF' : '#4BD5FF',
+                      boxShadow: selectedVibe === 'turnt' ? '0 0 15px rgba(255, 59, 31, 0.6), 0 4px 8px rgba(0, 0, 0, 0.8)' :
+                                selectedVibe === 'decent' ? '0 0 15px rgba(180, 122, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.8)' :
+                                '0 0 15px rgba(75, 213, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.8)',
+                      filter: 'drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5))'
+                    }}
+                  >
                     {vibeConfig[selectedVibe].badge}
                   </div>
                 </div>
 
-                {/* App logo */}
+                {/* TurntUp logo */}
                 <div className="absolute bottom-8 right-6">
-                  <div className="w-16 h-16 bg-black/70 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">VIBE</span>
-                  </div>
+                  <img 
+                    src="/lovable-uploads/4798e35a-824c-4ddc-9916-74b59aac299d.png"
+                    alt="TurntUp Logo"
+                    className="w-20 h-auto drop-shadow-lg"
+                    style={{
+                      filter: 'drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.8))'
+                    }}
+                  />
                 </div>
 
                 {/* Countdown */}
