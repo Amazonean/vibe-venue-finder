@@ -248,7 +248,7 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black">
+    <div className="fixed inset-0 z-[9999] bg-black">
       {/* Cancel button */}
       <Button
         onClick={onClose}

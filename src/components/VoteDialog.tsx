@@ -37,6 +37,7 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
 
   const handleTakeSelfie = () => {
     setShowSelfieCamera(true);
+    onOpenChange(false); // Close the dialog when camera opens
   };
 
   return (
