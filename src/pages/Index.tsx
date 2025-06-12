@@ -18,7 +18,7 @@ const Index = () => {
           <img 
             src="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png" 
             alt="TurntUp Logo" 
-            className="h-20 w-auto mx-auto sm:h-24 md:h-28"
+            className="h-60 w-auto mx-auto sm:h-72 md:h-96"
           />
         </div>
         
