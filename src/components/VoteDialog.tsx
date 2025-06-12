@@ -30,7 +30,7 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button size="sm" className="h-6 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
           Vote
