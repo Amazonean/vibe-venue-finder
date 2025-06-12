@@ -32,9 +32,13 @@ const VenuesHeader: React.FC<VenuesHeaderProps> = () => {
 
   return (
     <div className="flex items-center justify-between pb-2">
-      <h2 className="text-foreground text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">
-        TurntUp
-      </h2>
+      <div className="flex items-center">
+        <img 
+          src="/lovable-uploads/95c7bc9e-4384-4720-9805-6ba7ed30720a.png" 
+          alt="TurntUp Logo" 
+          className="h-8 w-auto sm:h-10"
+        />
+      </div>
       <div className="flex items-center gap-2">
         <Button 
           onClick={toggleTheme}
