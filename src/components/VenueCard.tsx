@@ -3,7 +3,6 @@ import { MapPin, Music, Users, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-
 interface Venue {
   id: number;
   name: string;
@@ -16,12 +15,10 @@ interface Venue {
   lastUpdated: string;
   description: string;
 }
-
 interface VenueCardProps {
   venue: Venue;
   showDistance: boolean;
 }
-
 const getVibeColor = (vibe: string) => {
   switch (vibe) {
     case 'chill':
@@ -34,7 +31,6 @@ const getVibeColor = (vibe: string) => {
       return 'bg-muted text-muted-foreground border border-border';
   }
 };
-
 const getVibeEmoji = (vibe: string) => {
   switch (vibe) {
     case 'chill':
@@ -47,21 +43,19 @@ const getVibeEmoji = (vibe: string) => {
       return '😐';
   }
 };
-
-const VenueCard: React.FC<VenueCardProps> = ({ venue, showDistance }) => {
-  return (
-    <Card className="overflow-hidden bg-muted border-none">
-      <div className="flex">
+const VenueCard: React.FC<VenueCardProps> = ({
+  venue,
+  showDistance
+}) => {
+  return <Card className="overflow-hidden bg-muted border-none">
+      <div className="flex mx-0">
         {/* Image Section */}
-        <div 
-          className="w-24 h-24 bg-center bg-cover bg-no-repeat flex-shrink-0"
-          style={{
-            backgroundImage: `url("https://images.unsplash.com/photo-1566737236500-c8ac43014a8e?w=200&h=200&fit=crop")`
-          }}
-        />
+        <div className="w-24 h-24 bg-center bg-cover bg-no-repeat flex-shrink-0" style={{
+        backgroundImage: `url("https://images.unsplash.com/photo-1566737236500-c8ac43014a8e?w=200&h=200&fit=crop")`
+      }} />
         
         {/* Content Section */}
-        <div className="flex-1 p-3">
+        <div className="flex-1 p-3 py-[21px] px-0 rounded-none mx-0">
           <CardHeader className="p-0 pb-2">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
@@ -73,15 +67,13 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, showDistance }) => {
                   <span className="truncate">{venue.address}</span>
                 </div>
               </div>
-              {showDistance && (
-                <Badge variant="secondary" className="text-xs flex-shrink-0 bg-background border-border">
+              {showDistance && <Badge variant="secondary" className="text-xs flex-shrink-0 bg-background border-border">
                   {venue.distance}km
-                </Badge>
-              )}
+                </Badge>}
             </div>
           </CardHeader>
           
-          <CardContent className="p-0 space-y-2">
+          <CardContent className="p-0 space-y-2 mx-0">
             {/* Description */}
             <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
               {venue.description}
@@ -117,18 +109,13 @@ const VenueCard: React.FC<VenueCardProps> = ({ venue, showDistance }) => {
 
             {/* Vote Button */}
             <div className="pt-1">
-              <Button 
-                size="sm" 
-                className="h-7 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90"
-              >
+              <Button size="sm" className="h-7 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
                 Vote
               </Button>
             </div>
           </CardContent>
         </div>
       </div>
-    </Card>
-  );
+    </Card>;
 };
-
 export default VenueCard;
