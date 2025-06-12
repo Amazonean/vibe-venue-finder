@@ -122,14 +122,26 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
 
       {/* Capture button */}
       {!countdown && (
-        <div className="absolute bottom-6 left-0 right-0 flex justify-center">
-          <Button
+        <div className="absolute bottom-6 left-0 right-0 flex justify-center pointer-events-auto">
+          <button
             onClick={onStartCountdown}
-            size="lg"
-            className="w-20 h-20 rounded-full bg-white text-black hover:bg-gray-200"
+            className="w-24 h-24 rounded-full flex items-center justify-center text-4xl transition-all duration-200 transform hover:scale-110 active:scale-95"
+            style={{
+              background: 'linear-gradient(145deg, #ffffff, #f0f0f0)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 2px 8px rgba(255, 255, 255, 0.5), inset 0 -2px 8px rgba(0, 0, 0, 0.1)',
+              border: '4px solid rgba(255, 255, 255, 0.8)',
+            }}
           >
-            📸
-          </Button>
+            <div 
+              className="w-4 h-4 rounded-full"
+              style={{
+                background: selectedVibe === 'turnt' ? '#FF3B1F' :
+                           selectedVibe === 'decent' ? '#B47AFF' : '#4BD5FF',
+                boxShadow: `0 0 12px ${selectedVibe === 'turnt' ? 'rgba(255, 59, 31, 0.8)' :
+                           selectedVibe === 'decent' ? 'rgba(180, 122, 255, 0.8)' : 'rgba(75, 213, 255, 0.8)'}`
+              }}
+            />
+          </button>
         </div>
       )}
     </>

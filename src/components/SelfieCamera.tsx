@@ -32,30 +32,51 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
 
   const startCamera = useCallback(async () => {
     try {
+      console.log('Starting camera...');
       setCameraError(null);
+      
+      // Check if getUserMedia is supported
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera API not supported in this browser');
+      }
+      
+      // Stop any existing stream first
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+      
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { 
           facingMode: 'user',
-          width: { ideal: 1080 },
-          height: { ideal: 1920 }
+          width: { ideal: 1280, min: 640 },
+          height: { ideal: 720, min: 480 }
         },
         audio: false
       });
       
+      console.log('Camera stream obtained:', mediaStream);
       setStream(mediaStream);
+      
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
+        // Ensure video starts playing
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current?.play().catch(err => {
+            console.error('Error playing video:', err);
+          });
+        };
       }
     } catch (error) {
       console.error('Camera access error:', error);
-      setCameraError('Camera access denied. Please enable camera permissions and try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown camera error';
+      setCameraError(`Camera access failed: ${errorMessage}. Please check permissions and try again.`);
       toast({
         title: "Camera Error",
         description: "Unable to access camera. Please check permissions.",
         variant: "destructive"
       });
     }
-  }, [toast]);
+  }, [toast, stream]);
 
   const stopCamera = useCallback(() => {
     if (stream) {
@@ -96,18 +117,32 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
 
   useEffect(() => {
     if (isOpen && !capturedImage) {
-      startCamera();
+      // Add a small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        startCamera();
+      }, 100);
+      return () => clearTimeout(timer);
     }
     
     return () => {
       stopCamera();
+      // Re-enable body scrolling when component unmounts
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [isOpen, capturedImage, startCamera, stopCamera]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-black">
+    <div className="fixed inset-0 z-[9999] bg-black overflow-hidden" style={{ touchAction: 'none' }}>
+      {/* Prevent scrolling and hide scrollbars */}
+      <style>{`
+        body { overflow: hidden !important; }
+        html { overflow: hidden !important; }
+        * { -webkit-overflow-scrolling: auto !important; }
+      `}</style>
+      
       {/* Cancel button */}
       <Button
         onClick={onClose}
