@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { MapPin, Music, Users, Heart } from 'lucide-react';
+import { MapPin, Music, Users } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import VoteDialog from '@/components/VoteDialog';
+import FavoriteButton from '@/components/FavoriteButton';
 
 interface Venue {
   id: number;
@@ -93,16 +93,10 @@ const VenueCard: React.FC<VenueCardProps> = ({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-8 w-8 p-0"
-                onClick={toggleFavorite}
-              >
-                <Heart 
-                  className={`h-4 w-4 ${isFavorited ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} 
-                />
-              </Button>
+              <FavoriteButton 
+                isFavorited={isFavorited}
+                onToggle={toggleFavorite}
+              />
               {showDistance && (
                 <Badge variant="secondary" className="text-xs flex-shrink-0 bg-background border-border">
                   {venue.distance}km
@@ -133,41 +127,12 @@ const VenueCard: React.FC<VenueCardProps> = ({
                 <span>{venue.voteCount}</span>
               </div>
             </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="h-6 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
-                  Vote
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Vote for the vibe at {venue.name}</DialogTitle>
-                </DialogHeader>
-                <div className="flex flex-col gap-3 py-4">
-                  <Button
-                    onClick={() => handleVibeVote('turnt')}
-                    className="w-full justify-start gap-3 h-12 bg-primary/20 text-primary border border-primary/30 hover:bg-primary hover:text-primary-foreground"
-                    variant="outline"
-                  >
-                    🔥 Turnt
-                  </Button>
-                  <Button
-                    onClick={() => handleVibeVote('decent')}
-                    className="w-full justify-start gap-3 h-12 bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80"
-                    variant="outline"
-                  >
-                    🙂 Decent
-                  </Button>
-                  <Button
-                    onClick={() => handleVibeVote('chill')}
-                    className="w-full justify-start gap-3 h-12 bg-accent/20 text-accent-foreground border border-accent/30 hover:bg-accent hover:text-accent-foreground"
-                    variant="outline"
-                  >
-                    😌 Chill
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <VoteDialog 
+              venueName={venue.name}
+              isOpen={isDialogOpen}
+              onOpenChange={setIsDialogOpen}
+              onVibeVote={handleVibeVote}
+            />
           </div>
         </div>
       </div>
