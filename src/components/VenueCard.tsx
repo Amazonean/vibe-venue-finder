@@ -1,8 +1,9 @@
-import React from 'react';
-import { MapPin, Music, Users } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Music, Users, Heart } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 interface Venue {
   id: number;
@@ -20,6 +21,7 @@ interface Venue {
 interface VenueCardProps {
   venue: Venue;
   showDistance: boolean;
+  isFavorite?: boolean;
 }
 
 const getVibeColor = (vibe: string) => {
@@ -50,8 +52,22 @@ const getVibeEmoji = (vibe: string) => {
 
 const VenueCard: React.FC<VenueCardProps> = ({
   venue,
-  showDistance
+  showDistance,
+  isFavorite = false
 }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(isFavorite);
+
+  const handleVibeVote = (vibe: 'turnt' | 'decent' | 'chill') => {
+    console.log(`Voted ${vibe} for venue ${venue.name}`);
+    setIsDialogOpen(false);
+    // TODO: Implement actual voting logic
+  };
+
+  const toggleFavorite = () => {
+    setIsFavorited(!isFavorited);
+    // TODO: Implement actual favorite toggle logic
+  };
   return (
     <Card className="bg-muted border-none p-4">
       <div className="flex gap-4 items-start">
@@ -76,11 +92,23 @@ const VenueCard: React.FC<VenueCardProps> = ({
                 <span className="truncate">{venue.address}</span>
               </div>
             </div>
-            {showDistance && (
-              <Badge variant="secondary" className="text-xs flex-shrink-0 bg-background border-border">
-                {venue.distance}km
-              </Badge>
-            )}
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-8 w-8 p-0"
+                onClick={toggleFavorite}
+              >
+                <Heart 
+                  className={`h-4 w-4 ${isFavorited ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} 
+                />
+              </Button>
+              {showDistance && (
+                <Badge variant="secondary" className="text-xs flex-shrink-0 bg-background border-border">
+                  {venue.distance}km
+                </Badge>
+              )}
+            </div>
           </div>
           
           {/* Middle Section - Badges */}
@@ -105,9 +133,41 @@ const VenueCard: React.FC<VenueCardProps> = ({
                 <span>{venue.voteCount}</span>
               </div>
             </div>
-            <Button size="sm" className="h-6 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
-              Vote
-            </Button>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="h-6 px-3 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
+                  Vote
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Vote for the vibe at {venue.name}</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-3 py-4">
+                  <Button
+                    onClick={() => handleVibeVote('turnt')}
+                    className="w-full justify-start gap-3 h-12 bg-primary/20 text-primary border border-primary/30 hover:bg-primary hover:text-primary-foreground"
+                    variant="outline"
+                  >
+                    🔥 Turnt
+                  </Button>
+                  <Button
+                    onClick={() => handleVibeVote('decent')}
+                    className="w-full justify-start gap-3 h-12 bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80"
+                    variant="outline"
+                  >
+                    🙂 Decent
+                  </Button>
+                  <Button
+                    onClick={() => handleVibeVote('chill')}
+                    className="w-full justify-start gap-3 h-12 bg-accent/20 text-accent-foreground border border-accent/30 hover:bg-accent hover:text-accent-foreground"
+                    variant="outline"
+                  >
+                    😌 Chill
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>

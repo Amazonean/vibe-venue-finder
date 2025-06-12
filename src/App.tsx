@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import Venues from "./pages/Venues";
 import Map from "./pages/Map";
+import Favorites from "./pages/Favorites";
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -38,6 +39,11 @@ const App = () => (
                 <Route path="/map" element={
                   <ProtectedRoute>
                     <Map />
+                  </ProtectedRoute>
+                } />
+                <Route path="/favorites" element={
+                  <ProtectedRoute>
+                    <Favorites />
                   </ProtectedRoute>
                 } />
                 <Route path="/profile" element={
