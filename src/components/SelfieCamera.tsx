@@ -249,14 +249,13 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black">
-      {/* Close button */}
+      {/* Cancel button */}
       <Button
         onClick={onClose}
         variant="ghost"
-        size="icon"
-        className="absolute top-4 right-4 z-10 text-white hover:bg-white/20"
+        className="absolute top-4 right-4 z-10 text-white hover:bg-white/20 px-4"
       >
-        <X className="h-6 w-6" />
+        Cancel
       </Button>
 
       {capturedImage ? (
