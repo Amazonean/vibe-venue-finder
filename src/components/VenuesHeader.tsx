@@ -34,9 +34,9 @@ const VenuesHeader: React.FC<VenuesHeaderProps> = () => {
     <div className="flex items-center justify-between pb-2">
       <div className="flex items-center">
         <img 
-          src="/lovable-uploads/95c7bc9e-4384-4720-9805-6ba7ed30720a.png" 
+          src="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png" 
           alt="TurntUp Logo" 
-          className="h-8 w-auto sm:h-10"
+          className="h-10 w-auto sm:h-12"
         />
       </div>
       <div className="flex items-center gap-2">
