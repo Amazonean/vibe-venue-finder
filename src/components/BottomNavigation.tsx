@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, MapPin, User } from 'lucide-react';
+import { Home, MapPin, Map, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const BottomNavigation = () => {
@@ -17,6 +17,11 @@ const BottomNavigation = () => {
       icon: MapPin,
       label: 'Venues',
       path: '/venues',
+    },
+    {
+      icon: Map,
+      label: 'Map',
+      path: '/map',
     },
     {
       icon: User,

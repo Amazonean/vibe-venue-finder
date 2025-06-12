@@ -9,6 +9,7 @@ import BottomNavigation from "./components/BottomNavigation";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import Venues from "./pages/Venues";
+import Map from "./pages/Map";
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -30,6 +31,11 @@ const App = () => (
                 <Route path="/venues" element={
                   <ProtectedRoute>
                     <Venues />
+                  </ProtectedRoute>
+                } />
+                <Route path="/map" element={
+                  <ProtectedRoute>
+                    <Map />
                   </ProtectedRoute>
                 } />
                 <Route path="/profile" element={
