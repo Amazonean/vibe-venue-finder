@@ -4,9 +4,12 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import VoteDialog from '@/components/VoteDialog';
 import FavoriteButton from '@/components/FavoriteButton';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface Venue {
-  id: number;
+  id: number | string;
   name: string;
   address: string;
   vibeLevel: 'chill' | 'decent' | 'turnt';
@@ -22,7 +25,7 @@ interface VenueCardProps {
   venue: Venue;
   showDistance: boolean;
   isFavorite?: boolean;
-  onFavoriteChange?: (venueId: number, isFavorited: boolean) => void;
+  onFavoriteChange?: (venueId: number | string, isFavorited: boolean) => void;
 }
 
 const getVibeColor = (vibe: string) => {
@@ -59,11 +62,57 @@ const VenueCard: React.FC<VenueCardProps> = ({
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isFavorited, setIsFavorited] = useState(isFavorite);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
-  const handleVibeVote = (vibe: 'turnt' | 'decent' | 'chill') => {
-    console.log(`Voted ${vibe} for venue ${venue.name}`);
-    setIsDialogOpen(false);
-    // TODO: Implement actual voting logic
+  const handleVibeVote = async (vibe: 'turnt' | 'decent' | 'chill') => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to vote on venue vibes",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // For mock venues (with number IDs), we'll use a placeholder UUID
+      // In a real app, you'd need to map these or use real venue IDs
+      const venueId = typeof venue.id === 'string' ? venue.id : '00000000-0000-0000-0000-000000000001';
+      
+      const { error } = await supabase
+        .from('votes')
+        .insert({
+          user_id: user.id,
+          venue_id: venueId,
+          vibe: vibe
+        });
+
+      if (error) {
+        if (error.message.includes('Users can only vote once per venue every 2 hours')) {
+          toast({
+            title: "Vote cooldown active",
+            description: "You can only vote once per venue every 2 hours",
+            variant: "destructive"
+          });
+        } else {
+          throw error;
+        }
+      } else {
+        toast({
+          title: "Vote submitted!",
+          description: `Thanks for voting ${vibe} for ${venue.name}`,
+        });
+        setIsDialogOpen(false);
+      }
+    } catch (error) {
+      console.error('Error submitting vote:', error);
+      toast({
+        title: "Error",
+        description: "Failed to submit vote. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const toggleFavorite = () => {
