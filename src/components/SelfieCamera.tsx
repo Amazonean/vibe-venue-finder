@@ -127,9 +127,9 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [isOpen, capturedImage]);
+  }, [isOpen, capturedImage, startCamera]);
 
-  // Cleanup effect when component unmounts or closes
+  // Cleanup effect when closing or unmounting
   useEffect(() => {
     if (!isOpen && streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
@@ -143,6 +143,7 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
       }
       // Re-enable body scrolling when component unmounts
       document.body.style.overflow = '';
