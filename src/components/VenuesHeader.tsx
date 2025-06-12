@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface VenuesHeaderProps {}
 
@@ -13,6 +13,7 @@ const VenuesHeader: React.FC<VenuesHeaderProps> = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleAuthAction = async () => {
     if (user) {
@@ -30,14 +31,18 @@ const VenuesHeader: React.FC<VenuesHeaderProps> = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
+  const isHomePage = location.pathname === '/';
+
   return (
     <div className="flex items-center justify-between pb-2">
       <div className="flex items-center">
-        <img 
-          src="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png" 
-          alt="TurntUp Logo" 
-          className="h-10 w-auto sm:h-12"
-        />
+        {!isHomePage && (
+          <img 
+            src="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png" 
+            alt="TurntUp Logo" 
+            className="h-10 w-auto sm:h-12"
+          />
+        )}
       </div>
       <div className="flex items-center gap-2">
         <Button 

@@ -12,7 +12,16 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-20">
+      <div className="container mx-auto px-4 py-12">
+        {/* Large Logo */}
+        <div className="text-center mb-12">
+          <img 
+            src="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png" 
+            alt="TurntUp Logo" 
+            className="h-20 w-auto mx-auto sm:h-24 md:h-28"
+          />
+        </div>
+        
         <div className="text-center max-w-3xl mx-auto">
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Find Your Vibe
