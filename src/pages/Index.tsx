@@ -12,9 +12,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-2">
         {/* Large Logo */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-3">
           <img 
             src="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png" 
             alt="TurntUp Logo" 
@@ -23,10 +23,10 @@ const Index = () => {
         </div>
         
         <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Find Your Vibe
           </h1>
-          <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+          <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
             Discover the perfect venues around you. Check real-time vibes, connect with the scene, 
             and find where the energy matches your mood.
           </p>
@@ -52,7 +52,7 @@ const Index = () => {
         </div>
 
         {/* Features */}
-        <div className="grid md:grid-cols-3 gap-8 mt-20">
+        <div className="grid md:grid-cols-3 gap-8 mt-10">
           <div className="text-center p-6">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <MapPin className="h-8 w-8 text-primary" />
