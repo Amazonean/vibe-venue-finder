@@ -22,6 +22,7 @@ interface VenueCardProps {
   venue: Venue;
   showDistance: boolean;
   isFavorite?: boolean;
+  onFavoriteChange?: (venueId: number, isFavorited: boolean) => void;
 }
 
 const getVibeColor = (vibe: string) => {
@@ -53,7 +54,8 @@ const getVibeEmoji = (vibe: string) => {
 const VenueCard: React.FC<VenueCardProps> = ({
   venue,
   showDistance,
-  isFavorite = false
+  isFavorite = false,
+  onFavoriteChange
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isFavorited, setIsFavorited] = useState(isFavorite);
@@ -65,7 +67,9 @@ const VenueCard: React.FC<VenueCardProps> = ({
   };
 
   const toggleFavorite = () => {
-    setIsFavorited(!isFavorited);
+    const newFavoriteState = !isFavorited;
+    setIsFavorited(newFavoriteState);
+    onFavoriteChange?.(venue.id, newFavoriteState);
     // TODO: Implement actual favorite toggle logic
   };
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import VenueCard from '@/components/VenueCard';
 
 const mockFavoriteVenues = [
@@ -29,7 +29,24 @@ const mockFavoriteVenues = [
 ];
 
 const Favorites = () => {
-  const [favoriteVenues] = useState(mockFavoriteVenues);
+  const [favoriteVenues, setFavoriteVenues] = useState(mockFavoriteVenues);
+  const [locationEnabled, setLocationEnabled] = useState(false);
+
+  useEffect(() => {
+    // Check if geolocation is available and was previously granted
+    if ("geolocation" in navigator) {
+      navigator.permissions?.query({ name: 'geolocation' }).then((permission) => {
+        setLocationEnabled(permission.state === 'granted');
+      });
+    }
+  }, []);
+
+  const handleFavoriteChange = (venueId: number, isFavorited: boolean) => {
+    if (!isFavorited) {
+      // Remove venue from favorites when unfavorited
+      setFavoriteVenues(prev => prev.filter(venue => venue.id !== venueId));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -43,8 +60,9 @@ const Favorites = () => {
             <VenueCard
               key={venue.id}
               venue={venue}
-              showDistance={true}
+              showDistance={locationEnabled}
               isFavorite={true}
+              onFavoriteChange={handleFavoriteChange}
             />
           ))}
         </div>
