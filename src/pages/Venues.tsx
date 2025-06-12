@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import VenuesHeader from '@/components/VenuesHeader';
 import VenuesSearchBar from '@/components/VenuesSearchBar';
 
 import VenuesFilters from '@/components/VenuesFilters';
@@ -169,9 +168,7 @@ const Venues = () => {
     <div className="min-h-screen bg-background pb-20">
       <div className="bg-background">
         <div className="max-w-md mx-auto px-4 py-4">
-          <VenuesHeader />
-
-          <VenuesSearchBar 
+          <VenuesSearchBar
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
           />

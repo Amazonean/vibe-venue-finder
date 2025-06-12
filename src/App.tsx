@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/AuthContext";
 import BottomNavigation from "./components/BottomNavigation";
+import VenuesHeader from "./components/VenuesHeader";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import Venues from "./pages/Venues";
@@ -23,9 +24,10 @@ const App = () => (
         <AuthProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
-            <div className="min-h-screen bg-background">
-              <Routes>
+            <BrowserRouter>
+              <div className="min-h-screen bg-background">
+                <VenuesHeader />
+                <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/venues" element={
