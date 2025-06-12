@@ -19,6 +19,7 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
   const [showThankYou, setShowThankYou] = useState(false);
 
   const handleVibeVote = (vibe: 'turnt' | 'decent' | 'chill') => {
+    console.log('VoteDialog: handleVibeVote called with vibe:', vibe);
     onVibeVote(vibe);
     setShowThankYou(true);
   };
