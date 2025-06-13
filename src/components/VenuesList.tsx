@@ -6,7 +6,7 @@ interface Venue {
   id: number;
   name: string;
   address: string;
-  vibeLevel: 'chill' | 'decent' | 'turnt';
+  vibeLevel: 'quiet' | 'chill' | 'turnt';
   distance: number;
   musicType: string;
   venueType: string;
