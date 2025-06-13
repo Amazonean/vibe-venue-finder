@@ -43,8 +43,8 @@ export const drawOverlays = async (
   // Badge colors matching live view
   const badgeColors = {
     turnt: '#FF3B1F',
-    decent: '#B47AFF',
-    chill: '#4BD5FF'
+    chill: '#B47AFF',
+    quiet: '#4BD5FF'
   };
 
   // Badge background with rounded corners and shadow

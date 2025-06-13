@@ -8,8 +8,8 @@ interface VibeFilterProps {
 
 const vibeOptions = [
   { value: 'all', label: 'All Vibes', emoji: '🎉' },
-  { value: 'chill', label: 'Chill', emoji: '😌' },
-  { value: 'decent', label: 'Decent', emoji: '🙂' },
+  { value: 'quiet', label: 'Quiet', emoji: '😌' },
+  { value: 'chill', label: 'Chill', emoji: '🙂' },
   { value: 'turnt', label: 'Turnt', emoji: '🔥' }
 ];
 

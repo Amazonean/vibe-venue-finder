@@ -1,4 +1,4 @@
-export type VibeType = 'turnt' | 'decent' | 'chill';
+export type VibeType = 'turnt' | 'chill' | 'quiet';
 
 export interface VibeConfiguration {
   filter: string;
@@ -16,18 +16,18 @@ export const getVibeConfig = (venueName: string): Record<VibeType, VibeConfigura
     prompt: 'Get Turnt! 🎉',
     hashtags: ['#TurntUpAt' + venueName.replace(/\s+/g, ''), '#VibeCheck', '#TurntUp', '#PartyMode']
   },
-  decent: {
+  chill: {
     filter: 'sepia(0.4) saturate(1.3) hue-rotate(280deg) brightness(1.05)',
     overlayColor: 'rgba(180, 122, 255, 0.25)',
-    badge: 'Decent',
-    prompt: 'Keep it Decent 😎',
-    hashtags: ['#DecentNight', '#VibeCheck', '#GoodTimes', '#TurntUpAt' + venueName.replace(/\s+/g, '')]
+    badge: 'Chill',
+    prompt: 'Keep it Chill 😎',
+    hashtags: ['#ChillNight', '#VibeCheck', '#GoodTimes', '#TurntUpAt' + venueName.replace(/\s+/g, '')]
   },
-  chill: {
+  quiet: {
     filter: 'sepia(0.2) saturate(1.1) hue-rotate(180deg) brightness(0.95)',
     overlayColor: 'rgba(75, 213, 255, 0.25)',
-    badge: 'Chill',
-    prompt: 'Just Chill 😌',
-    hashtags: ['#ChillScene', '#VibeCheck', '#ChillVibes', '#TurntUpAt' + venueName.replace(/\s+/g, '')]
+    badge: 'Quiet',
+    prompt: 'Stay Quiet 😌',
+    hashtags: ['#QuietScene', '#VibeCheck', '#QuietVibes', '#TurntUpAt' + venueName.replace(/\s+/g, '')]
   }
 });

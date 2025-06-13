@@ -78,9 +78,9 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
             className="px-6 py-3 rounded-full font-bold text-white text-lg transform shadow-lg"
             style={{
               backgroundColor: selectedVibe === 'turnt' ? '#FF3B1F' :
-                             selectedVibe === 'decent' ? '#B47AFF' : '#4BD5FF',
+                             selectedVibe === 'chill' ? '#B47AFF' : '#4BD5FF',
               boxShadow: selectedVibe === 'turnt' ? '0 0 15px rgba(255, 59, 31, 0.6), 0 4px 8px rgba(0, 0, 0, 0.8)' :
-                        selectedVibe === 'decent' ? '0 0 15px rgba(180, 122, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.8)' :
+                        selectedVibe === 'chill' ? '0 0 15px rgba(180, 122, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.8)' :
                         '0 0 15px rgba(75, 213, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.8)',
               filter: 'drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5))'
             }}
@@ -136,9 +136,9 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
               className="w-4 h-4 rounded-full"
               style={{
                 background: selectedVibe === 'turnt' ? '#FF3B1F' :
-                           selectedVibe === 'decent' ? '#B47AFF' : '#4BD5FF',
+                           selectedVibe === 'chill' ? '#B47AFF' : '#4BD5FF',
                 boxShadow: `0 0 12px ${selectedVibe === 'turnt' ? 'rgba(255, 59, 31, 0.8)' :
-                           selectedVibe === 'decent' ? 'rgba(180, 122, 255, 0.8)' : 'rgba(75, 213, 255, 0.8)'}`
+                           selectedVibe === 'chill' ? 'rgba(180, 122, 255, 0.8)' : 'rgba(75, 213, 255, 0.8)'}`
               }}
             />
           </button>

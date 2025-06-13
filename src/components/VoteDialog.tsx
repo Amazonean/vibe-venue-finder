@@ -8,7 +8,7 @@ interface VoteDialogProps {
   venueName: string;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onVibeVote: (vibe: 'turnt' | 'decent' | 'chill') => void;
+  onVibeVote: (vibe: 'turnt' | 'chill' | 'quiet') => void;
 }
 
 const VoteDialog: React.FC<VoteDialogProps> = ({
@@ -18,10 +18,10 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
   onVibeVote
 }) => {
   const [showThankYou, setShowThankYou] = useState(false);
-  const [selectedVibe, setSelectedVibe] = useState<'turnt' | 'decent' | 'chill' | null>(null);
+  const [selectedVibe, setSelectedVibe] = useState<'turnt' | 'chill' | 'quiet' | null>(null);
   const [showSelfieCamera, setShowSelfieCamera] = useState(false);
 
-  const handleVibeVote = (vibe: 'turnt' | 'decent' | 'chill') => {
+  const handleVibeVote = (vibe: 'turnt' | 'chill' | 'quiet') => {
     console.log('VoteDialog: handleVibeVote called with vibe:', vibe);
     setSelectedVibe(vibe);
     onVibeVote(vibe);
@@ -64,18 +64,18 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
               🔥 Turnt
             </Button>
             <Button
-              onClick={() => handleVibeVote('decent')}
+              onClick={() => handleVibeVote('chill')}
               className="w-full justify-start gap-3 h-12 bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80"
               variant="outline"
             >
-              🙂 Decent
+              🙂 Chill
             </Button>
             <Button
-              onClick={() => handleVibeVote('chill')}
+              onClick={() => handleVibeVote('quiet')}
               className="w-full justify-start gap-3 h-12 bg-accent/20 text-accent-foreground border border-accent/30 hover:bg-accent hover:text-accent-foreground"
               variant="outline"
             >
-              😌 Chill
+              😌 Quiet
             </Button>
           </div>
         ) : (

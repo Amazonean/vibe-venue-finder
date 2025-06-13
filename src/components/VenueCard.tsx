@@ -12,7 +12,7 @@ interface Venue {
   id: number | string;
   name: string;
   address: string;
-  vibeLevel: 'chill' | 'decent' | 'turnt';
+  vibeLevel: 'quiet' | 'chill' | 'turnt';
   distance: number;
   musicType: string;
   venueType: string;
@@ -30,9 +30,9 @@ interface VenueCardProps {
 
 const getVibeColor = (vibe: string) => {
   switch (vibe) {
-    case 'chill':
+    case 'quiet':
       return 'bg-accent/20 text-accent-foreground border border-accent/30';
-    case 'decent':
+    case 'chill':
       return 'bg-secondary text-secondary-foreground border border-border';
     case 'turnt':
       return 'bg-primary/20 text-primary border border-primary/30';
@@ -43,9 +43,9 @@ const getVibeColor = (vibe: string) => {
 
 const getVibeEmoji = (vibe: string) => {
   switch (vibe) {
-    case 'chill':
+    case 'quiet':
       return '😌';
-    case 'decent':
+    case 'chill':
       return '🙂';
     case 'turnt':
       return '🔥';
@@ -65,7 +65,7 @@ const VenueCard: React.FC<VenueCardProps> = ({
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const handleVibeVote = async (vibe: 'turnt' | 'decent' | 'chill') => {
+  const handleVibeVote = async (vibe: 'turnt' | 'chill' | 'quiet') => {
     console.log('Vote button clicked for vibe:', vibe, 'venue:', venue.name);
     
     if (!user) {
