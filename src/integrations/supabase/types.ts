@@ -183,7 +183,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      vibe_level: "chill" | "decent" | "turnt"
+      vibe_level: "chill" | "decent" | "turnt" | "quiet"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -299,7 +299,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      vibe_level: ["chill", "decent", "turnt"],
+      vibe_level: ["chill", "decent", "turnt", "quiet"],
     },
   },
 } as const

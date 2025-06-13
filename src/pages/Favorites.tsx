@@ -19,7 +19,7 @@ const mockFavoriteVenues = [
     id: 4,
     name: "Acoustic Corner",
     address: "321 Melody Lane, Arts Quarter",
-    vibeLevel: "chill" as const,
+    vibeLevel: "quiet" as const,
     distance: 1.7,
     musicType: "Live Acoustic",
     venueType: "Live Music",
