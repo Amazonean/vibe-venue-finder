@@ -114,7 +114,7 @@ const VenueCard: React.FC<VenueCardProps> = ({
           title: "Vote submitted!",
           description: `Thanks for voting ${vibe} for ${venue.name}`,
         });
-        setIsDialogOpen(false);
+        // Don't close dialog here - let VoteDialog handle it to show thank you message
       }
     } catch (error) {
       console.error('Error submitting vote:', error);

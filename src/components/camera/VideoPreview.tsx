@@ -157,7 +157,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
         </button>
       </div>
       
-      <div className="p-6 bg-black/80 safe-area-bottom">
+      <div className="p-6 bg-black/80" style={{ paddingBottom: 'env(safe-area-inset-bottom, 24px)' }}>
         {/* Hashtag toggle */}
         <div className="flex items-center justify-center gap-2 mb-4">
           <label className="flex items-center gap-2 text-white text-sm">

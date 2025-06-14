@@ -58,6 +58,9 @@ export class VideoCanvasRecorder {
     const drawFrame = async () => {
       if (!this.isRecordingRef.current) return;
 
+      // Clear canvas first
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      
       this.ctx.save();
 
       // Apply filter
@@ -85,13 +88,14 @@ export class VideoCanvasRecorder {
 
       this.ctx.restore();
 
-      if (this.mediaRecorder?.state === 'recording') {
+      // Continue animation loop while recording
+      if (this.isRecordingRef.current && this.mediaRecorder?.state === 'recording') {
         this.animationId = requestAnimationFrame(drawFrame);
       }
     };
 
     // Start drawing immediately and continuously
-    this.animationId = requestAnimationFrame(drawFrame);
+    drawFrame();
   }
 
   stopDrawing(): void {
