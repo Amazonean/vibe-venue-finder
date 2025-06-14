@@ -161,21 +161,21 @@ const VenueCard: React.FC<VenueCardProps> = ({
           {/* Header Section */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
-              <h3 className="text-foreground text-sm font-bold leading-tight truncate mb-1">
+              <h3 className="text-foreground text-sm font-bold leading-tight mb-1 break-words">
                 {venue.name}
               </h3>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin className="h-3 w-3 flex-shrink-0" />
-                <span className="truncate">{venue.address}</span>
+              <div className="flex items-start gap-1 text-xs text-muted-foreground">
+                <MapPin className="h-3 w-3 flex-shrink-0 mt-0.5" />
+                <span className="break-words">{venue.address}</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-start gap-2 flex-shrink-0">
               <FavoriteButton 
                 isFavorited={isFavorited}
                 onToggle={toggleFavorite}
               />
               {showDistance && (
-                <Badge variant="secondary" className="text-xs flex-shrink-0 bg-background border-border">
+                <Badge variant="secondary" className="text-xs flex-shrink-0 bg-background border-border whitespace-nowrap">
                   {venue.distance}km
                 </Badge>
               )}
