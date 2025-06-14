@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { VibeType, getVibeConfig } from './camera/VibeConfig';
 import CameraInterface from './camera/CameraInterface';
 import PhotoPreview from './camera/PhotoPreview';
+import VideoPreview from './camera/VideoPreview';
 
 interface SelfieCameraProps {
   isOpen: boolean;
@@ -17,20 +18,30 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
   selectedVibe
 }) => {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [capturedVideo, setCapturedVideo] = useState<string | null>(null);
   const vibeConfig = getVibeConfig(venueName);
 
   const handlePhotoCapture = (imageDataUrl: string) => {
     setCapturedImage(imageDataUrl);
   };
 
+  const handleVideoCapture = (videoDataUrl: string) => {
+    setCapturedVideo(videoDataUrl);
+  };
+
   const retakePhoto = () => {
     setCapturedImage(null);
+  };
+
+  const retakeVideo = () => {
+    setCapturedVideo(null);
   };
 
   // Cleanup effect when closing or unmounting
   useEffect(() => {
     if (!isOpen) {
       setCapturedImage(null);
+      setCapturedVideo(null);
       // Re-enable body scrolling
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
@@ -62,11 +73,20 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
           vibeConfig={vibeConfig}
           onRetakePhoto={retakePhoto}
         />
+      ) : capturedVideo ? (
+        <VideoPreview
+          capturedVideo={capturedVideo}
+          venueName={venueName}
+          selectedVibe={selectedVibe}
+          vibeConfig={vibeConfig}
+          onRetakeVideo={retakeVideo}
+        />
       ) : (
         <CameraInterface
           venueName={venueName}
           selectedVibe={selectedVibe}
           onPhotoCapture={handlePhotoCapture}
+          onVideoCapture={handleVideoCapture}
           onClose={onClose}
         />
       )}

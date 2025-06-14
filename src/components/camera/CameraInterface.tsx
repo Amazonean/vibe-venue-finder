@@ -11,6 +11,7 @@ interface CameraInterfaceProps {
   venueName: string;
   selectedVibe: VibeType;
   onPhotoCapture: (imageDataUrl: string) => void;
+  onVideoCapture: (videoDataUrl: string) => void;
   onClose: () => void;
 }
 
@@ -18,6 +19,7 @@ const CameraInterface: React.FC<CameraInterfaceProps> = ({
   venueName,
   selectedVibe,
   onPhotoCapture,
+  onVideoCapture,
   onClose
 }) => {
   const [currentFilter, setCurrentFilter] = useState('none');
@@ -36,7 +38,7 @@ const CameraInterface: React.FC<CameraInterfaceProps> = ({
     recordingTime, 
     startVideoRecording, 
     stopVideoRecording 
-  } = useVideoRecording(venueName, selectedVibe);
+  } = useVideoRecording(venueName, selectedVibe, onVideoCapture);
 
   const {
     canvasRef,

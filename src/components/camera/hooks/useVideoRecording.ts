@@ -5,7 +5,7 @@ import { VideoCanvasRecorder } from '../utils/videoCanvasRecorder';
 import { downloadVideo } from '../utils/videoDownloader';
 import { RecordingTimer } from '../utils/recordingTimer';
 
-export const useVideoRecording = (venueName: string, selectedVibe: VibeType) => {
+export const useVideoRecording = (venueName: string, selectedVibe: VibeType, onVideoCapture: (videoDataUrl: string) => void) => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -47,11 +47,15 @@ export const useVideoRecording = (venueName: string, selectedVibe: VibeType) => 
       };
       
       mediaRecorder.onstop = () => {
-        downloadVideo(recordedChunksRef.current, venueName, selectedVibe);
+        // Create video blob and data URL for preview
+        const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+        const videoDataUrl = URL.createObjectURL(blob);
+        
+        onVideoCapture(videoDataUrl);
         
         toast({
           title: "Video Recorded",
-          description: "Your 10-second vibe video has been saved with filters and overlays!",
+          description: "Your 10-second vibe video is ready for preview!",
         });
         
         cleanup();

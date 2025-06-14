@@ -76,22 +76,27 @@ export class VideoCanvasRecorder {
 
       this.ctx.restore();
 
-      // Draw overlays on the rotated canvas
-      await drawOverlays(
-        this.ctx, 
-        this.canvas.width, 
-        this.canvas.height, 
-        options.venueName, 
-        options.selectedVibe, 
-        options.vibeConfig
-      );
+      // Draw overlays consistently without flickering
+      try {
+        await drawOverlays(
+          this.ctx, 
+          this.canvas.width, 
+          this.canvas.height, 
+          options.venueName, 
+          options.selectedVibe, 
+          options.vibeConfig
+        );
+      } catch (error) {
+        console.error('Error drawing overlays:', error);
+      }
 
       if (this.mediaRecorder?.state === 'recording') {
         this.animationId = requestAnimationFrame(drawFrame);
       }
     };
 
-    drawFrame();
+    // Start drawing immediately and continuously
+    this.animationId = requestAnimationFrame(drawFrame);
   }
 
   stopDrawing(): void {

@@ -1,45 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, Share } from 'lucide-react';
+import { Download, Share, Play, Pause } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { VibeType, VibeConfiguration } from './VibeConfig';
 
-interface PhotoPreviewProps {
-  capturedImage: string;
+interface VideoPreviewProps {
+  capturedVideo: string;
   venueName: string;
   selectedVibe: VibeType;
   vibeConfig: Record<VibeType, VibeConfiguration>;
-  onRetakePhoto: () => void;
+  onRetakeVideo: () => void;
 }
 
-const PhotoPreview: React.FC<PhotoPreviewProps> = ({
-  capturedImage,
+const VideoPreview: React.FC<VideoPreviewProps> = ({
+  capturedVideo,
   venueName,
   selectedVibe,
   vibeConfig,
-  onRetakePhoto
+  onRetakeVideo
 }) => {
   const [includeHashtags, setIncludeHashtags] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
+
+  const togglePlayback = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleVideoEnded = () => {
+    setIsPlaying(false);
+  };
 
   const saveToDevice = () => {
     const link = document.createElement('a');
-    link.download = `vibe-selfie-${venueName.replace(/\s+/g, '-')}-${selectedVibe}.jpg`;
-    link.href = capturedImage;
+    link.download = `vibe-video-${venueName.replace(/\s+/g, '-')}-${selectedVibe}.webm`;
+    link.href = capturedVideo;
     link.click();
 
     toast({
-      title: "Photo Saved",
-      description: "Your vibe selfie has been saved to your device!",
+      title: "Video Saved",
+      description: "Your vibe video has been saved to your device!",
     });
   };
 
-  const sharePhoto = async () => {
+  const shareVideo = async () => {
     try {
       // Convert data URL to blob
-      const response = await fetch(capturedImage);
+      const response = await fetch(capturedVideo);
       const blob = await response.blob();
-      const file = new File([blob], `vibe-selfie-${selectedVibe}.jpg`, { type: 'image/jpeg' });
+      const file = new File([blob], `vibe-video-${selectedVibe}.webm`, { type: 'video/webm' });
 
       const shareData: ShareData = {
         files: [file],
@@ -53,15 +70,15 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
       if (navigator.canShare && navigator.canShare(shareData)) {
         await navigator.share(shareData);
         toast({
-          title: "Photo Shared",
-          description: "Your vibe selfie has been shared!",
+          title: "Video Shared",
+          description: "Your vibe video has been shared!",
         });
       } else {
         // Fallback for browsers that don't support native sharing
         saveToDevice();
         toast({
           title: "Share Not Supported",
-          description: "Photo saved to device instead. You can manually share it from your gallery.",
+          description: "Video saved to device instead. You can manually share it from your gallery.",
         });
       }
     } catch (error) {
@@ -69,7 +86,7 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
       saveToDevice();
       toast({
         title: "Share Failed",
-        description: "Photo saved to device instead.",
+        description: "Video saved to device instead.",
         variant: "destructive"
       });
     }
@@ -77,12 +94,29 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 flex items-center justify-center">
-        <img 
-          src={capturedImage} 
-          alt="Captured selfie" 
+      <div className="flex-1 flex items-center justify-center relative bg-black">
+        <video 
+          ref={videoRef}
+          src={capturedVideo} 
           className="max-w-full max-h-full object-contain"
+          onEnded={handleVideoEnded}
+          playsInline
+          muted
         />
+        
+        {/* Play/Pause button overlay */}
+        <button
+          onClick={togglePlayback}
+          className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors"
+        >
+          <div className="bg-white/90 rounded-full p-4 hover:bg-white transition-colors">
+            {isPlaying ? (
+              <Pause className="h-8 w-8 text-black" />
+            ) : (
+              <Play className="h-8 w-8 text-black ml-1" />
+            )}
+          </div>
+        </button>
       </div>
       
       <div className="p-6 bg-black/80 safe-area-bottom">
@@ -120,7 +154,7 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
             Save to Device
           </Button>
           <Button
-            onClick={sharePhoto}
+            onClick={shareVideo}
             className="flex-1 gap-2"
           >
             <Share className="h-4 w-4" />
@@ -129,15 +163,15 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
         </div>
         
         <Button
-          onClick={onRetakePhoto}
+          onClick={onRetakeVideo}
           variant="ghost"
           className="w-full text-white hover:bg-white/20"
         >
-          Retake Selfie
+          Retake Video
         </Button>
       </div>
     </div>
   );
 };
 
-export default PhotoPreview;
+export default VideoPreview;
