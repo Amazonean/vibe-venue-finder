@@ -168,12 +168,12 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
           </div>
         </div>
 
-        {/* Custom Vibe Badge - Bottom left */}
-        <div className="absolute bottom-20 left-4">
+        {/* Custom Vibe Badge - Top left below venue name */}
+        <div className="absolute top-32 left-4">
           <img 
             src={getVibeBadgeImage(selectedVibe)}
             alt={`${selectedVibe} vibe`}
-            className="w-28 h-auto drop-shadow-lg"
+            className="w-56 h-auto drop-shadow-lg"
             style={{
               filter: 'drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.8))'
             }}
