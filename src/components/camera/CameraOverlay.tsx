@@ -153,14 +153,15 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
       {/* Overlays */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Venue name - Fixed at top center */}
-        <div className="absolute top-8 left-0 right-0 text-center px-4">
-          <div className="inline-block bg-black/40 px-4 py-2 rounded-lg">
+        <div className="absolute top-8 left-0 right-0 text-center px-4 z-10">
+          <div className="inline-block bg-black/40 px-4 py-2 rounded-lg max-w-[90%]">
             <h1 
-              className="text-2xl sm:text-3xl font-bold uppercase drop-shadow-lg"
+              className="text-2xl sm:text-3xl font-bold uppercase drop-shadow-lg leading-tight"
               style={{ 
                 color: '#C26AF5',
                 textShadow: '0 0 10px rgba(194, 106, 245, 0.5), 0 2px 4px rgba(0, 0, 0, 0.8)',
-                lineHeight: '1.1'
+                wordWrap: 'break-word',
+                hyphens: 'auto'
               }}
             >
               {venueName}
@@ -169,7 +170,7 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
         </div>
 
         {/* Custom Vibe Badge - Top left below venue name */}
-        <div className="absolute top-15 left-4">
+        <div className="absolute top-18 left-4">
           <img 
             src={getVibeBadgeImage(selectedVibe)}
             alt={`${selectedVibe} vibe`}
