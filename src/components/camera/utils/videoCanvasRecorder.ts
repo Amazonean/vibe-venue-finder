@@ -63,16 +63,20 @@ export class VideoCanvasRecorder {
       
       this.ctx.save();
 
-      // Apply filter
-      this.ctx.filter = options.currentFilter;
+      // Apply filter to the entire canvas context
+      if (options.currentFilter && options.currentFilter !== 'none') {
+        this.ctx.filter = options.currentFilter;
+      }
 
       // Draw video frame (maintain original orientation)
       this.ctx.drawImage(videoElement, 0, 0, this.canvas.width, this.canvas.height);
 
-      // Reset filter for overlays
+      // Reset filter for overlays to ensure they render properly
       this.ctx.filter = 'none';
 
-      // Draw overlays consistently without flickering (before restoring context)
+      this.ctx.restore();
+
+      // Draw overlays on top without any transform issues
       try {
         await drawOverlays(
           this.ctx, 
@@ -85,8 +89,6 @@ export class VideoCanvasRecorder {
       } catch (error) {
         console.error('Error drawing overlays:', error);
       }
-
-      this.ctx.restore();
 
       // Continue animation loop while recording
       if (this.isRecordingRef.current && this.mediaRecorder?.state === 'recording') {
