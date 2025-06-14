@@ -56,7 +56,8 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
               textShadow: overlays.venueName.textShadow,
               fontSize: `${overlays.venueName.fontSize}px`,
               wordWrap: 'break-word',
-              hyphens: 'auto'
+              hyphens: 'auto',
+              WebkitTextStroke: '3px white'
             }}
           >
             {venueName}

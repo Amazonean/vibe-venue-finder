@@ -72,15 +72,20 @@ const drawVenueNameOverlay = (
   const textX = venueOverlay.x + venueOverlay.width / 2;
   const textY = venueOverlay.y + venueOverlay.height / 2;
 
+  // White outline
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 6;
+  ctx.strokeText(text, textX, textY);
+
   // Glow effect
-  ctx.shadowColor = 'rgba(194, 106, 245, 0.8)';
+  ctx.shadowColor = 'rgba(139, 92, 246, 0.8)';
   ctx.shadowBlur = 20;
-  ctx.strokeStyle = 'rgba(194, 106, 245, 0.5)';
-  ctx.lineWidth = 4;
+  ctx.strokeStyle = 'rgba(139, 92, 246, 0.5)';
+  ctx.lineWidth = 2;
   ctx.strokeText(text, textX, textY);
 
   // Main text
-  ctx.fillStyle = venueOverlay.textColor;
+  ctx.fillStyle = '#8B5CF6';
   ctx.fillText(text, textX, textY);
 
   // Reset shadow
