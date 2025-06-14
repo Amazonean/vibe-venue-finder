@@ -38,7 +38,7 @@ export const drawOverlays = async (
   ctx.fillText(venueName.toUpperCase(), width / 2, venueY);
   ctx.shadowBlur = 0;
 
-  // Custom Vibe Badge - Bottom left
+  // Custom Vibe Badge - Top left, positioned below venue name
   const getVibeBadgeImage = (vibe: VibeType) => {
     switch (vibe) {
       case 'turnt':
@@ -60,7 +60,7 @@ export const drawOverlays = async (
       vibeBadgeImg.onload = () => {
         const badgeSize = width * 0.18;
         const badgeX = width * 0.05;
-        const badgeY = height - badgeSize - height * 0.15;
+        const badgeY = height * 0.18; // Position at top-18 equivalent
         
         // Add drop shadow for vibe badge
         ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';

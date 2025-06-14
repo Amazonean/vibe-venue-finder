@@ -47,7 +47,7 @@ const CameraInterface: React.FC<CameraInterfaceProps> = ({
   } = usePhotoCapture();
 
   const handleStartRecording = () => {
-    startVideoRecording(streamRef);
+    startVideoRecording(streamRef, videoRef, currentFilter, vibeConfig);
   };
 
   const handleCaptureComplete = async () => {
