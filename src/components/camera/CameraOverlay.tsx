@@ -55,8 +55,8 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
         filter={filterDef.cssFilter}
       />
       
-      {/* Unified Overlays */}
-      {config && (
+      {/* Unified Overlays - Only show when not recording to avoid duplicates */}
+      {config && !isRecording && (
         <UnifiedOverlayRenderer
           config={config}
           venueName={venueName}

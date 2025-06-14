@@ -52,12 +52,13 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
           <h1 
             className="font-bungee-shade uppercase leading-tight text-center break-words"
             style={{ 
-              color: overlays.venueName.textColor,
-              textShadow: overlays.venueName.textShadow,
+              color: '#8B5CF6',
+              textShadow: '0 0 20px rgba(139, 92, 246, 0.8), 0 2px 4px rgba(0, 0, 0, 0.9)',
               fontSize: `${overlays.venueName.fontSize}px`,
               wordWrap: 'break-word',
               hyphens: 'auto',
-              WebkitTextStroke: '3px white'
+              WebkitTextStroke: '6px white',
+              filter: 'drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.8))'
             }}
           >
             {venueName}

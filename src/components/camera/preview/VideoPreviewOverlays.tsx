@@ -14,21 +14,9 @@ const VideoPreviewOverlays: React.FC<VideoPreviewOverlaysProps> = ({
   selectedVibe,
   vibeConfig
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { config } = useMediaConfiguration(containerRef);
-
-  return (
-    <div ref={containerRef} className="absolute inset-0 pointer-events-none">
-      {config && (
-        <UnifiedOverlayRenderer
-          config={config}
-          venueName={venueName}
-          selectedVibe={selectedVibe}
-          vibeConfig={vibeConfig}
-        />
-      )}
-    </div>
-  );
+  // Don't render overlays in preview since they're already baked into the video
+  // The video was recorded with canvas overlays, so showing React overlays would create duplicates
+  return null;
 };
 
 export default VideoPreviewOverlays;
