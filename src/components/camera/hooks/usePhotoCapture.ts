@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { capturePhoto } from '../PhotoCapture';
+import { capturePhoto } from '../utils/photoCapture';
 import { VibeType, VibeConfiguration } from '../VibeConfig';
 
 export const usePhotoCapture = () => {

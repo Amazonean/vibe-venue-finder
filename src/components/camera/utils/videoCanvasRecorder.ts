@@ -1,5 +1,5 @@
 import { VibeType, VibeConfiguration } from '../VibeConfig';
-import { drawOverlays } from '../PhotoCapture';
+import { drawOverlays } from '../overlays';
 
 export interface VideoRecorderOptions {
   venueName: string;
