@@ -13,6 +13,10 @@ export const renderCanvasOverlays = async (
 ): Promise<void> => {
   const { overlays } = config;
 
+  // Debug logging
+  console.log('CanvasOverlayRenderer - venueName:', venueName);
+  console.log('CanvasOverlayRenderer - config.overlays.venueName:', overlays.venueName);
+
   // Clear any existing styles
   ctx.save();
 

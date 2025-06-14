@@ -8,6 +8,10 @@ export const drawVenueNameOverlay = (
   const { overlays } = config;
   const venueOverlay = overlays.venueName;
 
+  // Debug logging
+  console.log('venueNameRenderer - venueName:', venueName);
+  console.log('venueNameRenderer - venueOverlay:', venueOverlay);
+
   // Set up text properties
   ctx.font = `${venueOverlay.fontSize}px "Bungee Shade", cursive`;
   ctx.textAlign = 'center';
