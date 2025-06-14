@@ -51,9 +51,9 @@ export const createMediaConfiguration = (
         height: containerHeight * 0.08,
         fontSize: Math.floor(containerWidth * 0.06 * safeScaleFactor),
         padding: containerWidth * 0.04,
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         textColor: '#C26AF5',
-        textShadow: '0 0 10px rgba(194, 106, 245, 0.5), 0 2px 4px rgba(0, 0, 0, 0.8)'
+        textShadow: '0 0 20px rgba(194, 106, 245, 0.8), 0 2px 4px rgba(0, 0, 0, 0.9)'
       },
       vibeBadge: {
         x: containerWidth * 0.05,
