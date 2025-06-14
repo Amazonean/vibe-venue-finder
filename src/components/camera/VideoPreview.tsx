@@ -74,11 +74,49 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
           description: "Your vibe video has been shared!",
         });
       } else {
-        // Fallback for browsers that don't support native sharing
+        // Use Web Share API or create a custom share dialog
+        const shareText = includeHashtags 
+          ? `Vibe check at ${venueName}! ${vibeConfig[selectedVibe].hashtags.join(' ')}`
+          : `Vibe check at ${venueName}!`;
+        
+        const shareUrl = URL.createObjectURL(blob);
+        
+        // Try to open native share dialog
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: `Vibe Check at ${venueName}`,
+              text: shareText,
+              url: shareUrl
+            });
+            toast({
+              title: "Share Dialog Opened",
+              description: "Choose your preferred sharing method.",
+            });
+            return;
+          } catch (shareError) {
+            console.log('Web Share API failed, using fallback');
+          }
+        }
+        
+        // Fallback: Copy to clipboard and show message
+        if (navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(shareText);
+            toast({
+              title: "Text Copied",
+              description: "Video caption copied to clipboard. You can manually share the downloaded video.",
+            });
+          } catch (clipboardError) {
+            console.log('Clipboard API failed');
+          }
+        }
+        
+        // Download as last resort
         saveToDevice();
         toast({
-          title: "Share Not Supported",
-          description: "Video saved to device instead. You can manually share it from your gallery.",
+          title: "Video Ready to Share",
+          description: "Video downloaded. You can now share it manually from your device.",
         });
       }
     } catch (error) {
@@ -101,7 +139,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
           className="max-w-full max-h-full object-contain"
           onEnded={handleVideoEnded}
           playsInline
-          muted
+          controls={false}
         />
         
         {/* Play/Pause button overlay */}

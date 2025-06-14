@@ -28,9 +28,9 @@ export class VideoCanvasRecorder {
     audioStream: MediaStream,
     options: VideoRecorderOptions
   ): Promise<MediaRecorder> {
-    // Set canvas size to match video in portrait orientation
-    this.canvas.width = videoElement.videoHeight; // Swap width/height for portrait
-    this.canvas.height = videoElement.videoWidth;
+    // Set canvas size to match video (no swapping for correct orientation)
+    this.canvas.width = videoElement.videoWidth;
+    this.canvas.height = videoElement.videoHeight;
 
     // Get canvas stream for recording
     const canvasStream = this.canvas.captureStream(30); // 30 FPS
@@ -60,23 +60,16 @@ export class VideoCanvasRecorder {
 
       this.ctx.save();
 
-      // Rotate canvas 90 degrees for portrait orientation
-      this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
-      this.ctx.rotate(Math.PI / 2);
-      this.ctx.translate(-this.canvas.height / 2, -this.canvas.width / 2);
-
       // Apply filter
       this.ctx.filter = options.currentFilter;
 
-      // Draw video frame
-      this.ctx.drawImage(videoElement, 0, 0, this.canvas.height, this.canvas.width);
+      // Draw video frame (maintain original orientation)
+      this.ctx.drawImage(videoElement, 0, 0, this.canvas.width, this.canvas.height);
 
       // Reset filter for overlays
       this.ctx.filter = 'none';
 
-      this.ctx.restore();
-
-      // Draw overlays consistently without flickering
+      // Draw overlays consistently without flickering (before restoring context)
       try {
         await drawOverlays(
           this.ctx, 
@@ -89,6 +82,8 @@ export class VideoCanvasRecorder {
       } catch (error) {
         console.error('Error drawing overlays:', error);
       }
+
+      this.ctx.restore();
 
       if (this.mediaRecorder?.state === 'recording') {
         this.animationId = requestAnimationFrame(drawFrame);

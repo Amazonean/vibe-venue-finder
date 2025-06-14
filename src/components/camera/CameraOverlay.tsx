@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { VibeType, VibeConfiguration } from './VibeConfig';
 
@@ -48,6 +48,7 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
   const [showFilterName, setShowFilterName] = useState(false);
   const [touchStartX, setTouchStartX] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const longPressTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const filterIndex = filters.findIndex(f => f.name === currentFilter);
@@ -240,10 +241,45 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
         <div className="absolute bottom-6 left-0 right-0 flex justify-center pointer-events-auto">
           <button
             onClick={onStartCountdown}
-            onMouseDown={onStartRecording}
-            onMouseUp={onStopRecording}
-            onTouchStart={onStartRecording}
-            onTouchEnd={onStopRecording}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              if (onStartRecording) {
+                onStartRecording();
+              }
+            }}
+            onMouseDown={(e) => {
+              // Only start recording on long press (right click or hold)
+              if (e.button === 0 && onStartRecording) { // Left mouse button
+                longPressTimerRef.current = setTimeout(() => {
+                  onStartRecording();
+                }, 500); // 500ms long press
+              }
+            }}
+            onMouseUp={() => {
+              if (longPressTimerRef.current) {
+                clearTimeout(longPressTimerRef.current);
+                longPressTimerRef.current = null;
+              }
+              if (onStopRecording) {
+                onStopRecording();
+              }
+            }}
+            onTouchStart={() => {
+              if (onStartRecording) {
+                longPressTimerRef.current = setTimeout(() => {
+                  onStartRecording();
+                }, 500); // 500ms long press
+              }
+            }}
+            onTouchEnd={() => {
+              if (longPressTimerRef.current) {
+                clearTimeout(longPressTimerRef.current);
+                longPressTimerRef.current = null;
+              }
+              if (onStopRecording) {
+                onStopRecording();
+              }
+            }}
             className="w-20 h-20 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110 active:scale-95 relative group"
             style={{
               background: 'linear-gradient(145deg, #C26AF5, #8A3FFC)',

@@ -57,11 +57,47 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
           description: "Your vibe selfie has been shared!",
         });
       } else {
-        // Fallback for browsers that don't support native sharing
+        // Use Web Share API or create a custom share dialog
+        const shareText = includeHashtags 
+          ? `Vibe check at ${venueName}! ${vibeConfig[selectedVibe].hashtags.join(' ')}`
+          : `Vibe check at ${venueName}!`;
+        
+        // Try to open native share dialog
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: `Vibe Check at ${venueName}`,
+              text: shareText,
+              url: capturedImage
+            });
+            toast({
+              title: "Share Dialog Opened",
+              description: "Choose your preferred sharing method.",
+            });
+            return;
+          } catch (shareError) {
+            console.log('Web Share API failed, using fallback');
+          }
+        }
+        
+        // Fallback: Copy to clipboard and show message
+        if (navigator.clipboard) {
+          try {
+            await navigator.clipboard.writeText(shareText);
+            toast({
+              title: "Text Copied",
+              description: "Photo caption copied to clipboard. You can manually share the downloaded photo.",
+            });
+          } catch (clipboardError) {
+            console.log('Clipboard API failed');
+          }
+        }
+        
+        // Download as last resort
         saveToDevice();
         toast({
-          title: "Share Not Supported",
-          description: "Photo saved to device instead. You can manually share it from your gallery.",
+          title: "Photo Ready to Share",
+          description: "Photo downloaded. You can now share it manually from your device.",
         });
       }
     } catch (error) {
