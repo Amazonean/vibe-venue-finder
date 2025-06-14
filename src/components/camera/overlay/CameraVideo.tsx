@@ -1,16 +1,13 @@
 import React from 'react';
-import { Filter } from '../types';
 
 interface CameraVideoProps {
   videoRef: React.RefObject<HTMLVideoElement>;
-  currentFilterIndex: number;
-  filters: Filter[];
+  filter: string;
 }
 
 const CameraVideo: React.FC<CameraVideoProps> = ({
   videoRef,
-  currentFilterIndex,
-  filters
+  filter
 }) => {
   return (
     <video
@@ -19,7 +16,7 @@ const CameraVideo: React.FC<CameraVideoProps> = ({
       playsInline
       muted
       className="w-full h-full object-cover bg-black"
-      style={{ filter: filters[currentFilterIndex].style }}
+      style={{ filter }}
     />
   );
 };

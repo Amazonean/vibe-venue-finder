@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { preloadOverlayImages } from './camera/overlays/CanvasOverlayRenderer';
 import { VibeType, getVibeConfig } from './camera/VibeConfig';
 import CameraInterface from './camera/CameraInterface';
 import PhotoPreview from './camera/PhotoPreview';
@@ -53,6 +54,11 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
       document.documentElement.style.overflow = '';
     };
   }, [isOpen]);
+
+  // Preload overlay images when component mounts
+  useEffect(() => {
+    preloadOverlayImages();
+  }, []);
 
   if (!isOpen) return null;
 

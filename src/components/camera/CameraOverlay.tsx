@@ -1,10 +1,9 @@
-import React from 'react';
-import { CameraOverlayProps, filters } from './types';
-import { useFilterGestures } from './hooks/useFilterGestures';
+import React, { useRef } from 'react';
+import { CameraOverlayProps } from './types';
+import { useEnhancedFilterGestures } from './hooks/useEnhancedFilterGestures';
+import { useMediaConfiguration } from './hooks/useMediaConfiguration';
 import CameraVideo from './overlay/CameraVideo';
-import VenueNameOverlay from './overlay/VenueNameOverlay';
-import VibeBadgeOverlay from './overlay/VibeBadgeOverlay';
-import LogoOverlay from './overlay/LogoOverlay';
+import UnifiedOverlayRenderer from './overlays/UnifiedOverlayRenderer';
 import FilterNameDisplay from './overlay/FilterNameDisplay';
 import CountdownOverlay from './overlay/CountdownOverlay';
 import PosePrompt from './overlay/PosePrompt';
@@ -23,22 +22,23 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
   cameraError,
   onStartCountdown,
   onStartCamera,
-  currentFilter = 'Default',
+  currentFilter = 'none',
   onFilterChange,
   isRecording = false,
   recordingTime = 0,
   onStartRecording,
   onStopRecording
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { config } = useMediaConfiguration(containerRef);
+  
   const {
-    currentFilterIndex,
+    currentFilter: filterDef,
     showFilterName,
-    handleTouchStart,
-    handleTouchMove,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp
-  } = useFilterGestures(currentFilter, onFilterChange);
+    gestureHandlers
+  } = useEnhancedFilterGestures(currentFilter, (filter) => {
+    onFilterChange?.(filter.cssFilter);
+  });
 
   if (cameraError) {
     return <CameraError cameraError={cameraError} onStartCamera={onStartCamera} />;
@@ -46,29 +46,30 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
 
   return (
     <div 
+      ref={containerRef}
       className="relative h-full cursor-grab active:cursor-grabbing"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
+      {...gestureHandlers}
     >
       <CameraVideo 
         videoRef={videoRef}
-        currentFilterIndex={currentFilterIndex}
-        filters={filters}
+        filter={filterDef.cssFilter}
       />
       
-      {/* Overlays */}
+      {/* Unified Overlays */}
+      {config && (
+        <UnifiedOverlayRenderer
+          config={config}
+          venueName={venueName}
+          selectedVibe={selectedVibe}
+          vibeConfig={vibeConfig}
+        />
+      )}
+      
+      {/* Interactive Overlays */}
       <div className="absolute inset-0 pointer-events-none">
-        <VenueNameOverlay venueName={venueName} />
-        <VibeBadgeOverlay selectedVibe={selectedVibe} />
-        <LogoOverlay />
         <FilterNameDisplay 
           showFilterName={showFilterName}
-          currentFilterIndex={currentFilterIndex}
-          filters={filters}
+          filterName={filterDef.name}
         />
         <CountdownOverlay countdown={countdown} />
         <PosePrompt 

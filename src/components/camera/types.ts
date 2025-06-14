@@ -18,14 +18,4 @@ export interface CameraOverlayProps {
   onStopRecording?: () => void;
 }
 
-export interface Filter {
-  name: string;
-  style: string;
-}
-
-export const filters: Filter[] = [
-  { name: 'Default', style: 'none' },
-  { name: 'Clarendon', style: 'brightness(1.1) contrast(1.2) saturate(1.35)' },
-  { name: 'Juno', style: 'sepia(0.3) saturate(1.4) hue-rotate(15deg) brightness(1.1)' },
-  { name: 'Gingham', style: 'sepia(0.4) saturate(0.8) brightness(1.1) contrast(0.9)' }
-];
+// Filter types moved to config/FilterConfig.ts

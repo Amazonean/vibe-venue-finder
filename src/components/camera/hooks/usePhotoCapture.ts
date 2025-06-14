@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { capturePhoto } from '../utils/photoCapture';
+import { captureEnhancedPhoto } from '../utils/enhancedPhotoCapture';
 import { VibeType, VibeConfiguration } from '../VibeConfig';
 
 export const usePhotoCapture = () => {
@@ -33,7 +33,7 @@ export const usePhotoCapture = () => {
     currentFilter: string,
     stopCamera: () => void
   ): Promise<string | null> => {
-    const imageDataUrl = await capturePhoto(videoRef, canvasRef, venueName, selectedVibe, vibeConfig, currentFilter);
+    const imageDataUrl = await captureEnhancedPhoto(videoRef, canvasRef, venueName, selectedVibe, vibeConfig, currentFilter);
     if (imageDataUrl) {
       setCapturedImage(imageDataUrl);
       stopCamera();

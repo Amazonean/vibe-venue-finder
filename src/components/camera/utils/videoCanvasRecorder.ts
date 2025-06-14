@@ -1,5 +1,6 @@
 import { VibeType, VibeConfiguration } from '../VibeConfig';
-import { drawOverlays } from '../overlays';
+import { renderCanvasOverlays } from '../overlays/CanvasOverlayRenderer';
+import { createMediaConfiguration } from '../config/MediaConfig';
 
 export interface VideoRecorderOptions {
   venueName: string;
@@ -74,12 +75,12 @@ export class VideoCanvasRecorder {
       // Reset filter before drawing overlays
       this.ctx.filter = 'none';
 
-      // Draw overlays on top
+      // Draw overlays on top using unified system
       try {
-        await drawOverlays(
+        const config = createMediaConfiguration(this.canvas.width, this.canvas.height);
+        await renderCanvasOverlays(
           this.ctx, 
-          this.canvas.width, 
-          this.canvas.height, 
+          config,
           options.venueName, 
           options.selectedVibe, 
           options.vibeConfig
