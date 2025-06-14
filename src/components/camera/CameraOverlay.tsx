@@ -170,7 +170,7 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
         </div>
 
         {/* Custom Vibe Badge - Top left below venue name */}
-        <div className="absolute top-18 left-4">
+        <div className="absolute top-20 left-4">
           <img 
             src={getVibeBadgeImage(selectedVibe)}
             alt={`${selectedVibe} vibe`}
