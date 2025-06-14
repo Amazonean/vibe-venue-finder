@@ -28,6 +28,6 @@ export const getVibeConfig = (venueName: string): Record<VibeType, VibeConfigura
     overlayColor: 'rgba(75, 213, 255, 0.25)',
     badge: 'Quiet',
     prompt: 'Stay Quiet 😌',
-    hashtags: ['#QuietScene', '#VibeCheck', '#QuietVibes', '#TurntUpAt' + venueName.replace(/\s+/g, '')]
+    hashtags: ['#QuietEnergy', '#VibeCheck', '#QuietVibes', '#TurntUpAt' + venueName.replace(/\s+/g, '')]
   }
 });

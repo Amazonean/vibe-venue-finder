@@ -27,6 +27,7 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [showPosePrompt, setShowPosePrompt] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [currentFilter, setCurrentFilter] = useState('none');
   const { toast } = useToast();
 
   const vibeConfig = getVibeConfig(venueName);
@@ -107,7 +108,7 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
   };
 
   const handleCapturePhoto = async () => {
-    const imageDataUrl = await capturePhoto(videoRef, canvasRef, venueName, selectedVibe, vibeConfig);
+    const imageDataUrl = await capturePhoto(videoRef, canvasRef, venueName, selectedVibe, vibeConfig, currentFilter);
     if (imageDataUrl) {
       setCapturedImage(imageDataUrl);
       stopCamera();
@@ -191,6 +192,8 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
             cameraError={cameraError}
             onStartCountdown={startCountdown}
             onStartCamera={startCamera}
+            currentFilter={currentFilter}
+            onFilterChange={setCurrentFilter}
           />
         </div>
       )}

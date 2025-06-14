@@ -93,11 +93,21 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
               type="checkbox"
               checked={includeHashtags}
               onChange={(e) => setIncludeHashtags(e.target.checked)}
-              className="rounded"
+              className="w-4 h-4 text-primary bg-gray-800 border-gray-600 rounded focus:ring-primary focus:ring-2"
             />
             Add vibe hashtags to your post?
           </label>
         </div>
+
+        {/* Preview hashtags */}
+        {includeHashtags && (
+          <div className="mb-4 p-3 bg-gray-900/50 rounded-lg">
+            <p className="text-xs text-gray-300 mb-1">Preview hashtags:</p>
+            <p className="text-sm text-blue-300">
+              {vibeConfig[selectedVibe].hashtags.join(' ')}
+            </p>
+          </div>
+        )}
 
         {/* Action buttons */}
         <div className="flex gap-3">

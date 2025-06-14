@@ -8,69 +8,113 @@ export const drawOverlays = async (
   selectedVibe: VibeType,
   vibeConfig: Record<VibeType, VibeConfiguration>
 ): Promise<void> => {
-  // Add color overlay filter
-  ctx.fillStyle = vibeConfig[selectedVibe].overlayColor;
-  ctx.fillRect(0, 0, width, height);
-
-  // Venue name background
-  const venueY = height * 0.1;
+  // Venue name background and text
+  const venueY = height * 0.12;
   const venueBackgroundHeight = height * 0.08;
+  
+  // Measure text to make background fit properly
+  ctx.font = `bold ${Math.floor(width * 0.06)}px Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  const textMetrics = ctx.measureText(venueName.toUpperCase());
+  const textWidth = textMetrics.width;
+  const padding = width * 0.04;
+  
+  // Draw venue name background
   ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-  ctx.roundRect(width * 0.1, venueY - venueBackgroundHeight/2, width * 0.8, venueBackgroundHeight, 15);
+  const backgroundX = (width - textWidth - padding) / 2;
+  const backgroundWidth = textWidth + padding;
+  ctx.roundRect(backgroundX, venueY - venueBackgroundHeight/2, backgroundWidth, venueBackgroundHeight, 8);
   ctx.fill();
 
   // Venue name text with purple glow effect
   ctx.fillStyle = '#C26AF5';
   ctx.strokeStyle = 'rgba(194, 106, 245, 0.5)';
-  ctx.lineWidth = 8;
-  ctx.font = `bold ${Math.floor(width * 0.06)}px Arial, sans-serif`;
-  ctx.textAlign = 'center';
+  ctx.lineWidth = 4;
   
   // Create glow effect
   ctx.shadowColor = 'rgba(194, 106, 245, 0.8)';
   ctx.shadowBlur = 20;
-  ctx.strokeText(venueName, width / 2, venueY);
-  ctx.fillText(venueName, width / 2, venueY);
+  ctx.strokeText(venueName.toUpperCase(), width / 2, venueY);
+  ctx.fillText(venueName.toUpperCase(), width / 2, venueY);
   ctx.shadowBlur = 0;
 
-  // Vibe badge in bottom-left
-  const badgeText = vibeConfig[selectedVibe].badge;
-  const badgeX = width * 0.05;
-  const badgeY = height * 0.85;
-  const badgeWidth = width * 0.3;
-  const badgeHeight = height * 0.08;
-
-  // Badge colors matching live view
-  const badgeColors = {
-    turnt: '#FF3B1F',
-    chill: '#B47AFF',
-    quiet: '#4BD5FF'
+  // Custom Vibe Badge - Bottom left
+  const getVibeBadgeImage = (vibe: VibeType) => {
+    switch (vibe) {
+      case 'turnt':
+        return '/lovable-uploads/20a93d55-cfbc-417d-b442-a073caa5158f.png';
+      case 'chill':
+        return '/lovable-uploads/4b5069a8-223b-47a6-b22b-5439eade3e91.png';
+      case 'quiet':
+        return '/lovable-uploads/750b5511-5654-47b1-93a5-1bb9063ad60c.png';
+      default:
+        return '/lovable-uploads/20a93d55-cfbc-417d-b442-a073caa5158f.png';
+    }
   };
 
-  // Badge background with rounded corners and shadow
-  ctx.fillStyle = badgeColors[selectedVibe];
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-  ctx.shadowBlur = 15;
-  ctx.shadowOffsetX = 4;
-  ctx.shadowOffsetY = 4;
-  ctx.roundRect(badgeX, badgeY - badgeHeight, badgeWidth, badgeHeight, badgeHeight / 2);
-  ctx.fill();
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 0;
+  try {
+    const vibeBadgeImg = new Image();
+    vibeBadgeImg.crossOrigin = 'anonymous';
+    
+    await new Promise<void>((resolve) => {
+      vibeBadgeImg.onload = () => {
+        const badgeSize = width * 0.15;
+        const badgeX = width * 0.05;
+        const badgeY = height - badgeSize - height * 0.15;
+        
+        // Add drop shadow for vibe badge
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        
+        ctx.drawImage(vibeBadgeImg, badgeX, badgeY, badgeSize, badgeSize * (vibeBadgeImg.height / vibeBadgeImg.width));
+        
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        
+        resolve();
+      };
+      
+      vibeBadgeImg.onerror = () => {
+        // Fallback to text badge if image fails to load
+        const badgeText = vibeConfig[selectedVibe].badge;
+        const badgeX = width * 0.05;
+        const badgeY = height * 0.85;
+        const badgeWidth = width * 0.25;
+        const badgeHeight = height * 0.06;
 
-  // Badge glow effect
-  ctx.shadowColor = badgeColors[selectedVibe];
-  ctx.shadowBlur = 15;
-  ctx.roundRect(badgeX, badgeY - badgeHeight, badgeWidth, badgeHeight, badgeHeight / 2);
-  ctx.fill();
-  ctx.shadowBlur = 0;
+        const badgeColors = {
+          turnt: '#FF3B1F',
+          chill: '#B47AFF',
+          quiet: '#4BD5FF'
+        };
 
-  // Badge text
-  ctx.fillStyle = 'white';
-  ctx.font = `bold ${Math.floor(width * 0.045)}px Arial, sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.fillText(badgeText, badgeX + badgeWidth / 2, badgeY - badgeHeight / 2 + height * 0.015);
+        ctx.fillStyle = badgeColors[selectedVibe];
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        ctx.roundRect(badgeX, badgeY - badgeHeight, badgeWidth, badgeHeight, badgeHeight / 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+
+        ctx.fillStyle = 'white';
+        ctx.font = `bold ${Math.floor(width * 0.035)}px Arial, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(badgeText, badgeX + badgeWidth / 2, badgeY - badgeHeight / 2 + height * 0.01);
+        
+        resolve();
+      };
+      
+      vibeBadgeImg.src = getVibeBadgeImage(selectedVibe);
+    });
+  } catch (error) {
+    console.error('Error loading vibe badge:', error);
+  }
 
   // TurntUp logo in bottom-right
   try {
@@ -79,7 +123,7 @@ export const drawOverlays = async (
     
     return new Promise<void>((resolve) => {
       logoImg.onload = () => {
-        const logoSize = width * 0.15;
+        const logoSize = width * 0.12;
         const logoX = width - logoSize - width * 0.05;
         const logoY = height - logoSize - height * 0.05;
         
@@ -132,7 +176,8 @@ export const capturePhoto = async (
   canvasRef: React.RefObject<HTMLCanvasElement>,
   venueName: string,
   selectedVibe: VibeType,
-  vibeConfig: Record<VibeType, VibeConfiguration>
+  vibeConfig: Record<VibeType, VibeConfiguration>,
+  currentFilter: string = 'none'
 ): Promise<string | null> => {
   if (!videoRef.current || !canvasRef.current) return null;
 
@@ -146,8 +191,8 @@ export const capturePhoto = async (
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
-  // Apply vibe filter
-  ctx.filter = vibeConfig[selectedVibe].filter;
+  // Apply current filter instead of vibe-specific filter
+  ctx.filter = currentFilter;
   
   // Draw video frame
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
