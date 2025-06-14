@@ -112,8 +112,9 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black flex flex-col h-screen">
+      {/* Photo container that shrinks as needed */}
+      <div className="flex-1 flex items-center justify-center min-h-0 p-2">
         <img 
           src={capturedImage} 
           alt="Captured selfie" 
@@ -121,25 +122,25 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
         />
       </div>
       
-      <div className="p-4 bg-black/80 space-y-3" style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}>
+      {/* Fixed bottom panel with controls */}
+      <div className="flex-shrink-0 p-3 bg-black/90 space-y-2 border-t border-gray-800" style={{ paddingBottom: 'env(safe-area-inset-bottom, 12px)' }}>
         {/* Hashtag toggle */}
-        <div className="flex items-center justify-center gap-2">
-          <label className="flex items-center gap-2 text-white text-sm">
+        <div className="flex items-center justify-center">
+          <label className="flex items-center gap-2 text-white text-xs">
             <input
               type="checkbox"
               checked={includeHashtags}
               onChange={(e) => setIncludeHashtags(e.target.checked)}
-              className="w-4 h-4 text-primary bg-gray-800 border-gray-600 rounded focus:ring-primary focus:ring-2"
+              className="w-3 h-3 text-primary bg-gray-800 border-gray-600 rounded focus:ring-primary focus:ring-1"
             />
-            Add vibe hashtags to your post?
+            Add vibe hashtags?
           </label>
         </div>
 
-        {/* Preview hashtags */}
+        {/* Preview hashtags - collapsible */}
         {includeHashtags && (
-          <div className="p-2 bg-gray-900/50 rounded-lg">
-            <p className="text-xs text-gray-300 mb-1">Preview hashtags:</p>
-            <p className="text-sm text-blue-300">
+          <div className="p-2 bg-gray-900/50 rounded text-center">
+            <p className="text-xs text-blue-300 leading-tight">
               {vibeConfig[selectedVibe].hashtags.join(' ')}
             </p>
           </div>
@@ -149,19 +150,19 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
         <div className="flex gap-2">
           <Button
             onClick={saveToDevice}
-            className="flex-1 gap-2"
+            className="flex-1 gap-1 h-8 text-xs"
             variant="outline"
             size="sm"
           >
-            <Download className="h-4 w-4" />
+            <Download className="h-3 w-3" />
             Save
           </Button>
           <Button
             onClick={sharePhoto}
-            className="flex-1 gap-2"
+            className="flex-1 gap-1 h-8 text-xs"
             size="sm"
           >
-            <Share className="h-4 w-4" />
+            <Share className="h-3 w-3" />
             Share
           </Button>
         </div>
@@ -169,7 +170,7 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
         <Button
           onClick={onRetakePhoto}
           variant="ghost"
-          className="w-full text-white hover:bg-white/20"
+          className="w-full text-white hover:bg-white/20 h-8 text-xs"
           size="sm"
         >
           Retake Selfie
