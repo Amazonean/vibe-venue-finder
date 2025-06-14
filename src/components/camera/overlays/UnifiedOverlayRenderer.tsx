@@ -30,6 +30,10 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
 }) => {
   const { overlays } = config;
 
+  // Debug logging
+  console.log('UnifiedOverlayRenderer - venueName:', venueName);
+  console.log('UnifiedOverlayRenderer - config:', config);
+
   return (
     <div className="absolute inset-0 pointer-events-none">
       {/* Venue Name Overlay */}
