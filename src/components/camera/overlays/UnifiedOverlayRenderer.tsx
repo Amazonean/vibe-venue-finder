@@ -45,7 +45,7 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
         <div 
           className="inline-block rounded-lg max-w-full overflow-hidden"
           style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            backgroundColor: overlays.venueName.backgroundColor,
             padding: `${overlays.venueName.padding / 2}px ${overlays.venueName.padding}px`
           }}
         >
@@ -56,8 +56,7 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
               textShadow: overlays.venueName.textShadow,
               fontSize: `${overlays.venueName.fontSize}px`,
               wordWrap: 'break-word',
-              hyphens: 'auto',
-              WebkitTextStroke: '2px white'
+              hyphens: 'auto'
             }}
           >
             {venueName}
