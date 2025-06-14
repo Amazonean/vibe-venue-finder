@@ -12,8 +12,8 @@ export const drawVenueNameOverlay = (
   console.log('venueNameRenderer - venueName:', venueName);
   console.log('venueNameRenderer - venueOverlay:', venueOverlay);
 
-  // Set up text properties
-  ctx.font = `${venueOverlay.fontSize}px "Bungee Shade", cursive`;
+  // Set up text properties  
+  ctx.font = `bold ${venueOverlay.fontSize}px Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
