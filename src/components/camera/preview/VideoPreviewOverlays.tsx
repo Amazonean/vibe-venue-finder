@@ -18,7 +18,7 @@ const VideoPreviewOverlays: React.FC<VideoPreviewOverlaysProps> = ({
   const { config } = useMediaConfiguration(containerRef);
 
   return (
-    <div ref={containerRef} className="absolute inset-2 pointer-events-none">
+    <div ref={containerRef} className="absolute inset-0 pointer-events-none">
       {config && (
         <UnifiedOverlayRenderer
           config={config}

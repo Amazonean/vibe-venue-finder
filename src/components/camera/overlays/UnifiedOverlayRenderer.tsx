@@ -50,7 +50,7 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
           }}
         >
           <h1 
-            className="font-bold uppercase leading-tight text-center break-words"
+            className="font-bungee-shade uppercase leading-tight text-center break-words"
             style={{ 
               color: overlays.venueName.textColor,
               textShadow: overlays.venueName.textShadow,

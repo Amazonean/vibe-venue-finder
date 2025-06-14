@@ -48,7 +48,7 @@ const drawVenueNameOverlay = (
   const venueOverlay = overlays.venueName;
 
   // Set up text properties
-  ctx.font = `bold ${venueOverlay.fontSize}px Arial, sans-serif`;
+  ctx.font = `${venueOverlay.fontSize}px "Bungee Shade", cursive`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
