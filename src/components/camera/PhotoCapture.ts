@@ -58,7 +58,7 @@ export const drawOverlays = async (
     
     await new Promise<void>((resolve) => {
       vibeBadgeImg.onload = () => {
-        const badgeSize = width * 0.15;
+        const badgeSize = width * 0.18;
         const badgeX = width * 0.05;
         const badgeY = height - badgeSize - height * 0.15;
         
@@ -123,7 +123,7 @@ export const drawOverlays = async (
     
     return new Promise<void>((resolve) => {
       logoImg.onload = () => {
-        const logoSize = width * 0.12;
+        const logoSize = width * 0.15;
         const logoX = width - logoSize - width * 0.05;
         const logoY = height - logoSize - height * 0.05;
         

@@ -21,6 +21,10 @@ interface CameraOverlayProps {
   onStartCamera: () => void;
   currentFilter?: string;
   onFilterChange?: (filter: string) => void;
+  isRecording?: boolean;
+  recordingTime?: number;
+  onStartRecording?: () => void;
+  onStopRecording?: () => void;
 }
 
 const CameraOverlay: React.FC<CameraOverlayProps> = ({
@@ -34,7 +38,11 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
   onStartCountdown,
   onStartCamera,
   currentFilter = 'Default',
-  onFilterChange
+  onFilterChange,
+  isRecording = false,
+  recordingTime = 0,
+  onStartRecording,
+  onStopRecording
 }) => {
   const [currentFilterIndex, setCurrentFilterIndex] = useState(0);
   const [showFilterName, setShowFilterName] = useState(false);
@@ -138,7 +146,7 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
         autoPlay
         playsInline
         muted
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover bg-black"
         style={{ filter: filters[currentFilterIndex].style }}
       />
       
@@ -165,7 +173,7 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
           <img 
             src={getVibeBadgeImage(selectedVibe)}
             alt={`${selectedVibe} vibe`}
-            className="w-20 h-auto drop-shadow-lg"
+            className="w-28 h-auto drop-shadow-lg"
             style={{
               filter: 'drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.8))'
             }}
@@ -177,7 +185,7 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
           <img 
             src="/lovable-uploads/4798e35a-824c-4ddc-9916-74b59aac299d.png"
             alt="TurntUp Logo"
-            className="w-16 h-auto drop-shadow-lg"
+            className="w-20 h-auto drop-shadow-lg"
             style={{
               filter: 'drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.8))'
             }}
@@ -212,37 +220,104 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
             </p>
           </div>
         )}
+
+        {/* Recording indicator */}
+        {isRecording && (
+          <div className="absolute top-8 right-4">
+            <div className="flex items-center gap-2 bg-red-600 px-3 py-2 rounded-full">
+              <div className="w-3 h-3 bg-white rounded-full animate-pulse" />
+              <span className="text-white text-sm font-semibold">
+                REC {recordingTime}s
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Capture button */}
+      {/* Custom Camera Button */}
       {!countdown && (
         <div className="absolute bottom-6 left-0 right-0 flex justify-center pointer-events-auto">
           <button
             onClick={onStartCountdown}
-            className="w-24 h-24 rounded-full flex items-center justify-center text-4xl transition-all duration-200 transform hover:scale-110 active:scale-95"
+            onMouseDown={onStartRecording}
+            onMouseUp={onStopRecording}
+            onTouchStart={onStartRecording}
+            onTouchEnd={onStopRecording}
+            className="w-20 h-20 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-110 active:scale-95 relative group"
             style={{
-              background: 'linear-gradient(145deg, #ffffff, #f0f0f0)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 2px 8px rgba(255, 255, 255, 0.5), inset 0 -2px 8px rgba(0, 0, 0, 0.1)',
-              border: '4px solid rgba(255, 255, 255, 0.8)',
+              background: 'linear-gradient(145deg, #C26AF5, #8A3FFC)',
+              boxShadow: '0 8px 32px rgba(194, 106, 245, 0.4), inset 0 2px 8px rgba(255, 255, 255, 0.2), inset 0 -2px 8px rgba(0, 0, 0, 0.3)',
+              border: '3px solid rgba(43, 43, 64, 0.8)',
             }}
           >
+            {/* Glow effect */}
             <div 
-              className="w-4 h-4 rounded-full"
+              className="absolute inset-0 rounded-full animate-pulse"
               style={{
-                background: selectedVibe === 'turnt' ? '#FF3B1F' :
-                           selectedVibe === 'chill' ? '#B47AFF' : '#4BD5FF',
-                boxShadow: `0 0 12px ${selectedVibe === 'turnt' ? 'rgba(255, 59, 31, 0.8)' :
-                           selectedVibe === 'chill' ? 'rgba(180, 122, 255, 0.8)' : 'rgba(75, 213, 255, 0.8)'}`
+                background: 'linear-gradient(145deg, #C26AF5, #8A3FFC)',
+                filter: 'blur(8px)',
+                opacity: '0.6',
+                zIndex: -1,
               }}
             />
+            
+            {/* Camera icon */}
+            <div className="relative">
+              <svg 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                className="text-white drop-shadow-lg group-active:scale-90 transition-transform duration-100"
+              >
+                <path 
+                  d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V18C22 18.5523 21.5523 19 21 19H3C2.44772 19 2 18.5523 2 18V6C2 5.44772 2.44772 5 3 5H7L9 3Z" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+                <circle 
+                  cx="12" 
+                  cy="12" 
+                  r="3" 
+                  stroke="currentColor" 
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+
+            {/* Recording progress ring for video mode */}
+            {isRecording && (
+              <div className="absolute inset-0 rounded-full">
+                <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                  <path
+                    className="text-white/30"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                    d="M18 2.5a15.5 15.5 0 1 1 0 31 15.5 15.5 0 1 1 0-31"
+                  />
+                  <path
+                    className="text-white"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeDasharray={`${(recordingTime / 10) * 97.4}, 97.4`}
+                    d="M18 2.5a15.5 15.5 0 1 1 0 31 15.5 15.5 0 1 1 0-31"
+                  />
+                </svg>
+              </div>
+            )}
           </button>
         </div>
       )}
 
       {/* Swipe hint */}
-      {!countdown && !showPosePrompt && (
+      {!countdown && !showPosePrompt && !isRecording && (
         <div className="absolute bottom-32 left-0 right-0 text-center pointer-events-none">
           <p className="text-white/60 text-sm">Swipe or drag left/right to change filters</p>
+          <p className="text-white/50 text-xs mt-1">Tap for photo • Hold for 10s video</p>
         </div>
       )}
     </div>
