@@ -1,5 +1,5 @@
 import { VibeType, VibeConfiguration } from '../VibeConfig';
-import { drawOverlays } from '../overlays';
+import { renderCanvasOverlays } from '../overlays/CanvasOverlayRenderer';
 
 export const capturePhoto = async (
   videoRef: React.RefObject<HTMLVideoElement>,
@@ -34,8 +34,37 @@ export const capturePhoto = async (
   // Reset filter before drawing overlays
   ctx.filter = 'none';
 
-  // Draw overlays (await for logo loading)
-  await drawOverlays(ctx, canvas.width, canvas.height, venueName, selectedVibe, vibeConfig);
+  // Draw overlays using unified system
+  const config = {
+    dimensions: { width: canvas.width, height: canvas.height },
+    overlays: {
+      venueName: {
+        x: canvas.width * 0.05,
+        y: canvas.height * 0.08,
+        width: canvas.width * 0.9,
+        height: canvas.height * 0.08,
+        fontSize: Math.floor(canvas.width * 0.06),
+        padding: canvas.width * 0.04,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        textColor: '#8B5CF6',
+        textShadow: '0 0 20px rgba(139, 92, 246, 0.8), 0 2px 4px rgba(0, 0, 0, 0.9)'
+      },
+      vibeBadge: {
+        x: canvas.width * 0.05,
+        y: canvas.height * 0.18,
+        width: Math.min(224, canvas.width * 0.6),
+        height: Math.min(156, canvas.height * 0.2)
+      },
+      logo: {
+        x: canvas.width - 80 - (canvas.width * 0.05),
+        y: canvas.height - 80 - (canvas.height * 0.05),
+        width: 80,
+        height: 80
+      }
+    },
+    responsive: { isSmallScreen: false, scaleFactor: 1 }
+  };
+  await renderCanvasOverlays(ctx, config, venueName, selectedVibe, vibeConfig);
 
   // Convert to image
   return canvas.toDataURL('image/jpeg', 0.9);
