@@ -147,19 +147,19 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
           onClick={togglePlayback}
           className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors"
         >
-          <div className="bg-white/90 rounded-full p-4 hover:bg-white transition-colors">
+          <div className="bg-primary/90 rounded-full p-4 hover:bg-primary transition-colors shadow-lg">
             {isPlaying ? (
-              <Pause className="h-8 w-8 text-black" />
+              <Pause className="h-8 w-8 text-white" />
             ) : (
-              <Play className="h-8 w-8 text-black ml-1" />
+              <Play className="h-8 w-8 text-white ml-1" />
             )}
           </div>
         </button>
       </div>
       
-      <div className="p-6 bg-black/80" style={{ paddingBottom: 'env(safe-area-inset-bottom, 24px)' }}>
+      <div className="p-4 bg-black/80 space-y-3" style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}>
         {/* Hashtag toggle */}
-        <div className="flex items-center justify-center gap-2 mb-4">
+        <div className="flex items-center justify-center gap-2">
           <label className="flex items-center gap-2 text-white text-sm">
             <input
               type="checkbox"
@@ -173,7 +173,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
 
         {/* Preview hashtags */}
         {includeHashtags && (
-          <div className="mb-4 p-3 bg-gray-900/50 rounded-lg">
+          <div className="p-2 bg-gray-900/50 rounded-lg">
             <p className="text-xs text-gray-300 mb-1">Preview hashtags:</p>
             <p className="text-sm text-blue-300">
               {vibeConfig[selectedVibe].hashtags.join(' ')}
@@ -182,18 +182,20 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
         )}
 
         {/* Action buttons */}
-        <div className="flex gap-3 mb-3">
+        <div className="flex gap-2">
           <Button
             onClick={saveToDevice}
             className="flex-1 gap-2"
             variant="outline"
+            size="sm"
           >
             <Download className="h-4 w-4" />
-            Save to Device
+            Save
           </Button>
           <Button
             onClick={shareVideo}
             className="flex-1 gap-2"
+            size="sm"
           >
             <Share className="h-4 w-4" />
             Share
@@ -204,6 +206,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
           onClick={onRetakeVideo}
           variant="ghost"
           className="w-full text-white hover:bg-white/20"
+          size="sm"
         >
           Retake Video
         </Button>

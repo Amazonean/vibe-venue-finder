@@ -21,13 +21,17 @@ export const capturePhoto = async (
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
-  // Apply current filter instead of vibe-specific filter
-  ctx.filter = currentFilter;
+  // Apply the filter if one is selected
+  if (currentFilter && currentFilter !== 'none') {
+    ctx.filter = currentFilter;
+  } else {
+    ctx.filter = 'none';
+  }
   
-  // Draw video frame
+  // Draw the video frame to canvas with filter applied
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  // Reset filter for overlays
+  // Reset filter before drawing overlays
   ctx.filter = 'none';
 
   // Draw overlays (await for logo loading)

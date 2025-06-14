@@ -61,22 +61,20 @@ export class VideoCanvasRecorder {
       // Clear canvas first
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
       
-      this.ctx.save();
-
-      // Apply filter to the entire canvas context
+      // Apply filter if specified and not 'none'
       if (options.currentFilter && options.currentFilter !== 'none') {
         this.ctx.filter = options.currentFilter;
+      } else {
+        this.ctx.filter = 'none';
       }
 
-      // Draw video frame (maintain original orientation)
+      // Draw video frame with filter applied
       this.ctx.drawImage(videoElement, 0, 0, this.canvas.width, this.canvas.height);
 
-      // Reset filter for overlays to ensure they render properly
+      // Reset filter before drawing overlays
       this.ctx.filter = 'none';
 
-      this.ctx.restore();
-
-      // Draw overlays on top without any transform issues
+      // Draw overlays on top
       try {
         await drawOverlays(
           this.ctx, 
