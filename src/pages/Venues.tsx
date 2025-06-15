@@ -5,11 +5,12 @@ import VenueCard from '@/components/VenueCard';
 import LocationPermission from '@/components/LocationPermission';
 import VenueTypeFilter from '@/components/VenueTypeFilter';
 import VibeFilter from '@/components/VibeFilter';
-import { Search, Filter, X } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Filter, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import VenuesSearchBar from '@/components/VenuesSearchBar';
+import ProximityFilter from '@/components/ProximityFilter';
 
 const Venues = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,6 +20,8 @@ const Venues = () => {
   const [selectedVibes, setSelectedVibes] = useState<string[]>([]);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [filteredVenues, setFilteredVenues] = useState(mockVenues);
+  const [maxDistance, setMaxDistance] = useState(10);
+  const [distanceUnit, setDistanceUnit] = useState<'km' | 'miles'>('km');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -58,6 +61,17 @@ const Venues = () => {
     }
   };
 
+  const handleLocationSelect = (location: {lat: number, lng: number}, placeName: string) => {
+    setUserLocation(location);
+    setLocationEnabled(true);
+    // Clear venue name search when selecting a location
+    setSearchQuery('');
+    toast({
+      title: "Location selected",
+      description: `Searching venues near ${placeName}`,
+    });
+  };
+
   const handleClearFilters = () => {
     setSelectedVenueTypes([]);
     setSelectedVibes([]);
@@ -72,21 +86,11 @@ const Venues = () => {
       <div className="bg-background">
         <div className="max-w-md mx-auto px-4 py-4">
           {/* Search Bar */}
-          <div className="py-3">
-            <div className="flex flex-col min-w-40 h-12 w-full">
-              <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
-                <div className="text-muted-foreground flex border-none bg-muted items-center justify-center pl-4 rounded-l-xl border-r-0">
-                  <Search className="h-6 w-6" />
-                </div>
-                <Input
-                  placeholder="Search venues, locations, music types..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-foreground focus:outline-0 focus:ring-0 border-none bg-muted focus:border-none h-full placeholder:text-muted-foreground px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
-                />
-              </div>
-            </div>
-          </div>
+          <VenuesSearchBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onLocationSelect={handleLocationSelect}
+          />
 
           {/* Filters Toggle */}
           <div className="flex items-center justify-between mb-4">
@@ -117,6 +121,16 @@ const Venues = () => {
           {isFiltersOpen && (
             <Card className="mb-4 p-4 bg-muted border-none">
               <div className="space-y-6">
+                <ProximityFilter
+                  maxDistance={maxDistance}
+                  unit={distanceUnit}
+                  onDistanceChange={setMaxDistance}
+                  onUnitChange={setDistanceUnit}
+                  enabled={locationEnabled}
+                />
+                
+                <Separator className="bg-border" />
+                
                 <VenueTypeFilter
                   selectedTypes={selectedVenueTypes}
                   onTypeChange={setSelectedVenueTypes}

@@ -64,17 +64,12 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
             title: 'Your Location',
             icon: {
               url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#8B5CF6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"/>
                   <circle cx="12" cy="12" r="4"/>
-                  <path d="M21.17 8H19a2 2 0 01-2-2V3.83a2 2 0 012-2h2.17a2 2 0 012 2V6a2 2 0 01-2 2z"/>
                 </svg>
               `),
-              scaledSize: new google.maps.Size(24, 24),
-              fillColor: '#4285F4',
-              fillOpacity: 1,
-              strokeColor: '#ffffff',
-              strokeWeight: 2
+              scaledSize: new google.maps.Size(24, 24)
             }
           });
         }
@@ -104,11 +99,75 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
 
           const infoWindow = new google.maps.InfoWindow({
             content: `
-              <div style="padding: 8px; max-width: 200px;">
-                <h3 style="margin: 0 0 4px 0; font-weight: bold;">${venue.name}</h3>
-                <p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">${venue.address}</p>
-                <p style="margin: 0 0 4px 0; font-size: 12px;"><strong>Vibe:</strong> ${venue.vibeLevel}</p>
-                <p style="margin: 0; font-size: 12px;"><strong>Music:</strong> ${venue.musicType}</p>
+              <div style="
+                padding: 16px; 
+                max-width: 280px; 
+                font-family: 'Plus Jakarta Sans', 'Noto Sans', sans-serif;
+                background: hsl(var(--background));
+                color: hsl(var(--foreground));
+                border-radius: 12px;
+              ">
+                <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                  <div style="
+                    width: 60px; 
+                    height: 60px; 
+                    background-image: url('https://images.unsplash.com/photo-1566737236500-c8ac43014a8e?w=200&h=200&fit=crop');
+                    background-size: cover;
+                    background-position: center;
+                    border-radius: 8px;
+                    flex-shrink: 0;
+                  "></div>
+                  <div style="flex: 1;">
+                    <h3 style="
+                      margin: 0 0 4px 0; 
+                      font-weight: bold; 
+                      font-size: 16px;
+                      color: hsl(var(--foreground));
+                    ">${venue.name}</h3>
+                    <p style="
+                      margin: 0 0 8px 0; 
+                      font-size: 12px; 
+                      color: hsl(var(--muted-foreground));
+                      line-height: 1.3;
+                    ">${venue.address}</p>
+                  </div>
+                </div>
+                
+                <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+                  <span style="
+                    background: hsl(var(--accent)); 
+                    color: hsl(var(--accent-foreground)); 
+                    padding: 4px 8px; 
+                    border-radius: 12px; 
+                    font-size: 11px; 
+                    font-weight: 500;
+                  ">${venue.vibeLevel}</span>
+                  <span style="
+                    background: hsl(var(--muted)); 
+                    color: hsl(var(--muted-foreground)); 
+                    padding: 4px 8px; 
+                    border-radius: 12px; 
+                    font-size: 11px;
+                  ">${venue.musicType}</span>
+                  <span style="
+                    background: hsl(var(--muted)); 
+                    color: hsl(var(--muted-foreground)); 
+                    padding: 4px 8px; 
+                    border-radius: 12px; 
+                    font-size: 11px;
+                  ">${venue.venueType}</span>
+                </div>
+                
+                <div style="
+                  display: flex; 
+                  justify-content: space-between; 
+                  align-items: center;
+                  font-size: 12px;
+                  color: hsl(var(--muted-foreground));
+                ">
+                  <span>${venue.voteCount} votes</span>
+                  <span>${venue.lastUpdated}</span>
+                </div>
               </div>
             `
           });
