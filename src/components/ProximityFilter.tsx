@@ -18,12 +18,9 @@ const ProximityFilter: React.FC<ProximityFilterProps> = ({
   enabled
 }) => {
   const maxValue = unit === 'km' ? 50 : 30;
-  const convertedDistance = unit === 'miles' ? Math.round(maxDistance * 0.621371) : maxDistance;
 
   const handleDistanceChange = (value: number[]) => {
-    const distance = value[0];
-    const kmDistance = unit === 'miles' ? Math.round(distance / 0.621371) : distance;
-    onDistanceChange(kmDistance);
+    onDistanceChange(value[0]);
   };
 
   if (!enabled) {
@@ -65,7 +62,7 @@ const ProximityFilter: React.FC<ProximityFilterProps> = ({
       
       <div className="space-y-3">
         <Slider
-          value={[convertedDistance]}
+          value={[maxDistance]}
           onValueChange={handleDistanceChange}
           max={maxValue}
           min={1}
@@ -74,7 +71,7 @@ const ProximityFilter: React.FC<ProximityFilterProps> = ({
         />
         <div className="text-center">
           <span className="text-sm text-muted-foreground">
-            Within {convertedDistance} {unit}
+            Within {maxDistance} {unit}
           </span>
         </div>
       </div>

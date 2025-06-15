@@ -64,6 +64,17 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     localStorage.setItem('selectedVibes', JSON.stringify(selectedVibes));
   }, [selectedVibes]);
 
+  const handleDistanceUnitChange = (newUnit: 'km' | 'miles') => {
+    if (newUnit !== distanceUnit) {
+      // Convert distance when changing units
+      const convertedDistance = newUnit === 'miles' 
+        ? Math.round(maxDistance * 0.621371)  // km to miles
+        : Math.round(maxDistance / 0.621371); // miles to km
+      setMaxDistance(convertedDistance);
+    }
+    setDistanceUnit(newUnit);
+  };
+
   const clearFilters = () => {
     setSelectedVenueTypes([]);
     setSelectedVibes([]);
@@ -78,7 +89,7 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     selectedVibes,
     isFiltersOpen,
     setMaxDistance,
-    setDistanceUnit,
+    setDistanceUnit: handleDistanceUnitChange,
     setSelectedVenueTypes,
     setSelectedVibes,
     setIsFiltersOpen,
