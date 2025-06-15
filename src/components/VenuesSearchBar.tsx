@@ -59,6 +59,11 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
   const handleSelectPrediction = (prediction: PlacePrediction) => {
     onSearchChange(prediction.structured_formatting.main_text);
     setOpen(false);
+    // Keep focus on input after selection
+    setTimeout(() => {
+      const input = document.querySelector('input[placeholder="Search for venues"]') as HTMLInputElement;
+      if (input) input.focus();
+    }, 0);
   };
 
   return (
@@ -78,6 +83,12 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
                   setOpen(true);
                 }}
                 onFocus={() => setOpen(predictions.length > 0)}
+                onBlur={(e) => {
+                  // Prevent blur when clicking on dropdown items
+                  if (!e.relatedTarget?.closest('[data-radix-popper-content-wrapper]')) {
+                    setTimeout(() => setOpen(false), 150);
+                  }
+                }}
                 className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-foreground focus:outline-0 focus:ring-0 border-none bg-muted focus:border-none h-full placeholder:text-muted-foreground px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
               />
             </div>
@@ -99,6 +110,7 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
                     <CommandItem
                       key={prediction.place_id}
                       onSelect={() => handleSelectPrediction(prediction)}
+                      onMouseDown={(e) => e.preventDefault()} // Prevent input blur
                       className="cursor-pointer hover:bg-accent"
                     >
                       <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />

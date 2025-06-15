@@ -47,15 +47,15 @@ const Favorites = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="max-w-md mx-auto px-4 py-4">
-        <h1 className="text-foreground text-[22px] font-bold leading-tight tracking-[-0.015em] pb-6">
-          Your Favorites
-        </h1>
-        
         <FeaturedVenues />
         
         {!locationEnabled && favoriteVenues.length > 0 && (
           <LocationPermission onPermissionChange={handleLocationPermission} />
         )}
+        
+        <h1 className="text-foreground text-[22px] font-bold leading-tight tracking-[-0.015em] pb-6 pt-2">
+          Your Favorites
+        </h1>
         
         <div className="space-y-4">
           {favoriteVenues.map(venue => (
