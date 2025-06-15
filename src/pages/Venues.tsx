@@ -5,11 +5,13 @@ import VenuesFilters from '@/components/VenuesFilters';
 import VenuesLocationStatus from '@/components/VenuesLocationStatus';
 import VenuesList from '@/components/VenuesList';
 import { mockVenues } from '@/data/mockVenues';
+import { getVenueDistance } from '@/utils/distanceCalculator';
 
 const Venues = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [searchLocation, setSearchLocation] = useState<{lat: number, lng: number} | null>(null);
   const [maxDistance, setMaxDistance] = useState(5);
   const [distanceUnit, setDistanceUnit] = useState<'km' | 'miles'>('km');
   const [selectedVenueTypes, setSelectedVenueTypes] = useState<string[]>([]);
@@ -26,9 +28,12 @@ const Venues = () => {
       venue.musicType.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    // Apply distance filter if location is enabled
-    if (locationEnabled) {
-      filtered = filtered.filter(venue => venue.distance <= maxDistance);
+    // Apply distance filter if location is enabled or search location is set
+    if (locationEnabled || searchLocation) {
+      filtered = filtered.map(venue => ({
+        ...venue,
+        distance: getVenueDistance(venue, searchLocation, userLocation, distanceUnit)
+      })).filter(venue => venue.distance <= maxDistance);
     }
 
     // Apply venue type filter
@@ -46,7 +51,7 @@ const Venues = () => {
     }
 
     setFilteredVenues(filtered);
-  }, [searchQuery, maxDistance, locationEnabled, selectedVenueTypes, selectedVibes]);
+  }, [searchQuery, maxDistance, locationEnabled, searchLocation, userLocation, distanceUnit, selectedVenueTypes, selectedVibes]);
 
   const handleLocationPermission = (granted: boolean, location?: {lat: number, lng: number}) => {
     setLocationEnabled(granted);
@@ -82,6 +87,14 @@ const Venues = () => {
     }
   };
 
+  const handleLocationSelect = (location: {lat: number, lng: number}, placeName: string) => {
+    setSearchLocation(location);
+    toast({
+      title: "Search location set",
+      description: `Now showing venues near ${placeName}`,
+    });
+  };
+
   const handleClearFilters = () => {
     setSelectedVenueTypes([]);
     setSelectedVibes([]);
@@ -96,6 +109,7 @@ const Venues = () => {
           <VenuesSearchBar
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
+            onLocationSelect={handleLocationSelect}
           />
 
           

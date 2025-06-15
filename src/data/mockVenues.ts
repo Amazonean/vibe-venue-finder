@@ -10,6 +10,8 @@ export interface Venue {
   lastUpdated: string;
   description: string;
   isFeatured?: boolean;
+  latitude?: number;
+  longitude?: number;
 }
 
 export const mockVenues: Venue[] = [
@@ -24,7 +26,9 @@ export const mockVenues: Venue[] = [
     voteCount: 127,
     lastUpdated: "2 min ago",
     description: "High-energy electronic music venue with amazing sound system",
-    isFeatured: true
+    isFeatured: true,
+    latitude: 40.7128,
+    longitude: -74.0060
   },
   {
     id: 2,

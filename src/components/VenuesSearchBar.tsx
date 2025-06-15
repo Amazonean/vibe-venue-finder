@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 interface VenuesSearchBarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  onLocationSelect?: (location: {lat: number, lng: number}, placeName: string) => void;
 }
 
 interface PlacePrediction {
@@ -20,7 +21,7 @@ interface PlacePrediction {
   };
 }
 
-const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearchChange }) => {
+const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearchChange, onLocationSelect }) => {
   const [open, setOpen] = useState(false);
   const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,9 +58,27 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
     fetchPredictions();
   }, [debouncedQuery]);
 
-  const handleSelectPrediction = (prediction: PlacePrediction) => {
+  const handleSelectPrediction = async (prediction: PlacePrediction) => {
     onSearchChange(prediction.structured_formatting.main_text);
     setOpen(false);
+    
+    // Get the coordinates for the selected place
+    if (onLocationSelect) {
+      try {
+        const { data, error } = await supabase.functions.invoke('google-places-details', {
+          body: { place_id: prediction.place_id }
+        });
+        
+        if (error) {
+          console.error('Error fetching place details:', error);
+        } else if (data?.location) {
+          onLocationSelect(data.location, prediction.structured_formatting.main_text);
+        }
+      } catch (err) {
+        console.error('Failed to fetch place details:', err);
+      }
+    }
+    
     // Keep focus on input after selection
     setTimeout(() => {
       if (inputRef.current) {
