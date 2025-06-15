@@ -47,9 +47,11 @@ const Toast = React.forwardRef<
     <ToastPrimitives.Root
       ref={ref}
       className={cn(toastVariants({ variant }), "cursor-pointer", className)}
-      onClick={() => {
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
         if (props.onOpenChange) {
-          props.onOpenChange(false)
+          props.onOpenChange(false);
         }
       }}
       {...props}
