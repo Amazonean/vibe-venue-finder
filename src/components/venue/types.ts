@@ -10,6 +10,8 @@ export interface Venue {
   lastUpdated: string;
   description: string;
   isFeatured?: boolean;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface VenueCardProps {

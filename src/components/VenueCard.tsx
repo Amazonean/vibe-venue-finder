@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import VenueInfo from './venue/VenueInfo';
 import VenueBadges from './venue/VenueBadges';
@@ -14,11 +15,19 @@ const VenueCard: React.FC<VenueCardProps> = ({
   isFavorite = false,
   onFavoriteChange
 }) => {
+  const navigate = useNavigate();
   const { isDialogOpen, setIsDialogOpen, handleVibeVote } = useVenueVoting(venue);
   const { isFavorited, toggleFavorite } = useFavorites(venue, isFavorite, onFavoriteChange);
 
+  const handleCardClick = () => {
+    navigate(`/map?venue=${venue.id}`);
+  };
+
   return (
-    <Card className="bg-muted border-none p-4">
+    <Card 
+      className="bg-muted border-none p-4 cursor-pointer hover:bg-muted/80 transition-colors" 
+      onClick={handleCardClick}
+    >
       <div className="flex gap-4 items-start">
         {/* Image Section */}
         <div 
@@ -33,24 +42,28 @@ const VenueCard: React.FC<VenueCardProps> = ({
           {/* Header Section */}
           <div className="flex items-start justify-between gap-3">
             <VenueInfo venue={venue} />
-            <VenueActions 
-              showDistance={showDistance}
-              distance={venue.distance}
-              isFavorited={isFavorited}
-              onToggleFavorite={toggleFavorite}
-            />
+            <div onClick={(e) => e.stopPropagation()}>
+              <VenueActions 
+                showDistance={showDistance}
+                distance={venue.distance}
+                isFavorited={isFavorited}
+                onToggleFavorite={toggleFavorite}
+              />
+            </div>
           </div>
           
           {/* Middle Section - Badges */}
           <VenueBadges venue={venue} />
           
           {/* Bottom Section - Info and Vote */}
-          <VenueStats 
-            venue={venue}
-            isDialogOpen={isDialogOpen}
-            onOpenChange={setIsDialogOpen}
-            onVibeVote={handleVibeVote}
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            <VenueStats 
+              venue={venue}
+              isDialogOpen={isDialogOpen}
+              onOpenChange={setIsDialogOpen}
+              onVibeVote={handleVibeVote}
+            />
+          </div>
         </div>
       </div>
     </Card>

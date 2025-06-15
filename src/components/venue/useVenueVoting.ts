@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLocation } from '@/contexts/LocationContext';
 import { useToast } from '@/hooks/use-toast';
+import { isUserAtVenue } from '@/utils/venueDistance';
 import { Venue } from './types';
 
 export const useVenueVoting = (venue: Venue) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useAuth();
+  const { locationEnabled, userLocation } = useLocation();
   const { toast } = useToast();
 
   const handleVibeVote = async (vibe: 'turnt' | 'chill' | 'quiet') => {
@@ -20,6 +23,35 @@ export const useVenueVoting = (venue: Venue) => {
         variant: "destructive"
       });
       return;
+    }
+
+    // Check if location is enabled
+    if (!locationEnabled || !userLocation) {
+      toast({
+        title: "Location required",
+        description: "Please enable location services to vote on venue vibes",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Check if user is at the venue (within 200 meters)
+    if (venue.latitude && venue.longitude) {
+      const atVenue = isUserAtVenue(
+        userLocation.lat,
+        userLocation.lng,
+        venue.latitude,
+        venue.longitude
+      );
+
+      if (!atVenue) {
+        toast({
+          title: "Too far from venue",
+          description: "You must be at the venue to vote on its vibe",
+          variant: "destructive"
+        });
+        return;
+      }
     }
 
     console.log('User authenticated:', user.id);
