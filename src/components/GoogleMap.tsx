@@ -20,8 +20,13 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
   useEffect(() => {
     const initMap = async () => {
       try {
+        // Get the API key from Supabase function
+        const { data: { GOOGLE_MAPS_API_KEY } } = await supabase.functions.invoke('get-secret', {
+          body: { name: 'GOOGLE_MAPS_API_KEY' }
+        });
+
         const loader = new Loader({
-          apiKey: 'GOOGLE_MAPS_API_KEY', // This will be replaced by the secret
+          apiKey: GOOGLE_MAPS_API_KEY,
           version: 'weekly',
           libraries: ['places']
         });
