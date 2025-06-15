@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useLocation } from '@/contexts/LocationContext';
 import VenuesSearchBar from '@/components/VenuesSearchBar';
 import VenuesFilters from '@/components/VenuesFilters';
 import VenuesLocationStatus from '@/components/VenuesLocationStatus';
@@ -9,8 +10,7 @@ import { getVenueDistance } from '@/utils/distanceCalculator';
 
 const Venues = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [locationEnabled, setLocationEnabled] = useState(false);
-  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+  const { locationEnabled, userLocation, setLocationEnabled, setUserLocation } = useLocation();
   const [searchLocation, setSearchLocation] = useState<{lat: number, lng: number} | null>(null);
   const [maxDistance, setMaxDistance] = useState(5);
   const [distanceUnit, setDistanceUnit] = useState<'km' | 'miles'>('km');

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import VenueCard from '@/components/VenueCard';
 import LocationPermission from '@/components/LocationPermission';
 import FeaturedVenues from '@/components/FeaturedVenues';
+import { useLocation } from '@/contexts/LocationContext';
 import { mockFavoriteVenues } from '@/data/mockVenues';
 
 const Favorites = () => {
@@ -10,31 +11,16 @@ const Favorites = () => {
     const saved = localStorage.getItem('favoriteVenues');
     return saved ? JSON.parse(saved) : mockFavoriteVenues;
   });
-  const [locationEnabled, setLocationEnabled] = useState(false);
+  const { locationEnabled, userLocation, setLocationEnabled, setUserLocation } = useLocation();
 
   useEffect(() => {
     // Save favorites to localStorage whenever favoriteVenues changes
     localStorage.setItem('favoriteVenues', JSON.stringify(favoriteVenues));
   }, [favoriteVenues]);
 
-  useEffect(() => {
-    // Check if geolocation is available and get current permission status
-    if ("geolocation" in navigator) {
-      // Try to get current position to check if permission is granted
-      navigator.geolocation.getCurrentPosition(
-        () => {
-          setLocationEnabled(true);
-        },
-        () => {
-          setLocationEnabled(false);
-        },
-        { timeout: 1000 }
-      );
-    }
-  }, []);
-
-  const handleLocationPermission = (granted: boolean) => {
+  const handleLocationPermission = (granted: boolean, location?: {lat: number, lng: number}) => {
     setLocationEnabled(granted);
+    setUserLocation(location || null);
   };
 
   const handleFavoriteChange = (venueId: number, isFavorited: boolean) => {

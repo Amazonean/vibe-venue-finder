@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/AuthContext";
+import { LocationProvider } from "./contexts/LocationContext";
 import BottomNavigation from "./components/BottomNavigation";
 import VenuesHeader from "./components/VenuesHeader";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -23,8 +24,9 @@ const App = () => (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <TooltipProvider>
         <AuthProvider>
-          <Toaster />
-          <Sonner />
+          <LocationProvider>
+            <Toaster />
+            <Sonner />
             <BrowserRouter>
               <div className="min-h-screen bg-background">
                 <VenuesHeader />
@@ -57,6 +59,7 @@ const App = () => (
               <BottomNavigation />
             </div>
           </BrowserRouter>
+          </LocationProvider>
         </AuthProvider>
       </TooltipProvider>
     </ThemeProvider>
