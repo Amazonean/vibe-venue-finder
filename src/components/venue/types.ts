@@ -9,6 +9,7 @@ export interface Venue {
   voteCount: number;
   lastUpdated: string;
   description: string;
+  isFeatured?: boolean;
 }
 
 export interface VenueCardProps {

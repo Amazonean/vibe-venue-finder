@@ -1,33 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import VenueCard from '@/components/VenueCard';
 import LocationPermission from '@/components/LocationPermission';
-
-const mockFavoriteVenues = [
-  {
-    id: 1,
-    name: "The Underground",
-    address: "123 Music St, Downtown",
-    vibeLevel: "turnt" as const,
-    distance: 0.8,
-    musicType: "Electronic",
-    venueType: "Clubs",
-    voteCount: 127,
-    lastUpdated: "2 min ago",
-    description: "High-energy electronic music venue with amazing sound system"
-  },
-  {
-    id: 4,
-    name: "Acoustic Corner",
-    address: "321 Melody Lane, Arts Quarter",
-    vibeLevel: "quiet" as const,
-    distance: 1.7,
-    musicType: "Live Acoustic",
-    venueType: "Live Music",
-    voteCount: 45,
-    lastUpdated: "30 min ago",
-    description: "Intimate venue featuring local acoustic artists"
-  }
-];
+import FeaturedVenues from '@/components/FeaturedVenues';
+import { mockFavoriteVenues } from '@/data/mockVenues';
 
 const Favorites = () => {
   const [favoriteVenues, setFavoriteVenues] = useState(() => {
@@ -75,6 +50,8 @@ const Favorites = () => {
         <h1 className="text-foreground text-[22px] font-bold leading-tight tracking-[-0.015em] pb-6">
           Your Favorites
         </h1>
+        
+        <FeaturedVenues />
         
         {!locationEnabled && favoriteVenues.length > 0 && (
           <LocationPermission onPermissionChange={handleLocationPermission} />

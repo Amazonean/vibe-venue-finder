@@ -1,19 +1,7 @@
 import React from 'react';
 import VenueCard from '@/components/VenueCard';
 import LocationPermission from '@/components/LocationPermission';
-
-interface Venue {
-  id: number;
-  name: string;
-  address: string;
-  vibeLevel: 'quiet' | 'chill' | 'turnt';
-  distance: number;
-  musicType: string;
-  venueType: string;
-  voteCount: number;
-  lastUpdated: string;
-  description: string;
-}
+import { Venue } from '@/data/mockVenues';
 
 interface VenuesListProps {
   venues: Venue[];
