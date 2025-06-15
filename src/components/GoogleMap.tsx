@@ -3,6 +3,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { useLocation } from '@/contexts/LocationContext';
 import { mockVenues } from '@/data/mockVenues';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface GoogleMapProps {
   selectedVenueId?: number | string;

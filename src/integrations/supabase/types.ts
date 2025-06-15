@@ -180,7 +180,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_secret: {
+        Args: { secret_name: string }
+        Returns: string
+      }
     }
     Enums: {
       vibe_level: "chill" | "decent" | "turnt" | "quiet"
