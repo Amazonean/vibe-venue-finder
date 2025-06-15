@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from '@/contexts/LocationContext';
+import { useFilters } from '@/contexts/FilterContext';
 import VenuesSearchBar from '@/components/VenuesSearchBar';
 import VenuesFilters from '@/components/VenuesFilters';
 import VenuesLocationStatus from '@/components/VenuesLocationStatus';
@@ -11,13 +12,21 @@ import { getVenueDistance } from '@/utils/distanceCalculator';
 const Venues = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const { locationEnabled, userLocation, setLocationEnabled, setUserLocation } = useLocation();
+  const {
+    maxDistance,
+    distanceUnit,
+    selectedVenueTypes,
+    selectedVibes,
+    isFiltersOpen,
+    setMaxDistance,
+    setDistanceUnit,
+    setSelectedVenueTypes,
+    setSelectedVibes,
+    setIsFiltersOpen,
+    clearFilters
+  } = useFilters();
   const [searchLocation, setSearchLocation] = useState<{lat: number, lng: number} | null>(null);
-  const [maxDistance, setMaxDistance] = useState(5);
-  const [distanceUnit, setDistanceUnit] = useState<'km' | 'miles'>('km');
-  const [selectedVenueTypes, setSelectedVenueTypes] = useState<string[]>([]);
-  const [selectedVibes, setSelectedVibes] = useState<string[]>([]);
   const [filteredVenues, setFilteredVenues] = useState(mockVenues);
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -96,10 +105,8 @@ const Venues = () => {
   };
 
   const handleClearFilters = () => {
-    setSelectedVenueTypes([]);
-    setSelectedVibes([]);
-    setMaxDistance(5);
-    setDistanceUnit('km');
+    clearFilters();
+    setSearchLocation(null);
   };
 
   return (
@@ -115,7 +122,7 @@ const Venues = () => {
           
 
           <VenuesFilters
-            locationEnabled={locationEnabled}
+            locationEnabled={locationEnabled || !!searchLocation}
             maxDistance={maxDistance}
             distanceUnit={distanceUnit}
             selectedVenueTypes={selectedVenueTypes}
@@ -130,9 +137,11 @@ const Venues = () => {
           />
 
           <VenuesLocationStatus
-            locationEnabled={locationEnabled}
+            locationEnabled={locationEnabled || !!searchLocation}
             userLocation={userLocation}
             maxDistance={maxDistance}
+            distanceUnit={distanceUnit}
+            searchLocation={searchLocation}
           />
         </div>
       </div>

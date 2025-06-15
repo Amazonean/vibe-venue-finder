@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LocationProvider } from "./contexts/LocationContext";
+import { FilterProvider } from "./contexts/FilterContext";
 import BottomNavigation from "./components/BottomNavigation";
 import VenuesHeader from "./components/VenuesHeader";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -25,6 +26,7 @@ const App = () => (
       <TooltipProvider>
         <AuthProvider>
           <LocationProvider>
+            <FilterProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
@@ -58,7 +60,8 @@ const App = () => (
               </Routes>
               <BottomNavigation />
             </div>
-          </BrowserRouter>
+            </BrowserRouter>
+            </FilterProvider>
           </LocationProvider>
         </AuthProvider>
       </TooltipProvider>
