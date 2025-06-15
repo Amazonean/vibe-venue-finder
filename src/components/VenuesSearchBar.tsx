@@ -24,6 +24,7 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
   const [open, setOpen] = useState(false);
   const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const debouncedQuery = useDebounce(searchQuery, 300);
 
   useEffect(() => {
@@ -61,9 +62,10 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
     setOpen(false);
     // Keep focus on input after selection
     setTimeout(() => {
-      const input = document.querySelector('input[placeholder="Search for venues"]') as HTMLInputElement;
-      if (input) input.focus();
-    }, 0);
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 50);
   };
 
   return (
@@ -76,17 +78,23 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
                 <Search className="h-6 w-6" />
               </div>
               <Input
+                ref={inputRef}
                 placeholder="Search for venues"
                 value={searchQuery}
                 onChange={(e) => {
                   onSearchChange(e.target.value);
-                  setOpen(true);
+                  if (e.target.value.length >= 2) {
+                    setOpen(true);
+                  }
                 }}
-                onFocus={() => setOpen(predictions.length > 0)}
-                onBlur={(e) => {
-                  // Prevent blur when clicking on dropdown items
-                  if (!e.relatedTarget?.closest('[data-radix-popper-content-wrapper]')) {
-                    setTimeout(() => setOpen(false), 150);
+                onFocus={() => {
+                  if (predictions.length > 0 || searchQuery.length >= 2) {
+                    setOpen(true);
+                  }
+                }}
+                onClick={() => {
+                  if (predictions.length > 0 || searchQuery.length >= 2) {
+                    setOpen(true);
                   }
                 }}
                 className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-foreground focus:outline-0 focus:ring-0 border-none bg-muted focus:border-none h-full placeholder:text-muted-foreground px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
@@ -97,6 +105,8 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
         <PopoverContent 
           className="w-[var(--radix-popover-trigger-width)] p-0 bg-background border-border shadow-lg z-50" 
           align="start"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => e.preventDefault()}
         >
           <Command>
             <CommandList className="max-h-48">
@@ -110,7 +120,10 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
                     <CommandItem
                       key={prediction.place_id}
                       onSelect={() => handleSelectPrediction(prediction)}
-                      onMouseDown={(e) => e.preventDefault()} // Prevent input blur
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
                       className="cursor-pointer hover:bg-accent"
                     >
                       <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
