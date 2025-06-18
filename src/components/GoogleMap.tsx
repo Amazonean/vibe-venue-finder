@@ -5,6 +5,12 @@ import { mockVenues } from '@/data/mockVenues';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 interface GoogleMapProps {
   selectedVenueId?: number | string;
   onVenueSelect?: (venueId: number | string) => void;
@@ -12,8 +18,8 @@ interface GoogleMapProps {
 
 const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect }) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<google.maps.Map | null>(null);
-  const markersRef = useRef<google.maps.Marker[]>([]);
+  const mapInstanceRef = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
   const { userLocation, locationEnabled } = useLocation();
   const [isLoaded, setIsLoaded] = useState(false);
   const { toast } = useToast();
@@ -40,7 +46,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
         const defaultCenter = { lat: 40.7589, lng: -73.9851 };
         const center = (locationEnabled && userLocation) ? userLocation : defaultCenter;
 
-        const map = new google.maps.Map(mapRef.current, {
+        const map = new (window as any).google.maps.Map(mapRef.current, {
           zoom: 13,
           center,
           styles: [
@@ -58,7 +64,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
 
         // Add user location marker if available
         if (locationEnabled && userLocation) {
-          new google.maps.Marker({
+          new (window as any).google.maps.Marker({
             position: userLocation,
             map,
             title: 'Your Location',
@@ -69,7 +75,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
                   <circle cx="12" cy="12" r="4"/>
                 </svg>
               `),
-              scaledSize: new google.maps.Size(24, 24)
+              scaledSize: new (window as any).google.maps.Size(24, 24)
             }
           });
         }
@@ -78,7 +84,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
         markersRef.current = mockVenues.map(venue => {
           if (!venue.latitude || !venue.longitude) return null;
 
-          const marker = new google.maps.Marker({
+          const marker = new (window as any).google.maps.Marker({
             position: { lat: venue.latitude, lng: venue.longitude },
             map,
             title: venue.name,
@@ -89,7 +95,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
                   <circle cx="12" cy="10" r="3"/>
                 </svg>
               `),
-              scaledSize: new google.maps.Size(32, 32),
+              scaledSize: new (window as any).google.maps.Size(32, 32),
               fillColor: venue.vibeLevel === 'turnt' ? '#ff3b1f' : venue.vibeLevel === 'chill' ? '#b47aff' : '#4bd5ff',
               fillOpacity: 1,
               strokeColor: '#ffffff',
@@ -97,7 +103,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
             }
           });
 
-          const infoWindow = new google.maps.InfoWindow({
+          const infoWindow = new (window as any).google.maps.InfoWindow({
             content: `
               <div style="
                 padding: 16px; 
@@ -188,7 +194,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
           });
 
           return marker;
-        }).filter(Boolean) as google.maps.Marker[];
+        }).filter(Boolean) as any[];
 
         setIsLoaded(true);
 

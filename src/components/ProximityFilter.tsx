@@ -29,7 +29,7 @@ const ProximityFilter: React.FC<ProximityFilterProps> = ({
         <h4 className="text-sm font-medium text-foreground mb-3">Distance</h4>
         <div className="text-center py-4">
           <p className="text-sm text-muted-foreground">
-            Enable location to filter by distance
+            Enable location or search for a place to filter by distance
           </p>
         </div>
       </div>

@@ -11,26 +11,33 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import VenuesSearchBar from '@/components/VenuesSearchBar';
 import ProximityFilter from '@/components/ProximityFilter';
+import { useLocation } from '@/contexts/LocationContext';
+import { calculateDistance } from '@/utils/distanceCalculator';
 
 const Venues = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [locationEnabled, setLocationEnabled] = useState(false);
-  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
   const [selectedVenueTypes, setSelectedVenueTypes] = useState<string[]>([]);
   const [selectedVibes, setSelectedVibes] = useState<string[]>([]);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [filteredVenues, setFilteredVenues] = useState(mockVenues);
   const [maxDistance, setMaxDistance] = useState(10);
   const [distanceUnit, setDistanceUnit] = useState<'km' | 'miles'>('km');
+  const [searchLocation, setSearchLocation] = useState<{lat: number, lng: number} | null>(null);
+  const { locationEnabled, userLocation, setLocationEnabled, setUserLocation } = useLocation();
   const { toast } = useToast();
 
   useEffect(() => {
-    // Filter venues based on search query, venue type, and vibe
-    let filtered = mockVenues.filter(venue => 
-      venue.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      venue.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      venue.musicType.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // Filter venues based on search query, venue type, vibe, and distance
+    let filtered = mockVenues;
+
+    // Apply search filter (only if no location search is active)
+    if (searchQuery && !searchLocation) {
+      filtered = filtered.filter(venue => 
+        venue.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        venue.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        venue.musicType.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
     // Apply venue type filter
     if (selectedVenueTypes.length > 0) {
@@ -46,8 +53,26 @@ const Venues = () => {
       );
     }
 
+    // Apply distance filter if location is available
+    const referenceLocation = searchLocation || userLocation;
+    if (referenceLocation && (locationEnabled || searchLocation)) {
+      filtered = filtered.filter(venue => {
+        if (venue.latitude && venue.longitude) {
+          const distance = calculateDistance(
+            referenceLocation.lat,
+            referenceLocation.lng,
+            venue.latitude,
+            venue.longitude,
+            distanceUnit
+          );
+          return distance <= maxDistance;
+        }
+        return false;
+      });
+    }
+
     setFilteredVenues(filtered);
-  }, [searchQuery, selectedVenueTypes, selectedVibes]);
+  }, [searchQuery, selectedVenueTypes, selectedVibes, maxDistance, distanceUnit, userLocation, locationEnabled, searchLocation]);
 
   const handleLocationPermission = (granted: boolean, location?: {lat: number, lng: number}) => {
     setLocationEnabled(granted);
@@ -62,9 +87,7 @@ const Venues = () => {
   };
 
   const handleLocationSelect = (location: {lat: number, lng: number}, placeName: string) => {
-    setUserLocation(location);
-    setLocationEnabled(true);
-    // Clear venue name search when selecting a location
+    setSearchLocation(location);
     setSearchQuery('');
     toast({
       title: "Location selected",
@@ -76,6 +99,7 @@ const Venues = () => {
     setSelectedVenueTypes([]);
     setSelectedVibes([]);
     setSearchQuery('');
+    setSearchLocation(null);
   };
 
   const hasActiveFilters = selectedVenueTypes.length > 0 || selectedVibes.length > 0;
@@ -126,7 +150,7 @@ const Venues = () => {
                   unit={distanceUnit}
                   onDistanceChange={setMaxDistance}
                   onUnitChange={setDistanceUnit}
-                  enabled={locationEnabled}
+                  enabled={locationEnabled || searchLocation !== null}
                 />
                 
                 <Separator className="bg-border" />
@@ -154,7 +178,7 @@ const Venues = () => {
         )}
         
         <h2 className="text-foreground text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5">
-          {locationEnabled ? 'Nearby Venues' : 'Popular Venues'}
+          {(locationEnabled || searchLocation) ? 'Nearby Venues' : 'Popular Venues'}
         </h2>
         
         <div className="space-y-4">
@@ -162,7 +186,7 @@ const Venues = () => {
             <VenueCard
               key={venue.id}
               venue={venue}
-              showDistance={locationEnabled}
+              showDistance={locationEnabled || searchLocation !== null}
             />
           ))}
         </div>
