@@ -8,52 +8,74 @@ export const drawVenueNameOverlay = (
   const { overlays } = config;
   const venueOverlay = overlays.venueName;
 
-  // Debug logging
-  console.log('venueNameRenderer - venueName:', venueName);
-  console.log('venueNameRenderer - venueOverlay:', venueOverlay);
-
-  // Set up text properties  
-  ctx.font = `bold ${venueOverlay.fontSize}px Arial, sans-serif`;
+  // Enhance styling: pill background with gradient stroke, glowing gradient text
+  // Set up text properties
+  const fontSize = venueOverlay.fontSize || 36;
+  ctx.font = `800 ${fontSize}px Arial, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  // Measure text for background sizing
+  // Prepare text
   const text = venueName.toUpperCase();
   const textMetrics = ctx.measureText(text);
   const textWidth = textMetrics.width;
-  
-  // Calculate background dimensions
-  const backgroundWidth = Math.min(textWidth + venueOverlay.padding, venueOverlay.width);
-  const backgroundHeight = venueOverlay.height * 0.6;
-  const backgroundX = venueOverlay.x + (venueOverlay.width - backgroundWidth) / 2;
-  const backgroundY = venueOverlay.y + (venueOverlay.height - backgroundHeight) / 2;
 
-  // Draw background
-  ctx.fillStyle = venueOverlay.backgroundColor;
-  ctx.roundRect(backgroundX, backgroundY, backgroundWidth, backgroundHeight, 8);
+  // Background (pill) dimensions
+  const padding = Math.max(20, (venueOverlay.padding || 24));
+  const bgWidth = Math.min(textWidth + padding * 2, venueOverlay.width);
+  const bgHeight = Math.max(venueOverlay.height * 0.6, fontSize * 1.4);
+  const bgX = venueOverlay.x + (venueOverlay.width - bgWidth) / 2;
+  const bgY = venueOverlay.y + (venueOverlay.height - bgHeight) / 2;
+
+  // Draw pill background
+  ctx.save();
+  const bgRadius = Math.min(16, bgHeight / 2);
+  ctx.beginPath();
+  ctx.roundRect(bgX, bgY, bgWidth, bgHeight, bgRadius);
+
+  // Fill with subtle translucent backdrop
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
   ctx.fill();
 
-  // Draw text with glow effect
+  // Gradient stroke around the pill
+  const strokeGrad = ctx.createLinearGradient(bgX, bgY, bgX + bgWidth, bgY);
+  strokeGrad.addColorStop(0, 'rgba(167, 139, 250, 0.9)'); // purple-300
+  strokeGrad.addColorStop(1, 'rgba(139, 92, 246, 0.9)');  // violet-500
+  ctx.strokeStyle = strokeGrad;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.restore();
+
+  // Text position
   const textX = venueOverlay.x + venueOverlay.width / 2;
   const textY = venueOverlay.y + venueOverlay.height / 2;
 
-  // White outline
-  ctx.strokeStyle = 'white';
-  ctx.lineWidth = 6;
+  // Create gradient for text fill
+  const textGrad = ctx.createLinearGradient(bgX, bgY, bgX + bgWidth, bgY + bgHeight);
+  textGrad.addColorStop(0, '#E9D5FF'); // fuchsia-100
+  textGrad.addColorStop(0.5, '#C4B5FD'); // violet-200
+  textGrad.addColorStop(1, '#8B5CF6'); // violet-500
+
+  // Outer white highlight stroke
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+  ctx.lineWidth = 5;
   ctx.strokeText(text, textX, textY);
 
-  // Glow effect
-  ctx.shadowColor = 'rgba(139, 92, 246, 0.8)';
-  ctx.shadowBlur = 20;
+  // Soft glow shadow + subtle colored stroke
+  ctx.shadowColor = 'rgba(139, 92, 246, 0.7)';
+  ctx.shadowBlur = 18;
   ctx.strokeStyle = 'rgba(139, 92, 246, 0.5)';
   ctx.lineWidth = 2;
   ctx.strokeText(text, textX, textY);
 
-  // Main text
-  ctx.fillStyle = '#8B5CF6';
+  // Main gradient-filled text
+  ctx.shadowBlur = 8;
+  ctx.shadowColor = 'rgba(167, 139, 250, 0.6)';
+  ctx.fillStyle = textGrad;
   ctx.fillText(text, textX, textY);
 
-  // Reset shadow
+  // Reset shadows
   ctx.shadowBlur = 0;
   ctx.shadowColor = 'transparent';
 };

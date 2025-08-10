@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Download, Share } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { VibeType, VibeConfiguration } from './VibeConfig';
-
 interface PhotoPreviewProps {
   capturedImage: string;
   venueName: string;
   selectedVibe: VibeType;
   vibeConfig: Record<VibeType, VibeConfiguration>;
   onRetakePhoto: () => void;
+  onClose: () => void;
 }
 
 const PhotoPreview: React.FC<PhotoPreviewProps> = ({
@@ -17,22 +18,31 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
   venueName,
   selectedVibe,
   vibeConfig,
-  onRetakePhoto
+  onRetakePhoto,
+  onClose
 }) => {
-  const [includeHashtags, setIncludeHashtags] = useState(true);
-  const { toast } = useToast();
+const [includeHashtags, setIncludeHashtags] = useState(true);
+const { toast } = useToast();
+const navigate = useNavigate();
 
-  const saveToDevice = () => {
-    const link = document.createElement('a');
-    link.download = `vibe-selfie-${venueName.replace(/\s+/g, '-')}-${selectedVibe}.jpg`;
-    link.href = capturedImage;
-    link.click();
+const saveToDevice = () => {
+  const link = document.createElement('a');
+  link.download = `vibe-selfie-${venueName.replace(/\s+/g, '-')}-${selectedVibe}.jpg`;
+  link.href = capturedImage;
+  link.click();
 
-    toast({
-      title: "Photo Saved",
-      description: "Your vibe selfie has been saved to your device!",
-    });
-  };
+  toast({
+    title: 'Photo Saved',
+    description: 'Your vibe selfie has been saved to your device!',
+  });
+
+  // Close the camera overlay and return the user to the venues page
+  // Give a brief moment for the toast and download to trigger
+  setTimeout(() => {
+    try { onClose(); } catch {}
+    try { navigate('/venues'); } catch {}
+  }, 250);
+};
 
   const sharePhoto = async () => {
     try {

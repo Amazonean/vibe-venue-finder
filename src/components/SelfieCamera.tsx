@@ -78,6 +78,7 @@ const SelfieCamera: React.FC<SelfieCameraProps> = ({
           selectedVibe={selectedVibe}
           vibeConfig={vibeConfig}
           onRetakePhoto={retakePhoto}
+          onClose={onClose}
         />
       ) : capturedVideo ? (
         <VideoPreview
