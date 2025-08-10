@@ -122,7 +122,7 @@ const saveToDevice = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black flex flex-col h-screen" style={{ paddingTop: 'calc(env(safe-area-inset-top) + var(--top-nav-height, 64px))' }}>
+    <div className="fixed inset-0 bg-black flex flex-col h-screen" style={{ paddingTop: 'calc(env(safe-area-inset-top) + var(--top-nav-height, 64px) + 12px)' }}>
       {/* Photo container that shrinks as needed */}
       <div className="flex-1 flex items-center justify-center min-h-0 p-2 relative">
         <img 
