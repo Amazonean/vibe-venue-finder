@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { isUserAtVenue } from '@/utils/venueDistance';
 import { Venue } from './types';
 import { useNavigate } from 'react-router-dom';
+import { MOCK_VENUE_IDS, ensureMockVenuesInDatabase } from '@/utils/mockVenues';
 export const useVenueVoting = (venue: Venue) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useAuth();
@@ -65,6 +66,11 @@ export const useVenueVoting = (venue: Venue) => {
       // In a real app, you'd need to map these or use real venue IDs
       const venueId = typeof venue.id === 'string' ? venue.id : '00000000-0000-0000-0000-000000000001';
       console.log('Using venue ID:', venueId);
+
+      // If voting on a mock venue, ensure it exists in DB to satisfy FK
+      if ((MOCK_VENUE_IDS as readonly string[]).includes(venueId)) {
+        await ensureMockVenuesInDatabase(userLocation);
+      }
       
       console.log('Attempting to insert vote...');
       const { error } = await supabase
