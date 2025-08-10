@@ -25,7 +25,7 @@ const VenueCard: React.FC<VenueCardProps> = ({
 
   return (
     <Card 
-      className="bg-muted border-none p-4 cursor-pointer hover:bg-muted/80 transition-colors" 
+      className="bg-muted/60 border-none p-4 cursor-pointer transition-colors duration-200 hover:bg-muted focus:bg-muted active:bg-muted" 
       onClick={handleCardClick}
     >
       <div className="flex gap-4 items-start">
