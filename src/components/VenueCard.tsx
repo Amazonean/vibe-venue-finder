@@ -33,7 +33,7 @@ const VenueCard: React.FC<VenueCardProps> = ({
         <div 
           className="w-20 h-20 bg-center bg-cover bg-no-repeat flex-shrink-0 rounded-md" 
           style={{
-            backgroundImage: `url("https://images.unsplash.com/photo-1566737236500-c8ac43014a8e?w=200&h=200&fit=crop")`
+            backgroundImage: `url("${venue.imageUrl || 'https://images.unsplash.com/photo-1566737236500-c8ac43014a8e?w=200&h=200&fit=crop'}")`
           }} 
         />
         

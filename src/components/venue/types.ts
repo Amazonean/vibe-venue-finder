@@ -12,6 +12,7 @@ export interface Venue {
   isFeatured?: boolean;
   latitude?: number;
   longitude?: number;
+  imageUrl?: string;
 }
 
 export interface VenueCardProps {

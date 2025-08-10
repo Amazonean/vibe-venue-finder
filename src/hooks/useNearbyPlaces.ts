@@ -8,6 +8,7 @@ export interface NearbyPlace {
   types?: string[];
   googleMapsUri?: string;
   location?: { latitude: number; longitude: number };
+  photoUrl?: string;
 }
 
 interface UseNearbyPlacesParams {

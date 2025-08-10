@@ -74,7 +74,8 @@ serve(async (req) => {
             "places.types",
             "places.googleMapsUri",
             "places.location",
-            "places.id"
+            "places.id",
+            "places.photos"
           ].join(","),
       },
       body: JSON.stringify(payload),
@@ -88,6 +89,36 @@ serve(async (req) => {
         status: res.status,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       });
+    }
+
+    // Enhance places with a first photo URL resolved server-side
+    try {
+      if (Array.isArray(data?.places)) {
+        const enhanced = await Promise.all(
+          data.places.map(async (p: any) => {
+            let photoUrl: string | undefined;
+            try {
+              const photoName = p?.photos?.[0]?.name;
+              if (photoName) {
+                const mediaRes = await fetch(`https://places.googleapis.com/v1/${photoName}/media?maxWidthPx=320&key=${apiKey}`, {
+                  method: "GET",
+                  redirect: "manual",
+                });
+                const loc = mediaRes.headers.get("location");
+                if (loc) {
+                  photoUrl = loc;
+                }
+              }
+            } catch (_err) {
+              // ignore photo errors
+            }
+            return { ...p, photoUrl };
+          })
+        );
+        data.places = enhanced;
+      }
+    } catch (_e) {
+      // ignore enhancement errors
     }
 
     return new Response(JSON.stringify(data), {

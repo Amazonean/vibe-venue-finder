@@ -94,6 +94,7 @@ const Venues = () => {
         voteCount: 0,
         lastUpdated: '',
         description: '',
+        imageUrl: p.photoUrl,
         latitude: lat,
         longitude: lng,
       };
