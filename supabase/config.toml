@@ -1,1 +1,4 @@
 project_id = "jbjydjqtygyxfgdhujaq"
+
+[functions.google-places-nearby]
+verify_jwt = false

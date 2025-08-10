@@ -46,19 +46,11 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
         const defaultCenter = { lat: 40.7589, lng: -73.9851 };
         const center = (locationEnabled && userLocation) ? userLocation : defaultCenter;
 
-        const map = new (window as any).google.maps.Map(mapRef.current, {
-          zoom: 13,
-          center,
-          styles: [
-            {
-              "featureType": "all",
-              "stylers": [
-                { "saturation": -100 },
-                { "gamma": 0.5 }
-              ]
-            }
-          ]
-        });
+          const map = new (window as any).google.maps.Map(mapRef.current, {
+            zoom: 13,
+            center,
+            mapTypeId: (window as any).google.maps.MapTypeId.TERRAIN,
+          });
 
         mapInstanceRef.current = map;
 

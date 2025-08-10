@@ -13,6 +13,7 @@ import VenuesSearchBar from '@/components/VenuesSearchBar';
 import ProximityFilter from '@/components/ProximityFilter';
 import { useLocation } from '@/contexts/LocationContext';
 import { calculateDistance } from '@/utils/distanceCalculator';
+import { useNearbyPlaces } from '@/hooks/useNearbyPlaces';
 
 const Venues = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -25,6 +26,82 @@ const Venues = () => {
   const [searchLocation, setSearchLocation] = useState<{lat: number, lng: number} | null>(null);
   const { locationEnabled, userLocation, setLocationEnabled, setUserLocation } = useLocation();
   const { toast } = useToast();
+
+  // Derived location and Places API params
+  const referenceLocation = searchLocation || userLocation;
+
+  const { includedTypes, keyword } = React.useMemo(() => {
+    const typeMap: Record<string, string[]> = {
+      'Clubs': ['night_club'],
+      'Bars': ['bar'],
+      'Restaurants': ['restaurant'],
+      'Live Music': ['bar', 'night_club'],
+      'Lounges': ['bar'],
+      'Rooftops': ['bar', 'restaurant'],
+      'Dance Halls': ['night_club'],
+    };
+    const kw: string[] = [];
+    const types = new Set<string>();
+    selectedVenueTypes.forEach((t) => {
+      (typeMap[t] || []).forEach((v) => types.add(v));
+      if (t === 'Lounges') kw.push('lounge');
+      if (t === 'Rooftops') kw.push('rooftop');
+      if (t === 'Live Music') kw.push('live music');
+      if (t === 'Dance Halls') kw.push('dance hall');
+    });
+    return {
+      includedTypes: types.size ? Array.from(types) : ['bar','night_club','restaurant'],
+      keyword: kw.length ? kw.join(' ') : undefined,
+    };
+  }, [selectedVenueTypes]);
+
+  const radiusMeters = React.useMemo(() => {
+    const meters = distanceUnit === 'km' ? maxDistance * 1000 : maxDistance * 1609.34;
+    return Math.min(Math.max(Math.round(meters), 1), 16093);
+  }, [maxDistance, distanceUnit]);
+
+  const nearbyQuery = useNearbyPlaces({
+    location: referenceLocation || null,
+    radiusMeters,
+    includedTypes,
+    keyword,
+    enabled: Boolean(referenceLocation),
+  });
+
+  const places = React.useMemo(() => {
+    return nearbyQuery.data?.pages.flatMap((p: any) => p?.places ?? []) ?? [];
+  }, [nearbyQuery.data]);
+
+  const placesAsVenues = React.useMemo(() => {
+    return places.map((p: any) => {
+      const lat = p.location?.latitude;
+      const lng = p.location?.longitude;
+      const distance = (referenceLocation && lat && lng)
+        ? calculateDistance(referenceLocation.lat, referenceLocation.lng, lat, lng, distanceUnit)
+        : 0;
+      const type = p.types?.includes('night_club') ? 'Clubs'
+        : p.types?.includes('bar') ? 'Bars'
+        : p.types?.includes('restaurant') ? 'Restaurants'
+        : 'Venue';
+      return {
+        id: p.id,
+        name: p.displayName?.text ?? 'Unknown',
+        address: p.formattedAddress ?? '',
+        vibeLevel: 'chill',
+        distance,
+        musicType: 'varied',
+        venueType: type,
+        voteCount: 0,
+        lastUpdated: '',
+        description: '',
+        latitude: lat,
+        longitude: lng,
+      };
+    });
+  }, [places, referenceLocation, distanceUnit]);
+
+  const displayVenues = (referenceLocation ? placesAsVenues : filteredVenues);
+
 
   useEffect(() => {
     // Filter venues based on search query, venue type, vibe, and distance
@@ -182,21 +259,33 @@ const Venues = () => {
         </h2>
         
         <div className="space-y-4">
-          {filteredVenues.map(venue => (
+          {displayVenues.map(venue => (
             <VenueCard
               key={venue.id}
               venue={venue}
-              showDistance={locationEnabled || searchLocation !== null}
+              showDistance={Boolean(referenceLocation)}
             />
           ))}
         </div>
 
-        {filteredVenues.length === 0 && (
+        {referenceLocation && displayVenues.length === 0 && !nearbyQuery.isLoading && (
           <div className="text-center py-12">
             <h3 className="text-lg font-medium text-foreground mb-2">No venues found</h3>
             <p className="text-muted-foreground">
-              Try adjusting your search terms or filters
+              Try adjusting your filters or expanding the distance
             </p>
+          </div>
+        )}
+
+        {referenceLocation && nearbyQuery.hasNextPage && (
+          <div className="flex justify-center mt-4">
+            <Button
+              onClick={() => nearbyQuery.fetchNextPage()}
+              disabled={nearbyQuery.isFetchingNextPage}
+              variant="outline"
+            >
+              {nearbyQuery.isFetchingNextPage ? 'Loading…' : 'Load more venues'}
+            </Button>
           </div>
         )}
       </div>
