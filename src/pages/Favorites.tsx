@@ -44,7 +44,7 @@ const Favorites = () => {
   };
 
   return (
-    <PageBackground lightSrc="/lovable-uploads/95c7bc9e-4384-4720-9805-6ba7ed30720a.png" darkSrc="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png">
+    <PageBackground lightSrc="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png" darkSrc="/lovable-uploads/95c7bc9e-4384-4720-9805-6ba7ed30720a.png">
       <div className="max-w-md mx-auto px-4 py-4">
         <FeaturedVenues />
         

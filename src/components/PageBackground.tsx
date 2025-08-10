@@ -16,7 +16,7 @@ const PageBackground: React.FC<PageBackgroundProps> = ({ lightSrc, darkSrc, clas
         alt=""
         aria-hidden="true"
         loading="lazy"
-        className="absolute inset-0 z-0 h-full w-full object-cover opacity-90 block dark:hidden"
+        className="fixed inset-0 z-0 h-full w-full object-cover opacity-90 block dark:hidden pointer-events-none"
       />
       {/* Dark mode background */}
       <img
@@ -24,10 +24,10 @@ const PageBackground: React.FC<PageBackgroundProps> = ({ lightSrc, darkSrc, clas
         alt=""
         aria-hidden="true"
         loading="lazy"
-        className="absolute inset-0 z-0 h-full w-full object-cover opacity-90 hidden dark:block"
+        className="fixed inset-0 z-0 h-full w-full object-cover opacity-90 hidden dark:block pointer-events-none"
       />
       {/* Subtle overlay for readability */}
-      <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-background/60 via-background/30 to-background/80" />
+      <div className="pointer-events-none fixed inset-0 z-10 bg-gradient-to-b from-background/60 via-background/30 to-background/80" />
 
       <div className="relative z-20">{children}</div>
     </section>
