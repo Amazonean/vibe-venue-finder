@@ -139,7 +139,7 @@ const Auth = () => {
   const years = Array.from({ length: 80 }, (_, i) => currentYear - i);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 pb-32">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Find Your Vibe</CardTitle>
