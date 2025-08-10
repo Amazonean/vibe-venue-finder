@@ -32,7 +32,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   } = useVideoPreview(capturedVideo, venueName, selectedVibe, vibeConfig);
 
   return (
-    <div className="fixed inset-0 bg-black flex flex-col h-screen">
+    <div className="fixed inset-0 bg-black flex flex-col h-screen" style={{ paddingTop: 'calc(env(safe-area-inset-top) + var(--top-nav-height, 64px) + 12px)' }}>
       {/* Video container that shrinks as needed */}
       <div className="flex-1 flex items-center justify-center relative min-h-0 p-2">
         <VideoPreviewPlayer

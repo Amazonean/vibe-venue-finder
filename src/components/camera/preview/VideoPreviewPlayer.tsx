@@ -30,7 +30,7 @@ const VideoPreviewPlayer: React.FC<VideoPreviewPlayerProps> = ({
       {/* Play/Pause button overlay */}
       <button
         onClick={onTogglePlayback}
-        className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors z-20"
+        className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors z-20" style={{ top: 0, left: 0, right: 0, bottom: 0 }}
       >
         <div className="bg-primary/90 rounded-full p-3 hover:bg-primary transition-colors shadow-lg">
           {isPlaying ? (
