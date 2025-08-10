@@ -3,7 +3,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 import { useLocation } from '@/contexts/LocationContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-
+import { getMockNearbyPlaces } from '@/utils/mockVenues';
 declare global {
   interface Window {
     google: any;
@@ -82,7 +82,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
             },
           });
           if (error) throw error;
-          const places = data?.places || [];
+          const places = [...getMockNearbyPlaces(center), ...(data?.places || [])];
 
           markersRef.current = places.map((p: any) => {
             const lat = p.location?.latitude;

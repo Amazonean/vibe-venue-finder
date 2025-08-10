@@ -7,7 +7,7 @@ import { useLocation } from '@/contexts/LocationContext';
 import { useNearbyPlaces } from '@/hooks/useNearbyPlaces';
 import { calculateDistance } from '@/utils/distanceCalculator';
 import { useNavigate } from 'react-router-dom';
-
+import { getMockNearbyPlaces } from '@/utils/mockVenues';
 const FeaturedVenues = () => {
   const { userLocation, locationEnabled } = useLocation();
   const referenceLocation = locationEnabled && userLocation ? userLocation : null;
@@ -20,7 +20,7 @@ const FeaturedVenues = () => {
     enabled: Boolean(referenceLocation),
   });
 
-  const places = nearby.data?.pages.flatMap((p: any) => p?.places ?? []) ?? [];
+  const places = [...getMockNearbyPlaces(referenceLocation), ...(nearby.data?.pages.flatMap((p: any) => p?.places ?? []) ?? [])];
   const featuredVenues = React.useMemo(() => {
     const mapped = places.map((p: any) => {
       const lat = p.location?.latitude;

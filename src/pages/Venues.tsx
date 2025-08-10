@@ -14,6 +14,7 @@ import { useLocation } from '@/contexts/LocationContext';
 import { calculateDistance } from '@/utils/distanceCalculator';
 import { useNearbyPlaces } from '@/hooks/useNearbyPlaces';
 import { Venue } from '@/components/venue/types';
+import { getMockNearbyPlaces } from '@/utils/mockVenues';
 
 const Venues = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,8 +70,9 @@ const Venues = () => {
   });
 
   const places = React.useMemo(() => {
-    return nearbyQuery.data?.pages.flatMap((p: any) => p?.places ?? []) ?? [];
-  }, [nearbyQuery.data]);
+    const base = nearbyQuery.data?.pages.flatMap((p: any) => p?.places ?? []) ?? [];
+    return [...getMockNearbyPlaces(referenceLocation), ...base];
+  }, [nearbyQuery.data, referenceLocation]);
 
   const placesAsVenues: Venue[] = React.useMemo(() => {
     return places.map((p: any) => {
