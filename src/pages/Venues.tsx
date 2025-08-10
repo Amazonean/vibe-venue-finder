@@ -145,7 +145,7 @@ const Venues = () => {
   const filterCount = selectedVenueTypes.length + selectedVibes.length;
 
   return (
-    <PageBackground lightSrc="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png" darkSrc="/lovable-uploads/95c7bc9e-4384-4720-9805-6ba7ed30720a.png">
+    <PageBackground lightSrc="/lovable-uploads/0dc1d262-1376-40b9-b7df-d4f9f9f3e576.png" darkSrc="/lovable-uploads/a3037181-7ea9-4b1a-a45f-3587fddeb3ad.png">
       <div>
         <div className="max-w-md mx-auto px-4 py-4">
           {/* Search Bar */}
