@@ -6,10 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { useLocation } from '@/contexts/LocationContext';
 import { useNearbyPlaces } from '@/hooks/useNearbyPlaces';
 import { calculateDistance } from '@/utils/distanceCalculator';
+import { useNavigate } from 'react-router-dom';
 
 const FeaturedVenues = () => {
   const { userLocation, locationEnabled } = useLocation();
   const referenceLocation = locationEnabled && userLocation ? userLocation : null;
+  const navigate = useNavigate();
 
   const nearby = useNearbyPlaces({
     location: referenceLocation,
@@ -37,7 +39,7 @@ const FeaturedVenues = () => {
         distance,
       };
     });
-    return mapped.sort((a: any, b: any) => (a.distance ?? 0) - (b.distance ?? 0)).slice(0, 10);
+    return mapped.sort((a: any, b: any) => (a.distance ?? 0) - (b.distance ?? 0)).slice(0, 5);
   }, [places, referenceLocation]);
 
   if (!referenceLocation) return null;
@@ -53,7 +55,7 @@ const FeaturedVenues = () => {
         <CarouselContent className="-ml-2 md:-ml-4">
           {featuredVenues.map((venue: any) => (
             <CarouselItem key={venue.id} className="pl-2 md:pl-4 basis-4/5 md:basis-1/2">
-              <Card className="border-border">
+              <Card className="border-border cursor-pointer transition hover:shadow-md" onClick={() => navigate(`/map?venue=${venue.id}`)}>
                 <CardContent className="p-4">
                   <div className="space-y-3">
                     <div className="flex items-start justify-between">

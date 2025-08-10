@@ -9,7 +9,7 @@ const Map = () => {
   useEffect(() => {
     const venueId = searchParams.get('venue');
     if (venueId) {
-      setSelectedVenueId(Number(venueId));
+      setSelectedVenueId(venueId);
     }
   }, [searchParams]);
 

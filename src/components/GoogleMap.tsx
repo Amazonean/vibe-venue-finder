@@ -144,7 +144,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
       const entry = (markersRef.current as any[]).find((m: any) => m.id === selectedVenueId);
       if (entry) {
         mapInstanceRef.current.setCenter(entry.marker.getPosition());
-        mapInstanceRef.current.setZoom(15);
+        mapInstanceRef.current.setZoom(17);
       }
     }
   }, [selectedVenueId, isLoaded]);
