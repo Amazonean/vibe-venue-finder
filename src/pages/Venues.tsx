@@ -257,7 +257,11 @@ const Venues = () => {
         <h2 className="text-foreground text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5">
           {(locationEnabled || searchLocation) ? 'Nearby Venues' : 'Popular Venues'}
         </h2>
-        
+        {nearbyQuery.isError && (
+          <div className="text-sm text-destructive mb-3">
+            Failed to fetch nearby venues. Please try again.
+          </div>
+        )}
         <div className="space-y-4">
           {displayVenues.map(venue => (
             <VenueCard

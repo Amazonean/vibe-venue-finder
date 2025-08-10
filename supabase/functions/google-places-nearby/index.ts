@@ -68,15 +68,14 @@ serve(async (req) => {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
         // Include nextPageToken and requested fields
-        "X-Goog-FieldMask": [
-          "places.displayName",
-          "places.formattedAddress",
-          "places.types",
-          "places.googleMapsUri",
-          "places.location",
-          "places.id",
-          "nextPageToken",
-        ].join(","),
+          "X-Goog-FieldMask": [
+            "places.displayName",
+            "places.formattedAddress",
+            "places.types",
+            "places.googleMapsUri",
+            "places.location",
+            "places.id"
+          ].join(","),
       },
       body: JSON.stringify(payload),
     });
