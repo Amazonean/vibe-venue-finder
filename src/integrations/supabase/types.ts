@@ -151,6 +151,7 @@ export type Database = {
       votes: {
         Row: {
           created_at: string | null
+          expires_at: string | null
           id: string
           user_id: string
           venue_id: string
@@ -158,6 +159,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          expires_at?: string | null
           id?: string
           user_id: string
           venue_id: string
@@ -165,6 +167,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          expires_at?: string | null
           id?: string
           user_id?: string
           venue_id?: string
