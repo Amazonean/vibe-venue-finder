@@ -1,6 +1,9 @@
 import { NearbyPlace } from "@/hooks/useNearbyPlaces";
 
-export const MOCK_VENUE_IDS = ["mock-venue-1", "mock-venue-2"] as const;
+export const MOCK_VENUE_IDS = [
+  "00000000-0000-0000-0000-000000000001",
+  "00000000-0000-0000-0000-000000000002"
+] as const;
 
 export function getMockNearbyPlaces(location: { lat: number; lng: number } | null | undefined): NearbyPlace[] {
   if (!location) return [];
