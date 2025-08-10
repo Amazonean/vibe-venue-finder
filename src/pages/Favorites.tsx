@@ -3,6 +3,7 @@ import VenueCard from '@/components/VenueCard';
 import LocationPermission from '@/components/LocationPermission';
 import FeaturedVenues from '@/components/FeaturedVenues';
 import { useLocation } from '@/contexts/LocationContext';
+import PageBackground from '@/components/PageBackground';
 
 const Favorites = () => {
   const [favoriteVenues, setFavoriteVenues] = useState(() => {
@@ -43,7 +44,7 @@ const Favorites = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <PageBackground lightSrc="/lovable-uploads/95c7bc9e-4384-4720-9805-6ba7ed30720a.png" darkSrc="/lovable-uploads/d02d0cde-dea2-47bf-818c-e801d38a92a9.png">
       <div className="max-w-md mx-auto px-4 py-4">
         <FeaturedVenues />
         
@@ -76,7 +77,7 @@ const Favorites = () => {
           </div>
         )}
       </div>
-    </div>
+    </PageBackground>
   );
 };
 
