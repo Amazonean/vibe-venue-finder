@@ -135,7 +135,7 @@ const saveToDevice = () => {
       </div>
       
       {/* Fixed bottom panel with controls */}
-      <div className="flex-shrink-0 p-3 bg-black/90 space-y-2 border-t border-gray-800" style={{ paddingBottom: 'env(safe-area-inset-bottom, 12px)' }}>
+      <div className="flex-shrink-0 p-3 bg-black/90 space-y-2 border-t border-gray-800" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 12px) + 64px)' }}>
         {/* Hashtag toggle */}
         <div className="flex items-center justify-center">
           <label className="flex items-center gap-2 text-white text-xs">

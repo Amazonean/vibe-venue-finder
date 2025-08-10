@@ -8,13 +8,19 @@ interface VenueStatsProps {
   isDialogOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onVibeVote: (vibe: 'turnt' | 'chill' | 'quiet') => Promise<boolean>;
+  hasActiveVote?: boolean;
+  remainingTime?: string;
+  activeVoteVibe?: 'turnt' | 'chill' | 'quiet' | null;
 }
 
 const VenueStats: React.FC<VenueStatsProps> = ({
   venue,
   isDialogOpen,
   onOpenChange,
-  onVibeVote
+  onVibeVote,
+  hasActiveVote,
+  remainingTime,
+  activeVoteVibe
 }) => {
   return (
     <div className="flex w-full items-center justify-between">
@@ -33,6 +39,9 @@ const VenueStats: React.FC<VenueStatsProps> = ({
         isOpen={isDialogOpen}
         onOpenChange={onOpenChange}
         onVibeVote={onVibeVote}
+        hasActiveVote={hasActiveVote}
+        remainingTime={remainingTime}
+        activeVoteVibe={activeVoteVibe}
       />
     </div>
   );

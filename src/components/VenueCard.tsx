@@ -16,7 +16,7 @@ const VenueCard: React.FC<VenueCardProps> = ({
   onFavoriteChange
 }) => {
   const navigate = useNavigate();
-  const { isDialogOpen, setIsDialogOpen, handleVibeVote } = useVenueVoting(venue);
+  const { isDialogOpen, setIsDialogOpen, handleVibeVote, hasActiveVote, remainingTime, activeVoteVibe } = useVenueVoting(venue);
   const { isFavorited, toggleFavorite } = useFavorites(venue, isFavorite, onFavoriteChange);
 
   const handleCardClick = () => {
@@ -62,6 +62,9 @@ const VenueCard: React.FC<VenueCardProps> = ({
               isDialogOpen={isDialogOpen}
               onOpenChange={setIsDialogOpen}
               onVibeVote={handleVibeVote}
+              hasActiveVote={hasActiveVote}
+              remainingTime={remainingTime}
+              activeVoteVibe={activeVoteVibe}
             />
           </div>
         </div>

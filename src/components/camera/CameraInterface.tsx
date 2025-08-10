@@ -85,7 +85,8 @@ const CameraInterface: React.FC<CameraInterfaceProps> = ({
       <Button
         onClick={onClose}
         variant="outline"
-        className="absolute bottom-8 left-4 z-10 text-white border-white/50 hover:bg-white/20 px-4"
+        className="absolute left-4 z-10 text-white border-white/50 hover:bg-white/20 px-4"
+        style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}
       >
         Cancel
       </Button>
