@@ -192,6 +192,14 @@ export type Database = {
         Args: { secret_name: string }
         Returns: string
       }
+      recompute_all_venue_vibes: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      recompute_venue_vibe: {
+        Args: { p_venue_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       vibe_level: "chill" | "decent" | "turnt" | "quiet"
