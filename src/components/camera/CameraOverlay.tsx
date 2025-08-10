@@ -48,6 +48,7 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
     <div 
       ref={containerRef}
       className="relative h-full cursor-grab active:cursor-grabbing"
+      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + var(--bottom-nav-height, 72px) + 16px)' }}
       {...gestureHandlers}
     >
       <CameraVideo 
