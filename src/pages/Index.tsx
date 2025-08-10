@@ -4,22 +4,17 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Music, Users } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-
 const Index = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-
-  return (
-    <div className="min-h-screen bg-background pb-20">
+  const {
+    user
+  } = useAuth();
+  return <div className="min-h-screen bg-background pb-20">
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-2">
         {/* Large Logo */}
         <div className="text-center mb-3">
-          <img 
-            src="/lovable-uploads/aeb22338-3739-4a42-b534-1c81ec69ff48.png" 
-            alt="TurntUp Logo" 
-            className="h-60 w-auto mx-auto sm:h-72 md:h-96"
-          />
+          <img src="/lovable-uploads/aeb22338-3739-4a42-b534-1c81ec69ff48.png" alt="TurntUp Logo" className="h-60 w-auto mx-auto sm:h-72 md:h-96" />
         </div>
         
         <div className="text-center max-w-3xl mx-auto">
@@ -31,23 +26,12 @@ const Index = () => {
             and find where the energy matches your mood.
           </p>
           <div className="flex gap-4 justify-center">
-            <Button 
-              onClick={() => navigate(user ? '/venues' : '/auth')}
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg"
-            >
+            <Button onClick={() => navigate(user ? '/venues' : '/auth')} size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg">
               {user ? 'Explore Venues' : 'Get Started'}
             </Button>
-            {!user && (
-              <Button 
-                onClick={() => navigate('/auth')}
-                variant="outline"
-                size="lg" 
-                className="px-8 py-3 text-lg"
-              >
+            {!user && <Button onClick={() => navigate('/auth')} variant="outline" size="lg" className="px-8 py-3 text-lg">
                 Sign In
-              </Button>
-            )}
+              </Button>}
           </div>
         </div>
 
@@ -78,14 +62,10 @@ const Index = () => {
               <Users className="h-8 w-8 text-primary" />
             </div>
             <h3 className="text-xl font-semibold mb-3">Community Driven</h3>
-            <p className="text-muted-foreground">
-              Vote on venue vibes and help others discover the perfect spot for their night out.
-            </p>
+            <p className="text-muted-foreground">Vote on venue vibes and help others discover the perfect spot for their day/night out.</p>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
