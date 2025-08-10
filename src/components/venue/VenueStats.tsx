@@ -17,7 +17,7 @@ const VenueStats: React.FC<VenueStatsProps> = ({
   onVibeVote
 }) => {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex w-full items-center justify-between">
       <div className="flex items-center gap-3 text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
           <Music className="h-3 w-3" />

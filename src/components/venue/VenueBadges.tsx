@@ -34,7 +34,7 @@ const getVibeEmoji = (vibe: string) => {
 
 const VenueBadges: React.FC<VenueBadgesProps> = ({ venue }) => {
   return (
-    <div className="flex items-center gap-2 my-2">
+    <div className="flex w-full items-center justify-start gap-2 my-2">
       <Badge className={`${getVibeColor(venue.vibeLevel)} text-xs font-medium`}>
         {getVibeEmoji(venue.vibeLevel)} {venue.vibeLevel}
       </Badge>
