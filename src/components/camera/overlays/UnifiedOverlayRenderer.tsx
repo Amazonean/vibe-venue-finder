@@ -41,28 +41,33 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
         className="absolute flex items-center justify-center"
         style={{
           left: overlays.venueName.x,
-          top: overlays.venueName.y,
+          top: `calc(${overlays.venueName.y}px + env(safe-area-inset-top) + var(--top-nav-height, 64px))`,
           width: overlays.venueName.width,
           height: overlays.venueName.height
         }}
       >
         <div 
-          className="inline-block rounded-lg max-w-full overflow-hidden"
+          className="inline-block rounded-full max-w-full overflow-hidden"
           style={{
-            backgroundColor: overlays.venueName.backgroundColor,
+            backgroundColor: 'rgba(0, 0, 0, 0.35)',
+            border: '2px solid rgba(139, 92, 246, 0.9)',
+            borderRadius: '9999px',
+            boxShadow: '0 8px 18px rgba(139, 92, 246, 0.35)',
             padding: `${overlays.venueName.padding / 2}px ${overlays.venueName.padding}px`
           }}
         >
           <h1 
             className="font-bungee-shade uppercase leading-tight text-center break-words"
             style={{ 
-              color: '#8B5CF6',
               fontSize: `${overlays.venueName.fontSize}px`,
+              backgroundImage: 'linear-gradient(90deg, #E9D5FF, #C4B5FD, #8B5CF6)',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent',
+              WebkitTextFillColor: 'transparent',
               wordWrap: 'break-word',
               hyphens: 'auto',
-              WebkitTextStroke: '6px white',
-              textShadow: '0 0 20px rgba(139, 92, 246, 0.8)',
-              filter: 'drop-shadow(0 0 20px rgba(139, 92, 246, 0.8)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9)) drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.8))'
+              WebkitTextStroke: '5px rgba(255,255,255,0.9)',
+              textShadow: '0 0 18px rgba(139, 92, 246, 0.7), 0 2px 4px rgba(0, 0, 0, 0.9)'
             }}
           >
             {venueName}
@@ -75,7 +80,7 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
         className="absolute"
         style={{
           left: overlays.vibeBadge.x,
-          top: overlays.vibeBadge.y,
+          top: `calc(${overlays.vibeBadge.y}px + env(safe-area-inset-top) + var(--top-nav-height, 64px))`,
           width: overlays.vibeBadge.width,
           height: overlays.vibeBadge.height
         }}
@@ -97,7 +102,7 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
         className="absolute"
         style={{
           left: overlays.logo.x,
-          bottom: '16px',
+          bottom: 'calc(env(safe-area-inset-bottom) + var(--bottom-nav-height, 72px) + 16px)',
           width: overlays.logo.width,
           height: overlays.logo.height
         }}
