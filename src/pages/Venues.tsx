@@ -13,6 +13,7 @@ import ProximityFilter from '@/components/ProximityFilter';
 import { useLocation } from '@/contexts/LocationContext';
 import { calculateDistance } from '@/utils/distanceCalculator';
 import { useNearbyPlaces } from '@/hooks/useNearbyPlaces';
+import { Venue } from '@/components/venue/types';
 
 const Venues = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -71,7 +72,7 @@ const Venues = () => {
     return nearbyQuery.data?.pages.flatMap((p: any) => p?.places ?? []) ?? [];
   }, [nearbyQuery.data]);
 
-  const placesAsVenues = React.useMemo(() => {
+  const placesAsVenues: Venue[] = React.useMemo(() => {
     return places.map((p: any) => {
       const lat = p.location?.latitude;
       const lng = p.location?.longitude;
@@ -82,11 +83,11 @@ const Venues = () => {
         : p.types?.includes('bar') ? 'Bars'
         : p.types?.includes('restaurant') ? 'Restaurants'
         : 'Venue';
-      return {
+      const v: Venue = {
         id: p.id,
         name: p.displayName?.text ?? 'Unknown',
         address: p.formattedAddress ?? '',
-        vibeLevel: 'chill',
+        vibeLevel: 'chill' as 'chill',
         distance,
         musicType: 'varied',
         venueType: type,
@@ -97,6 +98,7 @@ const Venues = () => {
         latitude: lat,
         longitude: lng,
       };
+      return v;
     });
   }, [places, referenceLocation, distanceUnit]);
 
