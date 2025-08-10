@@ -1,7 +1,7 @@
 import React from 'react';
 import VenueCard from '@/components/VenueCard';
 import LocationPermission from '@/components/LocationPermission';
-import { Venue } from '@/data/mockVenues';
+import { Venue } from './venue/types';
 
 interface VenuesListProps {
   venues: Venue[];

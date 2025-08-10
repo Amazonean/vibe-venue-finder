@@ -7,7 +7,7 @@ interface VenueStatsProps {
   venue: Venue;
   isDialogOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onVibeVote: (vibe: 'turnt' | 'chill' | 'quiet') => void;
+  onVibeVote: (vibe: 'turnt' | 'chill' | 'quiet') => Promise<boolean>;
 }
 
 const VenueStats: React.FC<VenueStatsProps> = ({

@@ -8,7 +8,7 @@ interface VoteDialogProps {
   venueName: string;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onVibeVote: (vibe: 'turnt' | 'chill' | 'quiet') => void;
+  onVibeVote: (vibe: 'turnt' | 'chill' | 'quiet') => Promise<boolean>;
 }
 
 const VoteDialog: React.FC<VoteDialogProps> = ({
@@ -21,12 +21,17 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
   const [selectedVibe, setSelectedVibe] = useState<'turnt' | 'chill' | 'quiet' | null>(null);
   const [showSelfieCamera, setShowSelfieCamera] = useState(false);
 
-  const handleVibeVote = (vibe: 'turnt' | 'chill' | 'quiet') => {
-    console.log('VoteDialog: handleVibeVote called with vibe:', vibe);
-    setSelectedVibe(vibe);
-    onVibeVote(vibe);
+const handleVibeVote = async (vibe: 'turnt' | 'chill' | 'quiet') => {
+  console.log('VoteDialog: handleVibeVote called with vibe:', vibe);
+  setSelectedVibe(vibe);
+  const success = await onVibeVote(vibe);
+  if (success) {
     setShowThankYou(true);
-  };
+  } else {
+    // Reset selection if vote failed (e.g., too far)
+    setSelectedVibe(null);
+  }
+};
 
   const handleClose = () => {
     setShowThankYou(false);

@@ -3,13 +3,12 @@ import VenueCard from '@/components/VenueCard';
 import LocationPermission from '@/components/LocationPermission';
 import FeaturedVenues from '@/components/FeaturedVenues';
 import { useLocation } from '@/contexts/LocationContext';
-import { mockFavoriteVenues } from '@/data/mockVenues';
 
 const Favorites = () => {
   const [favoriteVenues, setFavoriteVenues] = useState(() => {
-    // Load favorites from localStorage, fallback to mock data if none exist
+    // Load favorites from localStorage, default to empty
     const saved = localStorage.getItem('favoriteVenues');
-    return saved ? JSON.parse(saved) : mockFavoriteVenues;
+    return saved ? JSON.parse(saved) : [];
   });
   const { locationEnabled, userLocation, setLocationEnabled, setUserLocation } = useLocation();
 
@@ -18,15 +17,28 @@ const Favorites = () => {
     localStorage.setItem('favoriteVenues', JSON.stringify(favoriteVenues));
   }, [favoriteVenues]);
 
+  // Cleanup any legacy mock favorites (numeric IDs)
+  useEffect(() => {
+    const saved = localStorage.getItem('favoriteVenues');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      const filtered = parsed.filter((v: any) => typeof v.id === 'string');
+      if (filtered.length !== parsed.length) {
+        localStorage.setItem('favoriteVenues', JSON.stringify(filtered));
+        setFavoriteVenues(filtered);
+      }
+    }
+  }, []);
+
   const handleLocationPermission = (granted: boolean, location?: {lat: number, lng: number}) => {
     setLocationEnabled(granted);
     setUserLocation(location || null);
   };
 
-  const handleFavoriteChange = (venueId: number, isFavorited: boolean) => {
+  const handleFavoriteChange = (venueId: number | string, isFavorited: boolean) => {
     if (!isFavorited) {
       // Remove venue from favorites when unfavorited
-      setFavoriteVenues(prev => prev.filter(venue => venue.id !== venueId));
+      setFavoriteVenues((prev: any[]) => prev.filter((venue: any) => venue.id !== venueId));
     }
   };
 

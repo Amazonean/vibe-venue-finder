@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { mockVenues } from '@/data/mockVenues';
 import VenueCard from '@/components/VenueCard';
 import LocationPermission from '@/components/LocationPermission';
 import VenueTypeFilter from '@/components/VenueTypeFilter';
@@ -20,7 +19,7 @@ const Venues = () => {
   const [selectedVenueTypes, setSelectedVenueTypes] = useState<string[]>([]);
   const [selectedVibes, setSelectedVibes] = useState<string[]>([]);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [filteredVenues, setFilteredVenues] = useState(mockVenues);
+  // removed mock filtered state
   const [maxDistance, setMaxDistance] = useState(10);
   const [distanceUnit, setDistanceUnit] = useState<'km' | 'miles'>('km');
   const [searchLocation, setSearchLocation] = useState<{lat: number, lng: number} | null>(null);
@@ -101,56 +100,13 @@ const Venues = () => {
     });
   }, [places, referenceLocation, distanceUnit]);
 
-  const displayVenues = (referenceLocation ? placesAsVenues : filteredVenues);
+  const sortedPlaces = React.useMemo(() => {
+    return [...placesAsVenues].sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
+  }, [placesAsVenues]);
+
+  const displayVenues = sortedPlaces;
 
 
-  useEffect(() => {
-    // Filter venues based on search query, venue type, vibe, and distance
-    let filtered = mockVenues;
-
-    // Apply search filter (only if no location search is active)
-    if (searchQuery && !searchLocation) {
-      filtered = filtered.filter(venue => 
-        venue.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        venue.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        venue.musicType.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Apply venue type filter
-    if (selectedVenueTypes.length > 0) {
-      filtered = filtered.filter(venue => 
-        selectedVenueTypes.includes(venue.venueType)
-      );
-    }
-
-    // Apply vibe filter
-    if (selectedVibes.length > 0) {
-      filtered = filtered.filter(venue => 
-        selectedVibes.includes(venue.vibeLevel)
-      );
-    }
-
-    // Apply distance filter if location is available
-    const referenceLocation = searchLocation || userLocation;
-    if (referenceLocation && (locationEnabled || searchLocation)) {
-      filtered = filtered.filter(venue => {
-        if (venue.latitude && venue.longitude) {
-          const distance = calculateDistance(
-            referenceLocation.lat,
-            referenceLocation.lng,
-            venue.latitude,
-            venue.longitude,
-            distanceUnit
-          );
-          return distance <= maxDistance;
-        }
-        return false;
-      });
-    }
-
-    setFilteredVenues(filtered);
-  }, [searchQuery, selectedVenueTypes, selectedVibes, maxDistance, distanceUnit, userLocation, locationEnabled, searchLocation]);
 
   const handleLocationPermission = (granted: boolean, location?: {lat: number, lng: number}) => {
     setLocationEnabled(granted);

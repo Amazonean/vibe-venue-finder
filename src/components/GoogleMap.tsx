@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { useLocation } from '@/contexts/LocationContext';
-import { mockVenues } from '@/data/mockVenues';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -206,9 +205,9 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ selectedVenueId, onVenueSelect })
   // Center map on selected venue
   useEffect(() => {
     if (selectedVenueId && mapInstanceRef.current && isLoaded) {
-      const venue = mockVenues.find(v => v.id === selectedVenueId);
-      if (venue && venue.latitude && venue.longitude) {
-        mapInstanceRef.current.setCenter({ lat: venue.latitude, lng: venue.longitude });
+      const entry = (markersRef.current as any[]).find((m: any) => m.id === selectedVenueId);
+      if (entry) {
+        mapInstanceRef.current.setCenter(entry.marker.getPosition());
         mapInstanceRef.current.setZoom(15);
       }
     }

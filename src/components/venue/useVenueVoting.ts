@@ -5,14 +5,15 @@ import { useLocation } from '@/contexts/LocationContext';
 import { useToast } from '@/hooks/use-toast';
 import { isUserAtVenue } from '@/utils/venueDistance';
 import { Venue } from './types';
-
+import { useNavigate } from 'react-router-dom';
 export const useVenueVoting = (venue: Venue) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useAuth();
   const { locationEnabled, userLocation } = useLocation();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleVibeVote = async (vibe: 'turnt' | 'chill' | 'quiet') => {
+  const handleVibeVote = async (vibe: 'turnt' | 'chill' | 'quiet'): Promise<boolean> => {
     console.log('Vote button clicked for vibe:', vibe, 'venue:', venue.name);
     
     if (!user) {
@@ -22,7 +23,7 @@ export const useVenueVoting = (venue: Venue) => {
         description: "Please sign in to vote on venue vibes",
         variant: "destructive"
       });
-      return;
+      return false;
     }
 
     // Check if location is enabled
@@ -32,7 +33,7 @@ export const useVenueVoting = (venue: Venue) => {
         description: "Please enable location services to vote on venue vibes",
         variant: "destructive"
       });
-      return;
+      return false;
     }
 
     // Check if user is at the venue (within 200 meters)
@@ -50,7 +51,10 @@ export const useVenueVoting = (venue: Venue) => {
           description: "You must be at the venue to vote on its vibe",
           variant: "destructive"
         });
-        return;
+        // Close dialog and redirect to venues page
+        setIsDialogOpen(false);
+        navigate('/venues');
+        return false;
       }
     }
 
@@ -84,13 +88,15 @@ export const useVenueVoting = (venue: Venue) => {
           console.error('Vote error:', error);
           throw error;
         }
+        return false;
       } else {
         console.log('Vote successful!');
         toast({
           title: "Vote submitted!",
           description: `Thanks for voting ${vibe} for ${venue.name}`,
         });
-        // Don't close dialog here - let VoteDialog handle it to show thank you message
+        // Let VoteDialog decide whether to show thank-you
+        return true;
       }
     } catch (error) {
       console.error('Error submitting vote:', error);
@@ -99,6 +105,7 @@ export const useVenueVoting = (venue: Venue) => {
         description: "Failed to submit vote. Please try again.",
         variant: "destructive"
       });
+      return false;
     }
   };
 

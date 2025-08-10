@@ -17,10 +17,26 @@ const ProximityFilter: React.FC<ProximityFilterProps> = ({
   onUnitChange,
   enabled
 }) => {
-  const maxValue = unit === 'km' ? 50 : 30;
+  const milesMarks = [1, 3, 5, 7, 10];
+  const kmMarks = [1.6, 4.8, 8.0, 11.3, 16.1];
+  const marks = unit === 'miles' ? milesMarks : kmMarks;
+
+  const findNearest = (val: number, candidates: number[]) => {
+    return candidates.reduce((prev, curr) => Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev);
+  };
 
   const handleDistanceChange = (value: number[]) => {
-    onDistanceChange(value[0]);
+    const nearest = findNearest(value[0], marks);
+    onDistanceChange(Number(nearest.toFixed(1)));
+  };
+
+  const handleUnitSwitch = (newUnit: 'km' | 'miles') => {
+    if (newUnit === unit) return;
+    const converted = newUnit === 'miles' ? maxDistance / 1.609 : maxDistance * 1.609;
+    const targetMarks = newUnit === 'miles' ? milesMarks : kmMarks;
+    const snapped = findNearest(converted, targetMarks);
+    onUnitChange(newUnit);
+    onDistanceChange(Number(snapped.toFixed(1)));
   };
 
   if (!enabled) {
@@ -44,7 +60,7 @@ const ProximityFilter: React.FC<ProximityFilterProps> = ({
           <Button
             variant={unit === 'km' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => onUnitChange('km')}
+            onClick={() => handleUnitSwitch('km')}
             className="text-xs px-2 py-1"
           >
             km
@@ -52,7 +68,7 @@ const ProximityFilter: React.FC<ProximityFilterProps> = ({
           <Button
             variant={unit === 'miles' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => onUnitChange('miles')}
+            onClick={() => handleUnitSwitch('miles')}
             className="text-xs px-2 py-1"
           >
             mi
@@ -64,11 +80,16 @@ const ProximityFilter: React.FC<ProximityFilterProps> = ({
         <Slider
           value={[maxDistance]}
           onValueChange={handleDistanceChange}
-          max={maxValue}
-          min={1}
-          step={1}
+          max={marks[marks.length - 1]}
+          min={marks[0]}
+          step={unit === 'miles' ? 1 : 0.1}
           className="w-full"
         />
+        <div className="flex justify-between text-[11px] text-muted-foreground">
+          {marks.map((m) => (
+            <span key={m}>{m}{unit === 'miles' ? '' : ''}</span>
+          ))}
+        </div>
         <div className="text-center">
           <span className="text-sm text-muted-foreground">
             Within {maxDistance} {unit}
