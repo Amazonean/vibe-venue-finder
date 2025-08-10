@@ -97,7 +97,7 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
         className="absolute"
         style={{
           left: overlays.logo.x,
-          top: overlays.logo.y,
+          bottom: '16px',
           width: overlays.logo.width,
           height: overlays.logo.height
         }}
