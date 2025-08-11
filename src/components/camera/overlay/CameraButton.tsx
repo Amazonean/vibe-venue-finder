@@ -22,7 +22,7 @@ const CameraButton: React.FC<CameraButtonProps> = ({
   if (countdown) return null;
 
   return (
-    <div className="absolute left-0 right-0 flex justify-center pointer-events-auto z-30" style={{ bottom: 'calc(env(safe-area-inset-bottom) + var(--bottom-nav-height, 72px) + 16px)' }}>
+    <div className="absolute left-0 right-0 flex justify-center pointer-events-auto z-30" style={{ bottom: 'calc(env(safe-area-inset-bottom) + 8px)' }}>
       <button
         data-no-gesture="true"
         onClick={onStartCountdown}

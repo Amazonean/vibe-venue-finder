@@ -34,7 +34,7 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            transform: 'scale(0.98)',
+            transform: 'translateY(1.2%) scale(0.98)',
             transformOrigin: 'center'
           }}
         />
