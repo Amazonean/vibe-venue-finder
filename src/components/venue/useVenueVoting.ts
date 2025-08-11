@@ -7,6 +7,9 @@ import { isUserAtVenue } from '@/utils/venueDistance';
 import { Venue } from './types';
 import { useNavigate } from 'react-router-dom';
 import { MOCK_VENUE_IDS, ensureMockVenuesInDatabase } from '@/utils/mockVenues';
+const isUuid = (val: string) =>
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(val);
+
 export const useVenueVoting = (venue: Venue) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user } = useAuth();
@@ -30,12 +33,23 @@ export const useVenueVoting = (venue: Venue) => {
         return;
       }
       try {
-        const venueId = typeof venue.id === 'string' ? venue.id : '00000000-0000-0000-0000-000000000001';
-        const { data, error } = await supabase
+        // Determine whether we have a local UUID or an external Google Place ID
+        let venueUuid: string | null = null;
+        let placeId: string | null = null;
+        if (typeof venue.id === 'string') {
+          if (isUuid(venue.id)) venueUuid = venue.id; else placeId = venue.id;
+        } else {
+          venueUuid = '00000000-0000-0000-0000-000000000001';
+        }
+
+        let query = supabase
           .from('votes')
           .select('vibe, created_at')
-          .eq('user_id', user.id)
-          .eq('venue_id', venueId)
+          .eq('user_id', user.id);
+        if (venueUuid) query = query.eq('venue_id', venueUuid);
+        if (placeId) query = query.eq('place_id', placeId);
+
+        const { data, error } = await query
           .order('created_at', { ascending: false })
           .limit(1);
         if (error) {
@@ -150,24 +164,32 @@ export const useVenueVoting = (venue: Venue) => {
     console.log('User authenticated:', user.id);
 
     try {
-      // For mock venues (with number IDs), we'll use a placeholder UUID
-      // In a real app, you'd need to map these or use real venue IDs
-      const venueId = typeof venue.id === 'string' ? venue.id : '00000000-0000-0000-0000-000000000001';
-      console.log('Using venue ID:', venueId);
+      // Determine whether we have a local UUID or an external Google Place ID
+      let venueUuid: string | null = null;
+      let placeId: string | null = null;
+      if (typeof venue.id === 'string') {
+        if (isUuid(venue.id)) venueUuid = venue.id; else placeId = venue.id;
+      } else {
+        venueUuid = '00000000-0000-0000-0000-000000000001';
+      }
+      console.log('Using identifiers - venueUuid:', venueUuid, 'placeId:', placeId);
 
-      // If voting on a mock venue, ensure it exists in DB to satisfy FK
-      if ((MOCK_VENUE_IDS as readonly string[]).includes(venueId)) {
+      // If voting on a mock venue UUID, ensure venue exists in DB to satisfy downstream logic
+      if (venueUuid && (MOCK_VENUE_IDS as readonly string[]).includes(venueUuid)) {
         await ensureMockVenuesInDatabase(userLocation);
       }
       
       console.log('Attempting to insert vote...');
+      const payload: any = {
+        user_id: user.id,
+        vibe
+      };
+      if (venueUuid) payload.venue_id = venueUuid;
+      if (placeId) payload.place_id = placeId;
+
       const { error } = await supabase
         .from('votes')
-        .insert({
-          user_id: user.id,
-          venue_id: venueId,
-          vibe: vibe
-        });
+        .insert(payload);
 
       console.log('Insert result - error:', error);
 
