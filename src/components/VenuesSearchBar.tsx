@@ -5,6 +5,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useDebounce } from '@/hooks/useDebounce';
 import { supabase } from '@/integrations/supabase/client';
+import { calculateDistance as haversine } from '@/utils/distanceCalculator';
 
 interface VenuesSearchBarProps {
   searchQuery: string;
@@ -50,7 +51,31 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
           console.error('Error fetching predictions:', error);
           setPredictions([]);
         } else {
-          setPredictions(data?.predictions || []);
+          let preds: PlacePrediction[] = data?.predictions || [];
+          if (biasLocation && preds.length > 0) {
+            // Fetch details for top predictions to compute distance
+            const top = preds.slice(0, 8);
+            const details = await Promise.all(
+              top.map(async (p) => {
+                try {
+                  const { data: detail } = await supabase.functions.invoke('google-places-details', {
+                    body: { place_id: p.place_id }
+                  });
+                  const loc = detail?.location as { lat: number; lng: number } | undefined;
+                  const distance = loc ? haversine(biasLocation.lat, biasLocation.lng, loc.lat, loc.lng, 'km') : Number.POSITIVE_INFINITY;
+                  return { prediction: p, distance };
+                } catch {
+                  return { prediction: p, distance: Number.POSITIVE_INFINITY };
+                }
+              })
+            );
+            details.sort((a, b) => (a.distance - b.distance));
+            const sorted = details.map((d) => d.prediction);
+            // Append any remaining predictions
+            const remaining = preds.slice(8);
+            preds = [...sorted, ...remaining];
+          }
+          setPredictions(preds);
         }
       } catch (err) {
         console.error('Failed to fetch predictions:', err);

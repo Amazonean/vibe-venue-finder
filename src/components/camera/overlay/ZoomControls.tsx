@@ -2,29 +2,40 @@ import React, { useEffect, useState } from 'react';
 
 interface ZoomControlsProps {
   videoRef: React.RefObject<HTMLVideoElement>;
+  zoomScale?: number;
+  onZoomChange?: (val: number) => void;
 }
 
-const ZoomControls: React.FC<ZoomControlsProps> = ({ videoRef }) => {
+const ZoomControls: React.FC<ZoomControlsProps> = ({ videoRef, zoomScale = 1, onZoomChange }) => {
   const [supported, setSupported] = useState(false);
+  const [hasHardwareZoom, setHasHardwareZoom] = useState(false);
   const [min, setMin] = useState(1);
-  const [max, setMax] = useState(1);
+  const [max, setMax] = useState(3);
   const [step, setStep] = useState(0.1);
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(zoomScale);
 
   useEffect(() => {
     const init = async () => {
       try {
         const stream = (videoRef.current?.srcObject as MediaStream) || null;
         const track = stream?.getVideoTracks?.()[0];
-        // Use any-typed capabilities to avoid TS issues on browsers without zoom typing
         const caps: any = track?.getCapabilities?.();
         if (caps && caps.zoom) {
           setSupported(true);
+          setHasHardwareZoom(true);
           setMin(caps.zoom.min ?? 1);
           setMax(caps.zoom.max ?? 1);
           setStep(caps.zoom.step ?? 0.1);
           const settings: any = track?.getSettings?.();
           if (settings?.zoom) setZoom(settings.zoom);
+        } else {
+          // Fallback to digital zoom via CSS/canvas
+          setSupported(true);
+          setHasHardwareZoom(false);
+          setMin(1);
+          setMax(3);
+          setStep(0.1);
+          setZoom(zoomScale);
         }
       } catch (e) {
         setSupported(false);
@@ -36,17 +47,24 @@ const ZoomControls: React.FC<ZoomControlsProps> = ({ videoRef }) => {
   const clamp = (val: number) => Math.min(max, Math.max(min, val));
 
   const applyZoom = async (val: number) => {
+    const clamped = clamp(val);
     try {
       const stream = (videoRef.current?.srcObject as MediaStream) || null;
       const track = stream?.getVideoTracks?.()[0];
-      if (!track) return;
-      await (track as any).applyConstraints?.({ advanced: [{ zoom: val }] });
-      setZoom(val);
+      if (hasHardwareZoom && track) {
+        await (track as any).applyConstraints?.({ advanced: [{ zoom: clamped }] });
+        setZoom(clamped);
+      } else {
+        // Digital zoom fallback
+        setZoom(clamped);
+        onZoomChange?.(clamped);
+      }
     } catch (e) {
       // ignore if not supported
     }
   };
 
+  // Always render controls if supported or using fallback
   if (!supported) return null;
 
   return (

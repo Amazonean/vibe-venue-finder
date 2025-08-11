@@ -8,7 +8,8 @@ export const captureEnhancedPhoto = async (
   venueName: string,
   selectedVibe: VibeType,
   vibeConfig: Record<VibeType, VibeConfiguration>,
-  currentFilter: string
+  currentFilter: string,
+  zoomScale: number = 1
 ): Promise<string | null> => {
   if (!videoRef.current || !canvasRef.current) {
     console.error('Video or canvas ref not available');
@@ -39,8 +40,17 @@ export const captureEnhancedPhoto = async (
       ctx.filter = 'none';
     }
 
-    // Draw the video frame with filter
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Draw the video frame with filter and digital zoom if needed
+    const zoom = Math.max(1, zoomScale ?? 1);
+    if (zoom > 1) {
+      const srcW = video.videoWidth / zoom;
+      const srcH = video.videoHeight / zoom;
+      const sx = (video.videoWidth - srcW) / 2;
+      const sy = (video.videoHeight - srcH) / 2;
+      ctx.drawImage(video, sx, sy, srcW, srcH, 0, 0, canvas.width, canvas.height);
+    } else {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    }
 
     // Reset filter before drawing overlays
     ctx.filter = 'none';

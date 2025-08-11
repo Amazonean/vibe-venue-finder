@@ -60,7 +60,8 @@ const CameraInterface: React.FC<CameraInterfaceProps> = ({
       selectedVibe,
       vibeConfig,
       currentFilter,
-      stopCamera
+      stopCamera,
+      zoomScale
     );
     
     if (imageDataUrl) {

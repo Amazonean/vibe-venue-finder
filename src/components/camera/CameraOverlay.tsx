@@ -104,7 +104,7 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
       />
 
       {/* Zoom controls */}
-      <ZoomControls videoRef={videoRef} />
+      <ZoomControls videoRef={videoRef} zoomScale={zoomScale} onZoomChange={onZoomChange} />
     </div>
   );
 };

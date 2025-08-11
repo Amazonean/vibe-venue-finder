@@ -69,7 +69,7 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
             {alreadyVoted
               ? `You've already voted for ${venueName}`
               : showThankYou
-                ? 'Thanks for voting!'
+                ? 'Thanks for your vote!'
                 : `Vote for the vibe at ${venueName}`}
           </DialogTitle>
         </DialogHeader>

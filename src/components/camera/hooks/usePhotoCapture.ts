@@ -31,9 +31,10 @@ export const usePhotoCapture = () => {
     selectedVibe: VibeType,
     vibeConfig: Record<VibeType, VibeConfiguration>,
     currentFilter: string,
-    stopCamera: () => void
+    stopCamera: () => void,
+    zoomScale: number = 1
   ): Promise<string | null> => {
-    const imageDataUrl = await captureEnhancedPhoto(videoRef, canvasRef, venueName, selectedVibe, vibeConfig, currentFilter);
+    const imageDataUrl = await captureEnhancedPhoto(videoRef, canvasRef, venueName, selectedVibe, vibeConfig, currentFilter, zoomScale);
     if (imageDataUrl) {
       setCapturedImage(imageDataUrl);
       stopCamera();

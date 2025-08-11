@@ -19,7 +19,8 @@ export const useVideoRecording = (venueName: string, selectedVibe: VibeType, onV
     streamRef: React.RefObject<MediaStream | null>,
     videoRef: React.RefObject<HTMLVideoElement>,
     currentFilter: string,
-    vibeConfig: Record<VibeType, VibeConfiguration>
+    vibeConfig: Record<VibeType, VibeConfiguration>,
+    zoomScale: number = 1
   ) => {
     if (!streamRef.current || !videoRef.current) return;
     
@@ -35,7 +36,7 @@ export const useVideoRecording = (venueName: string, selectedVibe: VibeType, onV
       const mediaRecorder = await canvasRecorderRef.current.setupRecording(
         videoRef.current,
         streamRef.current,
-        { venueName, selectedVibe, currentFilter, vibeConfig }
+        { venueName, selectedVibe, currentFilter, vibeConfig, zoomScale }
       );
       
       mediaRecorderRef.current = mediaRecorder;

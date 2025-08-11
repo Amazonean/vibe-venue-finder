@@ -7,6 +7,7 @@ export interface VideoRecorderOptions {
   selectedVibe: VibeType;
   currentFilter: string;
   vibeConfig: Record<VibeType, VibeConfiguration>;
+  zoomScale?: number;
 }
 
 export class VideoCanvasRecorder {
@@ -70,7 +71,26 @@ export class VideoCanvasRecorder {
       }
 
       // Draw video frame with filter applied
-      this.ctx.drawImage(videoElement, 0, 0, this.canvas.width, this.canvas.height);
+      const zoom = Math.max(1, options.zoomScale ?? 1);
+      if (zoom > 1) {
+        const srcW = videoElement.videoWidth / zoom;
+        const srcH = videoElement.videoHeight / zoom;
+        const sx = (videoElement.videoWidth - srcW) / 2;
+        const sy = (videoElement.videoHeight - srcH) / 2;
+        this.ctx.drawImage(
+          videoElement,
+          sx,
+          sy,
+          srcW,
+          srcH,
+          0,
+          0,
+          this.canvas.width,
+          this.canvas.height
+        );
+      } else {
+        this.ctx.drawImage(videoElement, 0, 0, this.canvas.width, this.canvas.height);
+      }
 
       // Reset filter before drawing overlays
       this.ctx.filter = 'none';
