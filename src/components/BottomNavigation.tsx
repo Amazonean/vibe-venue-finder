@@ -1,39 +1,24 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, MapPin, Map, User, Heart } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
 
 const BottomNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
 
-  const navItems = [
-    {
-      icon: Home,
-      label: 'Home',
-      path: '/',
-    },
-    {
-      icon: Map,
-      label: 'Map',
-      path: '/map',
-    },
-    {
-      icon: MapPin,
-      label: 'Venues',
-      path: '/venues',
-    },
-    {
-      icon: Heart,
-      label: 'Favorites',
-      path: '/favorites',
-    },
-    {
-      icon: User,
-      label: 'Profile',
-      path: '/profile',
-    },
+  // Desired order: Home, Venues, Map, Favorites, Profile
+  const baseNavItems = [
+    { icon: Home, label: 'Home', path: '/' },
+    { icon: MapPin, label: 'Venues', path: '/venues' },
+    { icon: Map, label: 'Map', path: '/map' },
+    { icon: Heart, label: 'Favorites', path: '/favorites' },
+    { icon: User, label: 'Profile', path: '/profile' },
   ];
+
+  // Hide Home when signed in
+  const navItems = user ? baseNavItems.filter((i) => i.path !== '/') : baseNavItems;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
@@ -46,9 +31,10 @@ const BottomNavigation = () => {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`just flex flex-1 flex-col items-center justify-end gap-1 rounded-full ${
+              className={`flex flex-1 flex-col items-center justify-end gap-1 rounded-full ${
                 isActive ? 'text-primary border border-border bg-muted/20' : 'text-muted-foreground'
               }`}
+              aria-label={item.label}
             >
               <div className="flex h-8 items-center justify-center">
                 <Icon className="h-6 w-6" />
