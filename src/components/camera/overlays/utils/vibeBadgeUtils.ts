@@ -3,12 +3,12 @@ import { VibeType } from '../../VibeConfig';
 export const getVibeBadgeImagePath = (vibe: VibeType): string => {
   switch (vibe) {
     case 'turnt':
-      return '/lovable-uploads/20a93d55-cfbc-417d-b442-a073caa5158f.png';
+      return '/lovable-uploads/0dc1d262-1376-40b9-b7df-d4f9f9f3e576.png';
     case 'chill':
-      return '/lovable-uploads/4b5069a8-223b-47a6-b22b-5439eade3e91.png';
+      return '/lovable-uploads/a3037181-7ea9-4b1a-a45f-3587fddeb3ad.png';
     case 'quiet':
-      return '/lovable-uploads/750b5511-5654-47b1-93a5-1bb9063ad60c.png';
+      return '/lovable-uploads/aeb22338-3739-4a42-b534-1c81ec69ff48.png';
     default:
-      return '/lovable-uploads/20a93d55-cfbc-417d-b442-a073caa5158f.png';
+      return '/lovable-uploads/0dc1d262-1376-40b9-b7df-d4f9f9f3e576.png';
   }
 };

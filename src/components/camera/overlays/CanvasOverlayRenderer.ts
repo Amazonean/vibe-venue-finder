@@ -21,10 +21,7 @@ export const renderCanvasOverlays = async (
   ctx.save();
 
   try {
-    // Draw venue name (top-right aligned by renderer)
-    drawVenueNameOverlay(ctx, config, venueName);
-
-    // Draw vibe image (replaces previous badge logic)
+    // Draw vibe image first so venue name appears on top
     await drawImageOverlay(
       ctx,
       getVibeBadgeImagePath(selectedVibe),
@@ -34,6 +31,9 @@ export const renderCanvasOverlays = async (
       overlays.vibeBadge.height,
       true
     );
+
+    // Draw venue name on top-right
+    drawVenueNameOverlay(ctx, config, venueName);
 
   } finally {
     ctx.restore();
