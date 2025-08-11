@@ -11,6 +11,7 @@ import RecordingIndicator from './overlay/RecordingIndicator';
 import CameraButton from './overlay/CameraButton';
 import SwipeHint from './overlay/SwipeHint';
 import CameraError from './overlay/CameraError';
+import ZoomControls from './overlay/ZoomControls';
 
 const CameraOverlay: React.FC<CameraOverlayProps> = ({
   videoRef,
@@ -98,6 +99,9 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
         showPosePrompt={showPosePrompt}
         isRecording={isRecording}
       />
+
+      {/* Zoom controls */}
+      <ZoomControls videoRef={videoRef} />
     </div>
   );
 };

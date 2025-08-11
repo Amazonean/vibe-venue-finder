@@ -77,7 +77,7 @@ const VoteDialog: React.FC<VoteDialogProps> = ({
           <div className="flex flex-col gap-4 py-4 text-center">
             <p className="text-muted-foreground">
               You can vote again in {remainingTime}.
-              Want to take another selfie while you're here?
+              Want to take a selfie while you're here?
             </p>
             <div className="flex gap-3">
               <Button onClick={handleTakeSelfie} className="flex-1 gap-2">

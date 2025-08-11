@@ -105,14 +105,27 @@ const Venues = () => {
     });
   }, [places, referenceLocation, distanceUnit]);
 
-  const sortedPlaces = React.useMemo(() => {
-    return [...placesAsVenues].sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
-  }, [placesAsVenues]);
+  const displayVenues = React.useMemo(() => {
+    let list = sortedPlaces;
 
-  const displayVenues = sortedPlaces;
+    // Filter by selected venue types
+    if (selectedVenueTypes.length > 0) {
+      list = list.filter(v => selectedVenueTypes.includes(v.venueType));
+    }
 
+    // Filter by vibe levels
+    if (selectedVibes.length > 0) {
+      list = list.filter(v => selectedVibes.includes(v.vibeLevel));
+    }
 
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      list = list.filter(v => v.name.toLowerCase().includes(q) || v.address.toLowerCase().includes(q));
+    }
 
+    return list;
+  }, [sortedPlaces, selectedVenueTypes, selectedVibes, searchQuery]);
   const handleLocationPermission = (granted: boolean, location?: {lat: number, lng: number}) => {
     setLocationEnabled(granted);
     setUserLocation(location || null);
@@ -153,6 +166,7 @@ const Venues = () => {
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             onLocationSelect={handleLocationSelect}
+            biasLocation={referenceLocation || null}
           />
 
           {/* Filters Toggle */}
@@ -220,8 +234,12 @@ const Venues = () => {
           {(locationEnabled || searchLocation) ? 'Nearby Venues' : 'Popular Venues'}
         </h2>
         {nearbyQuery.isError && (
-          <div className="text-sm text-destructive mb-3">
-            Failed to fetch nearby venues. Please try again.
+          <div className="mb-4">
+            <div className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3">
+              <p className="text-sm font-semibold text-destructive">
+                Failed to fetch nearby venues. Please try again.
+              </p>
+            </div>
           </div>
         )}
         <div className="space-y-4">

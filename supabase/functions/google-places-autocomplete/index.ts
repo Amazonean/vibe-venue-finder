@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { input } = await req.json();
+    const { input, location, radius, types, components } = await req.json();
     
     if (!input || input.length < 2) {
       return new Response(JSON.stringify({ predictions: [] }), {
@@ -25,7 +25,23 @@ serve(async (req) => {
       throw new Error('Google Maps API key not configured');
     }
 
-    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&types=establishment&key=${apiKey}`;
+    const params = new URLSearchParams({
+      input: input,
+      key: apiKey,
+    });
+
+    // Bias results towards a location if provided
+    if (location && typeof location.lat === 'number' && typeof location.lng === 'number') {
+      params.set('location', `${location.lat},${location.lng}`);
+      if (radius) params.set('radius', String(radius));
+      params.set('strictbounds', 'true');
+    }
+
+    // Allow optional types and components (e.g., components=country:gb)
+    if (types) params.set('types', types);
+    if (components) params.set('components', components);
+
+    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?${params.toString()}`;
     
     const response = await fetch(url);
     const data = await response.json();

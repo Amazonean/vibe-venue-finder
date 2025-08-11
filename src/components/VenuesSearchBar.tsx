@@ -10,6 +10,7 @@ interface VenuesSearchBarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onLocationSelect?: (location: {lat: number, lng: number}, placeName: string) => void;
+  biasLocation?: { lat: number; lng: number } | null;
 }
 
 interface PlacePrediction {
@@ -21,7 +22,7 @@ interface PlacePrediction {
   };
 }
 
-const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearchChange, onLocationSelect }) => {
+const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearchChange, onLocationSelect, biasLocation }) => {
   const [open, setOpen] = useState(false);
   const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +39,11 @@ const VenuesSearchBar: React.FC<VenuesSearchBarProps> = ({ searchQuery, onSearch
       setIsLoading(true);
       try {
         const { data, error } = await supabase.functions.invoke('google-places-autocomplete', {
-          body: { input: debouncedQuery }
+          body: {
+            input: debouncedQuery,
+            location: biasLocation ?? undefined,
+            radius: 15000
+          }
         });
 
         if (error) {

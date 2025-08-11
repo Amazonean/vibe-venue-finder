@@ -8,22 +8,38 @@ interface LocationPermissionProps {
 }
 
 const LocationPermission: React.FC<LocationPermissionProps> = ({ onPermissionChange }) => {
-  const requestLocation = () => {
-    if ("geolocation" in navigator) {
+  const requestLocation = async () => {
+    try {
+      if (!('geolocation' in navigator)) {
+        onPermissionChange(false);
+        return;
+      }
+
+      // Hint permissions API when available
+      try {
+        // @ts-ignore
+        const status = await navigator.permissions?.query?.({ name: 'geolocation' as PermissionName });
+        if (status && status.state === 'denied') {
+          onPermissionChange(false);
+          return;
+        }
+      } catch {}
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const location = {
             lat: position.coords.latitude,
-            lng: position.coords.longitude
+            lng: position.coords.longitude,
           };
           onPermissionChange(true, location);
         },
         (error) => {
-          console.error("Error getting location:", error);
+          console.error('Error getting location:', error);
           onPermissionChange(false);
-        }
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
-    } else {
+    } catch (e) {
       onPermissionChange(false);
     }
   };

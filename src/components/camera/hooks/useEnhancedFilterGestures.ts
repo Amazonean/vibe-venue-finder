@@ -72,17 +72,21 @@ export const useEnhancedFilterGestures = (
 
   // Touch handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    e.preventDefault();
+    // Ignore touches on elements that opt out of gestures
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-no-gesture="true"]')) return;
     handleInteractionStart(e.touches[0].clientX);
   }, [handleInteractionStart]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    e.preventDefault();
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-no-gesture="true"]')) return;
     handleInteractionMove(e.touches[0].clientX);
   }, [handleInteractionMove]);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    e.preventDefault();
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-no-gesture="true"]')) return;
     handleInteractionEnd();
   }, [handleInteractionEnd]);
 
