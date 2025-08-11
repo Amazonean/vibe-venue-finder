@@ -7,7 +7,7 @@ export const drawImageOverlay = async (
   y: number,
   width: number,
   height: number,
-  maintainAspectRatio: boolean = true
+  fit: 'contain' | 'cover' = 'contain'
 ): Promise<void> => {
   try {
     const img = await loadImage(imagePath);
@@ -17,7 +17,7 @@ export const drawImageOverlay = async (
     let drawX = x;
     let drawY = y;
 
-    if (maintainAspectRatio) {
+    if (fit === 'contain') {
       const imgAspectRatio = img.width / img.height;
       const targetAspectRatio = width / height;
 
@@ -29,6 +29,24 @@ export const drawImageOverlay = async (
         // Image is taller - fit to height
         drawWidth = height * imgAspectRatio;
         drawX = x + (width - drawWidth) / 2;
+      }
+    } else if (fit === 'cover') {
+      // Fill the target area edge-to-edge, cropping overflow
+      const imgAspectRatio = img.width / img.height;
+      const targetAspectRatio = width / height;
+
+      if (imgAspectRatio > targetAspectRatio) {
+        // Image is wider - match height, crop sides
+        drawHeight = height;
+        drawWidth = height * imgAspectRatio;
+        drawX = x + (width - drawWidth) / 2;
+        drawY = y;
+      } else {
+        // Image is taller - match width, crop top/bottom
+        drawWidth = width;
+        drawHeight = width / imgAspectRatio;
+        drawX = x;
+        drawY = y + (height - drawHeight) / 2;
       }
     }
 

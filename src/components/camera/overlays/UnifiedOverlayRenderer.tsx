@@ -26,23 +26,14 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
   return (
     <div className="absolute inset-0 pointer-events-none">
       {/* Vibe Image Overlay */}
-      <div
-        className="absolute"
-        style={{
-          left: overlays.vibeBadge.x,
-          top: overlays.vibeBadge.y,
-          width: overlays.vibeBadge.width,
-          height: overlays.vibeBadge.height
-        }}
-      >
+      <div className="absolute inset-0">
         <img
           src={getVibeBadgeImagePath(selectedVibe)}
-          alt={`${selectedVibe} vibe`}
+          alt={`${selectedVibe} vibe frame`}
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'contain',
-            filter: 'drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.8))'
+            objectFit: 'cover'
           }}
         />
       </div>

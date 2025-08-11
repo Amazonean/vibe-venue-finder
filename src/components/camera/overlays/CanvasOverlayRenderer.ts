@@ -25,11 +25,11 @@ export const renderCanvasOverlays = async (
     await drawImageOverlay(
       ctx,
       getVibeBadgeImagePath(selectedVibe),
-      overlays.vibeBadge.x,
-      overlays.vibeBadge.y,
-      overlays.vibeBadge.width,
-      overlays.vibeBadge.height,
-      true
+      0,
+      0,
+      ctx.canvas.width,
+      ctx.canvas.height,
+      'cover'
     );
 
     // Draw venue name on top-right
