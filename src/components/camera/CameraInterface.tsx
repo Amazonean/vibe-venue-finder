@@ -90,7 +90,7 @@ const CameraInterface: React.FC<CameraInterfaceProps> = ({
         data-no-gesture="true"
         aria-label="Cancel camera"
         className="absolute left-4 z-50 pointer-events-auto text-white border-white/50 hover:bg-white/20 px-4"
-        style={{ bottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}
+        style={{ bottom: 'calc(var(--bottom-nav-height, 72px) + 8px)' }}
       >
         Cancel
       </Button>
