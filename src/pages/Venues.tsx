@@ -105,6 +105,10 @@ const Venues = () => {
     });
   }, [places, referenceLocation, distanceUnit]);
 
+  const sortedPlaces = React.useMemo(() => {
+    return [...placesAsVenues].sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
+  }, [placesAsVenues]);
+
   const displayVenues = React.useMemo(() => {
     let list = sortedPlaces;
 
