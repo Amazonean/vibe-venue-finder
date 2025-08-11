@@ -8,6 +8,7 @@ import VenueStats from './venue/VenueStats';
 import { useVenueVoting } from './venue/useVenueVoting';
 import { useFavorites } from './venue/useFavorites';
 import { VenueCardProps } from './venue/types';
+import { useVenueAggregates } from './venue/useVenueAggregates';
 
 const VenueCard: React.FC<VenueCardProps> = ({
   venue,
@@ -18,6 +19,7 @@ const VenueCard: React.FC<VenueCardProps> = ({
   const navigate = useNavigate();
   const { isDialogOpen, setIsDialogOpen, handleVibeVote, hasActiveVote, remainingTime, activeVoteVibe } = useVenueVoting(venue);
   const { isFavorited, toggleFavorite } = useFavorites(venue, isFavorite, onFavoriteChange);
+  const { voteCount, vibeLevel } = useVenueAggregates(venue);
 
   const handleCardClick = () => {
     navigate(`/map?venue=${venue.id}`);
@@ -37,37 +39,37 @@ const VenueCard: React.FC<VenueCardProps> = ({
           }} 
         />
         
-        {/* Content Section */}
-        <div className="flex-1 flex flex-col justify-between min-h-[80px]">
-          {/* Header Section */}
-          <div className="flex items-start justify-between gap-3">
-            <VenueInfo venue={venue} />
+          {/* Content Section */}
+          <div className="flex-1 flex flex-col justify-between min-h-[80px]">
+            {/* Header Section */}
+            <div className="flex items-start justify-between gap-3">
+              <VenueInfo venue={venue} />
+              <div onClick={(e) => e.stopPropagation()}>
+                <VenueActions 
+                  showDistance={showDistance}
+                  distance={venue.distance}
+                  isFavorited={isFavorited}
+                  onToggleFavorite={toggleFavorite}
+                />
+              </div>
+            </div>
+            
+            {/* Middle Section - Badges */}
+            <VenueBadges venue={{ ...venue, vibeLevel }} />
+            
+            {/* Bottom Section - Info and Vote */}
             <div onClick={(e) => e.stopPropagation()}>
-              <VenueActions 
-                showDistance={showDistance}
-                distance={venue.distance}
-                isFavorited={isFavorited}
-                onToggleFavorite={toggleFavorite}
+              <VenueStats 
+                venue={{ ...venue, voteCount }}
+                isDialogOpen={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+                onVibeVote={handleVibeVote}
+                hasActiveVote={hasActiveVote}
+                remainingTime={remainingTime}
+                activeVoteVibe={activeVoteVibe}
               />
             </div>
           </div>
-          
-          {/* Middle Section - Badges */}
-          <VenueBadges venue={venue} />
-          
-          {/* Bottom Section - Info and Vote */}
-          <div onClick={(e) => e.stopPropagation()}>
-            <VenueStats 
-              venue={venue}
-              isDialogOpen={isDialogOpen}
-              onOpenChange={setIsDialogOpen}
-              onVibeVote={handleVibeVote}
-              hasActiveVote={hasActiveVote}
-              remainingTime={remainingTime}
-              activeVoteVibe={activeVoteVibe}
-            />
-          </div>
-        </div>
       </div>
     </Card>
   );

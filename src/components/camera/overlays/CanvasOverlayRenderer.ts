@@ -3,6 +3,7 @@ import { MediaConfiguration } from '../config/MediaConfig';
 import { drawVenueNameOverlay } from './renderers/venueNameRenderer';
 import { drawImageOverlay } from './renderers/imageRenderer';
 import { getVibeBadgeImagePath } from './utils/vibeBadgeUtils';
+import { VIBE_FRAME } from './constants';
 
 export const renderCanvasOverlays = async (
   ctx: CanvasRenderingContext2D,
@@ -22,8 +23,8 @@ export const renderCanvasOverlays = async (
 
   try {
     // Draw vibe image first so venue name appears on top
-    const margin = Math.round(Math.min(ctx.canvas.width, ctx.canvas.height) * 0.01);
-    const verticalShift = Math.round(ctx.canvas.height * 0.012);
+    const margin = Math.round(Math.min(ctx.canvas.width, ctx.canvas.height) * VIBE_FRAME.marginPct);
+    const verticalShift = Math.round(ctx.canvas.height * VIBE_FRAME.translateY);
 
     ctx.save();
     ctx.translate(0, verticalShift);
