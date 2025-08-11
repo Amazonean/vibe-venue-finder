@@ -43,7 +43,7 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
         className="absolute flex items-center justify-end"
         style={{
           right: 16,
-          top: `calc(${overlays.venueName.y}px + env(safe-area-inset-top) + var(--top-nav-height, 64px))`,
+          top: overlays.venueName.y,
           width: overlays.venueName.width,
           height: overlays.venueName.height
         }}

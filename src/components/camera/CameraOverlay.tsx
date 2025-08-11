@@ -42,7 +42,10 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
     <div 
       ref={containerRef}
       className="relative h-full"
-      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + var(--bottom-nav-height, 72px) + 16px)' }}
+      style={{
+        paddingTop: 'calc(env(safe-area-inset-top) + var(--top-nav-height, 64px))',
+        paddingBottom: 'calc(env(safe-area-inset-bottom) + var(--bottom-nav-height, 72px))'
+      }}
     >
       <CameraVideo 
         videoRef={videoRef}
