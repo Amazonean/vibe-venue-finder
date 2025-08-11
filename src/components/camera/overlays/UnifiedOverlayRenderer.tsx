@@ -33,7 +33,9 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'cover'
+            objectFit: 'cover',
+            transform: 'scale(0.98)',
+            transformOrigin: 'center'
           }}
         />
       </div>

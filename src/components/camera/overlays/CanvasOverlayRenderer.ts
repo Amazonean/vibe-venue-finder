@@ -22,13 +22,14 @@ export const renderCanvasOverlays = async (
 
   try {
     // Draw vibe image first so venue name appears on top
+    const margin = Math.round(Math.min(ctx.canvas.width, ctx.canvas.height) * 0.01);
     await drawImageOverlay(
       ctx,
       getVibeBadgeImagePath(selectedVibe),
-      0,
-      0,
-      ctx.canvas.width,
-      ctx.canvas.height,
+      margin,
+      margin,
+      ctx.canvas.width - margin * 2,
+      ctx.canvas.height - margin * 2,
       'cover'
     );
 

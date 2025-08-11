@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Moon, Sun, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
@@ -33,8 +33,21 @@ const VenuesHeader: React.FC<VenuesHeaderProps> = () => {
 
   const isHomePage = location.pathname === '/';
 
+  const headerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const setHeight = () => {
+      document.documentElement.style.setProperty('--top-nav-height', `${el.offsetHeight}px`);
+    };
+    setHeight();
+    const ro = new ResizeObserver(setHeight);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <div className="flex items-center justify-between pb-2 bg-background/80 backdrop-blur-sm sticky top-0 z-40 px-4 pt-2">
+    <div ref={headerRef} className="flex items-center justify-between pb-2 bg-background/80 backdrop-blur-sm sticky top-0 z-40 px-4 pt-2">
       <div className="flex items-center">
         {!isHomePage && (
           <img 

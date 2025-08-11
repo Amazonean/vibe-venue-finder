@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, MapPin, Map, User, Heart } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,8 +20,21 @@ const BottomNavigation = () => {
   // Hide Home when signed in
   const navItems = user ? baseNavItems.filter((i) => i.path !== '/') : baseNavItems;
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const setHeight = () => {
+      document.documentElement.style.setProperty('--bottom-nav-height', `${el.offsetHeight}px`);
+    };
+    setHeight();
+    const ro = new ResizeObserver(setHeight);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50">
+    <div ref={containerRef} className="fixed bottom-0 left-0 right-0 z-50">
       <div className="flex gap-2 border-t border-border bg-sidebar/80 backdrop-blur-sm px-4 pb-3 pt-2">
         {navItems.map((item) => {
           const Icon = item.icon;
