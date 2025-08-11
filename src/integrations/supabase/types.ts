@@ -155,7 +155,7 @@ export type Database = {
           id: string
           place_id: string | null
           user_id: string
-          venue_id: string
+          venue_id: string | null
           vibe: Database["public"]["Enums"]["vibe_level"]
         }
         Insert: {
@@ -164,7 +164,7 @@ export type Database = {
           id?: string
           place_id?: string | null
           user_id: string
-          venue_id: string
+          venue_id?: string | null
           vibe: Database["public"]["Enums"]["vibe_level"]
         }
         Update: {
@@ -173,7 +173,7 @@ export type Database = {
           id?: string
           place_id?: string | null
           user_id?: string
-          venue_id?: string
+          venue_id?: string | null
           vibe?: Database["public"]["Enums"]["vibe_level"]
         }
         Relationships: [
