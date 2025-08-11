@@ -3,11 +3,13 @@ import React from 'react';
 interface CameraVideoProps {
   videoRef: React.RefObject<HTMLVideoElement>;
   filter: string;
+  zoomScale?: number;
 }
 
 const CameraVideo: React.FC<CameraVideoProps> = ({
   videoRef,
-  filter
+  filter,
+  zoomScale = 1
 }) => {
   return (
     <video
@@ -16,7 +18,7 @@ const CameraVideo: React.FC<CameraVideoProps> = ({
       playsInline
       muted
       className="w-full h-full object-cover bg-black"
-      style={{ filter }}
+      style={{ filter, transform: `scale(${zoomScale})`, transformOrigin: 'center center' }}
     />
   );
 };

@@ -28,7 +28,9 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
   isRecording = false,
   recordingTime = 0,
   onStartRecording,
-  onStopRecording
+  onStopRecording,
+  zoomScale = 1,
+  onZoomChange
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { config } = useMediaConfiguration(containerRef);
@@ -55,6 +57,7 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
       <CameraVideo 
         videoRef={videoRef}
         filter={filterDef.cssFilter}
+        zoomScale={zoomScale}
       />
       
       {/* Unified Overlays - Only show when not recording to avoid duplicates */}

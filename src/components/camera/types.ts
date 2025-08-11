@@ -16,6 +16,8 @@ export interface CameraOverlayProps {
   recordingTime?: number;
   onStartRecording?: () => void;
   onStopRecording?: () => void;
+  zoomScale?: number;
+  onZoomChange?: (val: number) => void;
 }
 
 // Filter types moved to config/FilterConfig.ts

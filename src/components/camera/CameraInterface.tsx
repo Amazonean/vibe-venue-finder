@@ -23,6 +23,7 @@ const CameraInterface: React.FC<CameraInterfaceProps> = ({
   onClose
 }) => {
   const [currentFilter, setCurrentFilter] = useState('none');
+  const [zoomScale, setZoomScale] = useState(1);
   const vibeConfig = getVibeConfig(venueName);
 
   const { 
@@ -49,7 +50,7 @@ const CameraInterface: React.FC<CameraInterfaceProps> = ({
   } = usePhotoCapture();
 
   const handleStartRecording = () => {
-    startVideoRecording(streamRef, videoRef, currentFilter, vibeConfig);
+    startVideoRecording(streamRef, videoRef, currentFilter, vibeConfig, zoomScale);
   };
 
   const handleCaptureComplete = async () => {
@@ -85,7 +86,9 @@ const CameraInterface: React.FC<CameraInterfaceProps> = ({
       <Button
         onClick={onClose}
         variant="outline"
-        className="absolute left-4 z-10 text-white border-white/50 hover:bg-white/20 px-4"
+        data-no-gesture="true"
+        aria-label="Cancel camera"
+        className="absolute left-4 z-50 pointer-events-auto text-white border-white/50 hover:bg-white/20 px-4"
         style={{ bottom: 'calc(env(safe-area-inset-bottom) + var(--bottom-nav-height, 72px) + 16px)' }}
       >
         Cancel
@@ -107,6 +110,8 @@ const CameraInterface: React.FC<CameraInterfaceProps> = ({
         recordingTime={recordingTime}
         onStartRecording={handleStartRecording}
         onStopRecording={stopVideoRecording}
+        zoomScale={zoomScale}
+        onZoomChange={setZoomScale}
       />
 
       {/* Hidden canvas for photo capture */}
