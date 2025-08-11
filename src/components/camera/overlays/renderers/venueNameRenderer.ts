@@ -12,7 +12,7 @@ export const drawVenueNameOverlay = (
   // Set up text properties
   const fontSize = venueOverlay.fontSize || 36;
   ctx.font = `800 ${fontSize}px Arial, sans-serif`;
-  ctx.textAlign = 'center';
+  ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
 
   // Prepare text
@@ -24,7 +24,7 @@ export const drawVenueNameOverlay = (
   const padding = Math.max(20, (venueOverlay.padding || 24));
   const bgWidth = Math.min(textWidth + padding * 2, venueOverlay.width);
   const bgHeight = Math.max(venueOverlay.height * 0.6, fontSize * 1.4);
-  const bgX = venueOverlay.x + (venueOverlay.width - bgWidth) / 2;
+  const bgX = venueOverlay.x + (venueOverlay.width - bgWidth); // right-aligned pill
   const bgY = venueOverlay.y + (venueOverlay.height - bgHeight) / 2;
 
   // Draw pill background
@@ -47,7 +47,7 @@ export const drawVenueNameOverlay = (
   ctx.restore();
 
   // Text position
-  const textX = venueOverlay.x + venueOverlay.width / 2;
+  const textX = bgX + bgWidth - padding / 2; // near right edge inside pill
   const textY = venueOverlay.y + venueOverlay.height / 2;
 
   // Create gradient for text fill

@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Download, Share } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { VibeType, VibeConfiguration } from './VibeConfig';
+import { useEnhancedFilterGestures } from './hooks/useEnhancedFilterGestures';
+import FilterNameDisplay from './overlay/FilterNameDisplay';
 interface PhotoPreviewProps {
   capturedImage: string;
   venueName: string;
@@ -124,14 +126,11 @@ const saveToDevice = () => {
   return (
     <div className="fixed inset-0 bg-black flex flex-col h-screen" style={{ paddingTop: 'calc(env(safe-area-inset-top) + var(--top-nav-height, 64px) + 12px)' }}>
       {/* Photo container that shrinks as needed */}
-      <div className="flex-1 flex items-center justify-center min-h-0 p-2 relative">
-        <img 
-          src={capturedImage} 
-          alt="Captured selfie" 
-          className="max-w-full max-h-full object-contain"
-        />
-        
-        {/* Note: Overlays are already embedded in the captured image */}
+      <div className="flex-1 flex items-center justify-center min-h-0 p-2 relative"
+        {...(useEnhancedFilterGestures as any) && {}}
+      >
+        {/* Gesture-enabled preview area */}
+        <PreviewWithGestures imageSrc={capturedImage} />
       </div>
       
       {/* Fixed bottom panel with controls */}
@@ -188,6 +187,22 @@ const saveToDevice = () => {
           Retake Selfie
         </Button>
       </div>
+    </div>
+  );
+};
+
+// Internal component to enable swipe filters on photo preview
+const PreviewWithGestures: React.FC<{ imageSrc: string }> = ({ imageSrc }) => {
+  const { currentFilter: filterDef, showFilterName, gestureHandlers } = useEnhancedFilterGestures('none', () => {});
+  return (
+    <div className="absolute inset-0 flex items-center justify-center" {...gestureHandlers}>
+      <img
+        src={imageSrc}
+        alt="Captured selfie"
+        className="max-w-full max-h-full object-contain"
+        style={{ filter: filterDef.cssFilter }}
+      />
+      <FilterNameDisplay showFilterName={showFilterName} filterName={filterDef.name} />
     </div>
   );
 };

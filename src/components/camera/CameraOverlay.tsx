@@ -1,15 +1,12 @@
 import React, { useRef } from 'react';
 import { CameraOverlayProps } from './types';
-import { useEnhancedFilterGestures } from './hooks/useEnhancedFilterGestures';
 import { useMediaConfiguration } from './hooks/useMediaConfiguration';
 import CameraVideo from './overlay/CameraVideo';
 import UnifiedOverlayRenderer from './overlays/UnifiedOverlayRenderer';
-import FilterNameDisplay from './overlay/FilterNameDisplay';
 import CountdownOverlay from './overlay/CountdownOverlay';
 import PosePrompt from './overlay/PosePrompt';
 import RecordingIndicator from './overlay/RecordingIndicator';
 import CameraButton from './overlay/CameraButton';
-import SwipeHint from './overlay/SwipeHint';
 import CameraError from './overlay/CameraError';
 import ZoomControls from './overlay/ZoomControls';
 
@@ -35,13 +32,7 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const { config } = useMediaConfiguration(containerRef);
   
-  const {
-    currentFilter: filterDef,
-    showFilterName,
-    gestureHandlers
-  } = useEnhancedFilterGestures(currentFilter, (filter) => {
-    onFilterChange?.(filter.cssFilter);
-  });
+  // Filter swipe gestures are disabled on live camera; only available in previews
 
   if (cameraError) {
     return <CameraError cameraError={cameraError} onStartCamera={onStartCamera} />;
@@ -50,13 +41,12 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
   return (
     <div 
       ref={containerRef}
-      className="relative h-full cursor-grab active:cursor-grabbing"
+      className="relative h-full"
       style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + var(--bottom-nav-height, 72px) + 16px)' }}
-      {...gestureHandlers}
     >
       <CameraVideo 
         videoRef={videoRef}
-        filter={filterDef.cssFilter}
+        filter={currentFilter}
         zoomScale={zoomScale}
       />
       
@@ -72,10 +62,6 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
       
       {/* Interactive Overlays */}
       <div className="absolute inset-0 pointer-events-none">
-        <FilterNameDisplay 
-          showFilterName={showFilterName}
-          filterName={filterDef.name}
-        />
         <CountdownOverlay countdown={countdown} />
         <PosePrompt 
           showPosePrompt={showPosePrompt}
@@ -97,11 +83,6 @@ const CameraOverlay: React.FC<CameraOverlayProps> = ({
         onStopRecording={onStopRecording}
       />
 
-      <SwipeHint 
-        countdown={countdown}
-        showPosePrompt={showPosePrompt}
-        isRecording={isRecording}
-      />
 
       {/* Zoom controls */}
       <ZoomControls videoRef={videoRef} zoomScale={zoomScale} onZoomChange={onZoomChange} />

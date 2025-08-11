@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Slider } from '@/components/ui/slider';
 
 interface ZoomControlsProps {
   videoRef: React.RefObject<HTMLVideoElement>;
@@ -70,25 +71,22 @@ const ZoomControls: React.FC<ZoomControlsProps> = ({ videoRef, zoomScale = 1, on
   return (
     <div
       data-no-gesture="true"
-      className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col gap-2 p-2 rounded-xl bg-background/70 backdrop-blur border border-border shadow-sm pointer-events-auto z-30"
+      className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 p-2 rounded-xl bg-background/70 backdrop-blur border border-border shadow-sm pointer-events-auto z-30"
     >
-      <button
-        className="w-8 h-8 rounded-md bg-muted text-foreground flex items-center justify-center border border-border"
-        onClick={() => applyZoom(clamp(zoom + step))}
-        aria-label="Zoom in"
-      >
-        +
-      </button>
+      <div className="h-40 flex items-center">
+        <Slider
+          orientation="vertical"
+          min={min}
+          max={max}
+          step={step}
+          value={[zoom]}
+          onValueChange={(val) => applyZoom(val[0] ?? zoom)}
+          className="h-36 w-6"
+        />
+      </div>
       <div className="text-xs text-muted-foreground text-center select-none">
         {zoom.toFixed(1)}x
       </div>
-      <button
-        className="w-8 h-8 rounded-md bg-muted text-foreground flex items-center justify-center border border-border"
-        onClick={() => applyZoom(clamp(zoom - step))}
-        aria-label="Zoom out"
-      >
-        −
-      </button>
     </div>
   );
 };

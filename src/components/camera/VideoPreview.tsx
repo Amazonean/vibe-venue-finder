@@ -4,6 +4,8 @@ import VideoPreviewOverlays from './preview/VideoPreviewOverlays';
 import VideoPreviewControls from './preview/VideoPreviewControls';
 import VideoPreviewPlayer from './preview/VideoPreviewPlayer';
 import { useVideoPreview } from './preview/hooks/useVideoPreview';
+import { useEnhancedFilterGestures } from './hooks/useEnhancedFilterGestures';
+import FilterNameDisplay from './overlay/FilterNameDisplay';
 
 interface VideoPreviewProps {
   capturedVideo: string;
@@ -31,23 +33,21 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
     shareVideo
   } = useVideoPreview(capturedVideo, venueName, selectedVibe, vibeConfig);
 
+  const gesture = useEnhancedFilterGestures('none', () => {});
+
   return (
     <div className="fixed inset-0 bg-black flex flex-col h-screen" style={{ paddingTop: 'calc(env(safe-area-inset-top) + var(--top-nav-height, 64px) + 12px)' }}>
       {/* Video container that shrinks as needed */}
-      <div className="flex-1 flex items-center justify-center relative min-h-0 p-2">
+      <div className="flex-1 flex items-center justify-center relative min-h-0 p-2" {...gesture.gestureHandlers}>
         <VideoPreviewPlayer
           videoRef={videoRef}
           capturedVideo={capturedVideo}
           isPlaying={isPlaying}
           onTogglePlayback={togglePlayback}
           onVideoEnded={handleVideoEnded}
+          filterCss={gesture.currentFilter.cssFilter}
         />
-        
-        <VideoPreviewOverlays
-          venueName={venueName}
-          selectedVibe={selectedVibe}
-          vibeConfig={vibeConfig}
-        />
+        <FilterNameDisplay showFilterName={gesture.showFilterName} filterName={gesture.currentFilter.name} />
       </div>
       
       <VideoPreviewControls

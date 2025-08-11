@@ -7,6 +7,7 @@ interface VideoPreviewPlayerProps {
   isPlaying: boolean;
   onTogglePlayback: () => void;
   onVideoEnded: () => void;
+  filterCss?: string;
 }
 
 const VideoPreviewPlayer: React.FC<VideoPreviewPlayerProps> = ({
@@ -14,7 +15,8 @@ const VideoPreviewPlayer: React.FC<VideoPreviewPlayerProps> = ({
   capturedVideo,
   isPlaying,
   onTogglePlayback,
-  onVideoEnded
+  onVideoEnded,
+  filterCss
 }) => {
   return (
     <>
@@ -25,20 +27,20 @@ const VideoPreviewPlayer: React.FC<VideoPreviewPlayerProps> = ({
         onEnded={onVideoEnded}
         playsInline
         controls={false}
+        style={{ filter: filterCss }}
       />
       
-      {/* Play/Pause button overlay */}
+      {/* Floating Play/Pause button */}
       <button
         onClick={onTogglePlayback}
-        className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors z-20" style={{ top: 0, left: 0, right: 0, bottom: 0 }}
+        data-no-gesture="true"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-primary/90 rounded-full p-3 hover:bg-primary transition-colors shadow-lg z-20"
       >
-        <div className="bg-primary/90 rounded-full p-3 hover:bg-primary transition-colors shadow-lg">
-          {isPlaying ? (
-            <Pause className="h-6 w-6 text-white" />
-          ) : (
-            <Play className="h-6 w-6 text-white ml-0.5" />
-          )}
-        </div>
+        {isPlaying ? (
+          <Pause className="h-6 w-6 text-white" />
+        ) : (
+          <Play className="h-6 w-6 text-white ml-0.5" />
+        )}
       </button>
     </>
   );

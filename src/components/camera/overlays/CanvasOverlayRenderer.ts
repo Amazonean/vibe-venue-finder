@@ -21,10 +21,10 @@ export const renderCanvasOverlays = async (
   ctx.save();
 
   try {
-    // Draw venue name
+    // Draw venue name (top-right aligned by renderer)
     drawVenueNameOverlay(ctx, config, venueName);
 
-    // Draw vibe badge
+    // Draw vibe image (replaces previous badge logic)
     await drawImageOverlay(
       ctx,
       getVibeBadgeImagePath(selectedVibe),
@@ -35,16 +35,6 @@ export const renderCanvasOverlays = async (
       true
     );
 
-    // Draw logo
-    await drawImageOverlay(
-      ctx,
-      '/lovable-uploads/4798e35a-824c-4ddc-9916-74b59aac299d.png',
-      overlays.logo.x,
-      overlays.logo.y,
-      overlays.logo.width,
-      overlays.logo.height,
-      true
-    );
   } finally {
     ctx.restore();
   }
