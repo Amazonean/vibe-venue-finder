@@ -239,8 +239,8 @@ const Venues = () => {
         </h2>
         {nearbyQuery.isError && (
           <div className="mb-4">
-            <div className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3">
-              <p className="text-sm font-semibold text-destructive">
+            <div className="rounded-lg bg-black px-4 py-3">
+              <p className="text-sm font-bold text-destructive">
                 Failed to fetch nearby venues. Please try again.
               </p>
             </div>
