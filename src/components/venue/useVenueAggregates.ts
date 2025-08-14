@@ -15,13 +15,20 @@ export function useVenueAggregates(venue: Venue) {
 
   const fetchAggregates = async () => {
     try {
+      console.log('Fetching aggregates for venue:', venueId);
       const { data, error } = await supabase
         .rpc('get_venue_aggregates', { p_venue_id: venueId });
       
+      console.log('RPC response:', { data, error });
+      
       if (!error && data && data.length > 0) {
         const aggregates = data[0];
-        setVoteCount(aggregates.vote_count ?? 0);
+        console.log('Setting vote count:', aggregates.vote_count);
+        console.log('Setting vibe level:', aggregates.current_vibe);
+        setVoteCount(Number(aggregates.vote_count) || 0);
         setVibeLevel(aggregates.current_vibe as Vibe ?? 'chill');
+      } else {
+        console.log('No aggregates data found, keeping existing values');
       }
     } catch (e) {
       console.error('Error fetching venue aggregates:', e);

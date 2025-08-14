@@ -2,7 +2,7 @@ import React from 'react';
 import { VibeType, VibeConfiguration } from '../VibeConfig';
 import { MediaConfiguration } from '../config/MediaConfig';
 import { getVibeBadgeImagePath } from './utils/vibeBadgeUtils';
-import { VIBE_FRAME } from './constants';
+import { VIBE_FRAME, VIBE_POSITIONING } from './constants';
 
 interface UnifiedOverlayRendererProps {
   config: MediaConfiguration;
@@ -35,7 +35,7 @@ const UnifiedOverlayRenderer: React.FC<UnifiedOverlayRendererProps> = ({
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            transform: `translateY(${VIBE_FRAME.translateY * 100}%) scale(${VIBE_FRAME.scale})`,
+            transform: `translateY(${VIBE_POSITIONING[selectedVibe].translateY * 100}%) scale(${VIBE_FRAME.scale})`,
             transformOrigin: 'center'
           }}
         />
