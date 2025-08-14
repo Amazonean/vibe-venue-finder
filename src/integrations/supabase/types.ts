@@ -219,6 +219,10 @@ export type Database = {
         Args: { p_venue_id: string }
         Returns: undefined
       }
+      security_configuration_reminder: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       vibe_level: "chill" | "decent" | "turnt" | "quiet"
