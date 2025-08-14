@@ -1,7 +1,4 @@
 project_id = "jbjydjqtygyxfgdhujaq"
 
-[functions.google-places-nearby]
-verify_jwt = false
-
-[functions.generate-vapid-keys]
+[functions.google-places-details]
 verify_jwt = false

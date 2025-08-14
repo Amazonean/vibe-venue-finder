@@ -191,9 +191,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_place_vibe: {
+        Args: { p_place_id: string }
+        Returns: {
+          current_vibe: Database["public"]["Enums"]["vibe_level"]
+          vote_count: number
+          last_updated: string
+        }[]
+      }
       get_secret: {
         Args: { secret_name: string }
         Returns: string
+      }
+      get_venue_aggregates: {
+        Args: { p_venue_id: string }
+        Returns: {
+          vote_count: number
+          current_vibe: Database["public"]["Enums"]["vibe_level"]
+          last_updated: string
+        }[]
       }
       recompute_all_venue_vibes: {
         Args: Record<PropertyKey, never>

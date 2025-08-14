@@ -15,45 +15,16 @@ export function useVenueAggregates(venue: Venue) {
 
   const fetchAggregates = async () => {
     try {
-      if (isUuid(venueId)) {
-        const { data, error } = await supabase
-          .from('venues')
-          .select('vote_count, current_vibe')
-          .eq('id', venueId)
-          .maybeSingle();
-        if (!error && data) {
-          setVoteCount(data.vote_count ?? 0);
-          if (data.current_vibe) setVibeLevel(data.current_vibe as Vibe);
-        }
-      } else {
-        const since = new Date(Date.now() - 2.5 * 60 * 60 * 1000).toISOString();
-        const { data, error } = await supabase
-          .from('votes')
-          .select('vibe, created_at')
-          .eq('place_id', venueId)
-          .gte('created_at', since)
-          .limit(500);
-        if (!error && data) {
-          const weights: Record<Vibe, number> = { quiet: 0, chill: 0, turnt: 0 };
-          data.forEach((row: any) => {
-            const created = new Date(row.created_at).getTime();
-            const ageMs = Date.now() - created;
-            const weight = ageMs <= 2 * 60 * 60 * 1000 ? 1 : 0.5;
-            const v = row.vibe as Vibe;
-            weights[v] = (weights[v] ?? 0) + weight;
-          });
-          setVoteCount(data.length);
-          let best: Vibe = 'chill';
-          let bestVal = -1;
-          (['turnt','chill','quiet'] as Vibe[]).forEach(v => {
-            const val = weights[v] ?? 0;
-            if (val > bestVal) { bestVal = val; best = v; }
-          });
-          setVibeLevel(data.length > 0 ? best : venue.vibeLevel);
-        }
+      const { data, error } = await supabase
+        .rpc('get_venue_aggregates', { p_venue_id: venueId });
+      
+      if (!error && data && data.length > 0) {
+        const aggregates = data[0];
+        setVoteCount(aggregates.vote_count ?? 0);
+        setVibeLevel(aggregates.current_vibe as Vibe ?? 'chill');
       }
     } catch (e) {
-      // no-op
+      console.error('Error fetching venue aggregates:', e);
     }
   };
 
