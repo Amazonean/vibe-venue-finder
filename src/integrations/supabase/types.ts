@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -195,8 +195,8 @@ export type Database = {
         Args: { p_place_id: string }
         Returns: {
           current_vibe: Database["public"]["Enums"]["vibe_level"]
-          vote_count: number
           last_updated: string
+          vote_count: number
         }[]
       }
       get_secret: {
@@ -206,9 +206,9 @@ export type Database = {
       get_venue_aggregates: {
         Args: { p_venue_id: string }
         Returns: {
-          vote_count: number
           current_vibe: Database["public"]["Enums"]["vibe_level"]
           last_updated: string
+          vote_count: number
         }[]
       }
       recompute_all_venue_vibes: {
