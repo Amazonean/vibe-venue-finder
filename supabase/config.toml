@@ -2,3 +2,6 @@ project_id = "jbjydjqtygyxfgdhujaq"
 
 [functions.google-places-details]
 verify_jwt = false
+
+[functions.get-secret]
+verify_jwt = true
