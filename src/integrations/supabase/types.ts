@@ -199,10 +199,7 @@ export type Database = {
           vote_count: number
         }[]
       }
-      get_secret: {
-        Args: { secret_name: string }
-        Returns: string
-      }
+      get_secret: { Args: { secret_name: string }; Returns: string }
       get_venue_aggregates: {
         Args: { p_venue_id: string }
         Returns: {
@@ -211,18 +208,9 @@ export type Database = {
           vote_count: number
         }[]
       }
-      recompute_all_venue_vibes: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      recompute_venue_vibe: {
-        Args: { p_venue_id: string }
-        Returns: undefined
-      }
-      security_configuration_reminder: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      recompute_all_venue_vibes: { Args: never; Returns: undefined }
+      recompute_venue_vibe: { Args: { p_venue_id: string }; Returns: undefined }
+      security_configuration_reminder: { Args: never; Returns: string }
     }
     Enums: {
       vibe_level: "chill" | "decent" | "turnt" | "quiet"
